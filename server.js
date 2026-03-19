@@ -6,6 +6,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -1318,6 +1319,21 @@ app.get('/api/health', (req, res) => {
         mongodb: mongoose.connection.readyState === 1 ? '✅ Connected' : '❌ Disconnected',
         timestamp: new Date().toISOString()
     });
+});
+
+// ===== SPA CATCH-ALL ROUTE =====
+// This should be after all API routes
+app.get('*', (req, res) => {
+    // Don't intercept API routes
+    if (req.path.startsWith('/api/')) {
+        return res.status(404).json({
+            success: false,
+            error: 'API endpoint not found'
+        });
+    }
+    
+    // Serve index.html for all other routes (SPA routing)
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
 // ===== START SERVER =====
