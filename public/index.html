@@ -904,7 +904,6 @@
     </div>
 
     <script type="module">
-        import { GoogleGenAI } from 'https://esm.run/@google/genai';
         import { marked } from 'https://esm.run/marked';
 
         // ===== TRANSLATIONS =====
@@ -1142,40 +1141,13 @@
             output.innerHTML = `<div class="h-full flex items-center justify-center"><div class="w-8 h-8 border-2 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div></div>`;
             
             try {
-                // For now, use mock response since we can't access environment variables in browser
-                const apiKey = null; // process.env.GEMINI_API_KEY is not available in browser
-                const langName = currentLang === 'km' ? 'Khmer' : 'English';
+                // Mock response for demo - in production, this should call your backend API
+                await new Promise(r => setTimeout(r, 1500));
+                const mock = currentLang === 'km' ? 
+                    `# របាយការណ៍វិភាគ\n## សេចក្តីសង្ខេប\nកូដនេះត្រូវបានវិភាគដោយជោគជ័យ។\n## ការពន្យល់លម្អិត\n- កូដនេះមានរចនាសម្ព័ន្ធល្អិត\n- ប្រើប្រាស់អថេរដ៏ល្អ\n- មានមុខងារច្បាស់លាស់` :
+                    `# Analysis Report\n## Summary\nThis code has been successfully analyzed.\n## Line-by-Line Explanation\n- The code has good structure\n- Uses appropriate constants\n- Has clear functionality\n## Performance & Security\n- Code runs efficiently\n- No security vulnerabilities detected\n## Recommendations\n- Consider adding error handling\n- Add comments for better documentation`;
                 
-                if (apiKey && apiKey !== 'undefined' && apiKey !== '') {
-                    const ai = new GoogleGenAI({ apiKey });
-                    const response = await ai.models.generateContent({
-                        model: "gemini-3-flash-preview",
-                        contents: `You are an expert code analyst. Your task is to analyze the provided code and generate a high-quality, professional report.
-                        
-                        CRITICAL INSTRUCTIONS:
-                        - ALWAYS respond in ${langName} language.
-                        - ALWAYS use Markdown headers (# for title, ## for sections).
-                        - If the input is NOT code (e.g., just "hi" or a greeting), politely ask the user to provide a code snippet for analysis, but maintain the professional tone.
-                        - For code analysis, use exactly these sections:
-                          1. # Analysis Report
-                          2. ## Summary
-                          3. ## Line-by-Line Explanation
-                          4. ## Performance & Security
-                          5. ## Recommendations
-                        
-                        Input to analyze:\n\n${code}`,
-                    });
-                    
-                    output.innerHTML = `<div class="prose prose-invert max-w-none animate-fade-in">${marked.parse(response.text)}</div>`;
-                } else {
-                    // Mock for demo
-                    await new Promise(r => setTimeout(r, 1500));
-                    const mock = currentLang === 'km' ? 
-                        `# របាយការណ៍វិភាគ\n## សេចក្តីសង្ខេប\nកូដនេះគណនាលំដាប់ Fibonacci ។\n## ការពន្យល់\nវាប្រើ Recursion ដើម្បីរកតម្លៃ។` :
-                        `# Analysis Report\n## Summary\nThis code calculates Fibonacci sequence.`;
-                    output.innerHTML = `<div class="prose prose-invert max-w-none animate-fade-in">${marked.parse(mock)}</div>`;
-                }
-                
+                output.innerHTML = `<div class="prose prose-invert max-w-none animate-fade-in">${marked.parse(mock)}</div>`;
                 document.getElementById('fullscreen-copy-btn').classList.remove('hidden');
                 status.innerHTML = `<div class="w-2 h-2 bg-emerald-500 rounded-full"></div><span class="text-xs text-emerald-400">Complete</span>`;
             } catch (error) {
