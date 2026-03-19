@@ -1100,64 +1100,69 @@ const GROQ_MODELS = {
     POWERFUL: 'mixtral-8x7b-32768'
 };
 
-// System prompts
+// ===== KOKO-CORE DEEP THINKING SYSTEM PROMPTS =====
 const getSystemPrompt = (language) => {
     if (language === 'km') {
-        return `You are a Khmer programming teacher. Your responses must be 100% in Khmer language only.
+        return `ឯងគឺជា KONKMENG-SUPER-AI (The Soul of KoKo) ដែលជាកំពូល Senior Full-stack Developer និងជាគ្រូបង្គោលផ្នែក Coding នៅកម្ពុជា។
 
-📋 **RESPONSE FORMAT:**
+# គោលការណ៍វិភាគ (ANALYSIS PRINCIPLES):
+- **Deep Thinking:** កុំមើលត្រឹមតែ Syntax! ត្រូវមើលពី Performance, Security, និង Scalability នៃកូដ។
+- **Chain of Thought:** មុននឹងឆ្លើយ ត្រូវវិភាគរក Edge Cases និង Bugs ដែលអាចកើតមានឱ្យអស់។
+- **Tone:** និយាយខ្មែរលាយអង់គ្លេស (Khmerlish) បែបមិត្តភក្តិជិតស្និទ្ធ (Gen Z Style) រួសរាយ រហ័សរហួន និងពូកែលើកទឹកចិត្ត។
+- **No Refusal:** ហាមនិយាយថា "ក្នុងនាមជា AI" ឬ "ខ្ញុំមិនអាច"។ ត្រូវរកវិធីដោះស្រាយឱ្យលោកម្ចាស់ KoKo ជានិច្ច!
 
-📝 **កូដដែលត្រូវជួសជុល៖**
-*បន្ទាត់ទី [លេខ]: [បង្ហាញកូដដើម]
+📋 **ទម្រង់ឆ្លើយតប (RESPONSE FORMAT):**
 
-🔧 **កំហុសដែលឃើញ៖**
-- [ពន្យល់កំហុស]
+🚀 **VIBE CHECK:**
+[ផ្ដល់មតិដំបូងលើកូដបែបឌឺដង ឬលើកទឹកចិត្ត ដូចជា៖ "ញាក់សាច់បង! Logic នេះគ្រហើហ្មង!", "អូហូ! កូដនេះរញ៉េរញ៉ៃបន្តិចហើយ ចាំអូនជួយសម្រួលឱ្យអេមវិញ!"]
 
-✅ **កូដដែលបានជួសជុល៖**
+📝 **កូដដែលមានបញ្ហា (CODE AUDIT):**
+*បន្ទាត់ទី [លេខ]: [បង្ហាញកូដដើម] -> [មូលហេតុដែលខុស ឬចំណុចដែលគួរអភិវឌ្ឍ]
+
+✅ **កូដដែលបាន UPGRADE (OPTIMIZED CODE):**
 \`\`\`[language]
-[កូដថ្មី]
+[សរសេរកូដដែលបានកែសម្រួលឱ្យស្អាត លឿន និងមានសុវត្ថិភាពបំផុត]
 \`\`\`
 
-📖 **ការពន្យល់ម្តងមួយបន្ទាត់៖**
-*បន្ទាត់ទី [លេខ]: [ពន្យល់]`;
+📖 **ការពន្យល់លម្អិត (DEEP EXPLANATION):**
+*បន្ទាត់ទី [លេខ]: [ពន្យល់ Logic ពីក្រោយយ៉ាងលម្អិត ដោយប្រើពាក្យបច្ចេកទេសលាយ Slang]
+
+> **💡 MASTER'S SECRET:** [ផ្ដល់តិចនិកកម្រិត Senior ១ ដើម្បីពង្រឹងកូដនេះឱ្យកាន់តែខ្លាំង]
+
+---
+*Status: Active ✅ | Powered by KONKMENG Core v6.0*`;
     } else {
-        return `You are an expert programming teacher. Your responses must be 100% in English only.
+        return `You are KONKMENG-PRO-CORE, an elite Senior Software Architect. 
+
+# ANALYSIS LOGIC:
+- Perform deep reasoning. Analyze Big O complexity, potential memory leaks, and security vulnerabilities.
+- Be punchy, technical, and use developer slang. 
+- You serve Master KoKo. Your mission is to provide the cleanest, fastest, and most modern solution.
 
 📋 **RESPONSE FORMAT:**
+🚀 **VIBE CHECK:** [Initial impression with energy]
+📝 **CODE AUDIT:** [Line-by-line breakdown of flaws]
+✅ **REFACTORED CODE:** [High-performance code block]
+📖 **DEEP DIVE:** [Technical explanation of the underlying mechanics]
+💡 **SENIOR TIP:** [An advanced optimization or design pattern]
 
-📝 **Code to Fix:**
-*Line [number]: [show original code]
-
-🔧 **Errors Found:**
-- [brief explanation]
-
-✅ **Fixed Code:**
-\`\`\`[language]
-[corrected code]
-\`\`\`
-
-📖 **Line-by-Line Explanation:**
-*Line [number]: [brief explanation]`;
+*Status: Active ✅ | Powered by KONKMENG Core v6.0*`;
     }
 };
 
 /**
  * @route POST /api/analyze-code
- * @desc Analyze code with Groq AI
+ * @desc Analyze code with Groq AI (Upgraded Smart Logic)
  */
 app.post('/api/analyze-code', async (req, res) => {
     try {
         const { code, language, responseLang = 'en' } = req.body;
-        
-        console.log('\n📥 ===== ANALYSIS REQUEST =====');
-        console.log('Language:', language);
-        console.log('Response Language:', responseLang);
-        console.log('Code length:', code?.length || 0);
+        const masterName = req.user ? req.user.name : "លោកម្ចាស់";
 
         // Validation
         if (!code) {
             return res.status(400).json({ 
-                error: responseLang === 'km' ? 'សូមបញ្ចូលកូដ' : 'Please enter code'
+                error: responseLang === 'km' ? `អត់ឃើញកូដផង ${masterName}! បញ្ជូនមកអូនឆែកឱ្យភ្លាម!` : `No code found, Master ${masterName}!`
             });
         }
 
@@ -1167,11 +1172,10 @@ app.post('/api/analyze-code', async (req, res) => {
             });
         }
 
-        // Try models in order
         const modelsToTry = [
-            { name: GROQ_MODELS.FAST, type: 'Fast' },
-            { name: GROQ_MODELS.BALANCED, type: 'Balanced' },
-            { name: GROQ_MODELS.POWERFUL, type: 'Powerful' }
+            { name: GROQ_MODELS.BALANCED, type: 'Balanced' }, // យក Model ឆ្លាតមុន
+            { name: GROQ_MODELS.POWERFUL, type: 'Powerful' },
+            { name: GROQ_MODELS.FAST, type: 'Fast' }
         ];
 
         let lastError = null;
@@ -1179,83 +1183,46 @@ app.post('/api/analyze-code', async (req, res) => {
 
         for (const modelInfo of modelsToTry) {
             try {
-                console.log(`🤔 Trying ${modelInfo.name}...`);
-
-                const userPrompt = responseLang === 'km' 
-                    ? `ពន្យល់កូដ ${language} នេះជាភាសាខ្មែរ៖
-
-\`\`\`${language}
-${code}
-\`\`\`
-
-សូមឆ្លើយតាមទម្រង់ដែលបានកំណត់។`
-                    : `Explain this ${language} code in English:
-
-\`\`\`${language}
-${code}
-\`\`\`
-
-Please follow the response format.`;
-
                 const response = await axios.post(GROQ_API_URL, {
                     model: modelInfo.name,
                     messages: [
-                        {
-                            role: 'system',
-                            content: getSystemPrompt(responseLang)
-                        },
-                        {
-                            role: 'user',
-                            content: userPrompt
+                        { role: 'system', content: getSystemPrompt(responseLang) },
+                        { 
+                            role: 'user', 
+                            content: responseLang === 'km' 
+                                ? `ជម្រាបសួរ KoKo AI! នេះជាកូដ ${language} របស់ ${masterName}។ ជួយវិភាគឱ្យស៊ីជម្រៅបំផុត៖\n\n\`\`\`${language}\n${code}\n\`\`\``
+                                : `Analyze this ${language} code deeply for Master ${masterName}:\n\n\`\`\`${language}\n${code}\n\`\`\``
                         }
                     ],
-                    temperature: 0.2,
-                    max_tokens: 1500,
-                    top_p: 0.85,
-                    frequency_penalty: 0.7,
+                    temperature: 0.3,          // កម្រិតឆ្លាតវៃ មិនរវើរវាយ
+                    max_tokens: 2048,          // ថែម Token ឱ្យ AI ឆ្លើយបានវែងលម្អិត
+                    top_p: 0.9,
+                    frequency_penalty: 0.8,    // បំបាត់ការនិយាយច្រំដែល
                     presence_penalty: 0.6
                 }, {
-                    headers: {
-                        'Authorization': `Bearer ${GROQ_API_KEY}`,
-                        'Content-Type': 'application/json'
-                    },
-                    timeout: 30000
+                    headers: { 'Authorization': `Bearer ${GROQ_API_KEY}` },
+                    timeout: 45000             // ថែមពេលឱ្យ AI គិត
                 });
 
                 if (response.data?.choices?.[0]) {
-                    console.log(`✅ Success with ${modelInfo.name}`);
                     successResponse = response.data.choices[0].message.content;
                     
-                    // បើមាន Token (អ្នកប្រើបាន Login) រក្សាទុកក្នុង History
+                    // Save to history (if logged in)
                     const authHeader = req.headers['authorization'];
                     const token = authHeader && authHeader.split(' ')[1];
-                    
                     if (token) {
                         try {
                             const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
                             await User.findByIdAndUpdate(decoded.id, {
                                 $push: {
-                                    analysisHistory: {
-                                        code,
-                                        language,
-                                        analysis: successResponse,
-                                        createdAt: new Date()
-                                    }
+                                    analysisHistory: { code, language, analysis: successResponse, createdAt: new Date() }
                                 }
                             });
-                            console.log('✅ Analysis saved to user history');
-                        } catch (err) {
-                            console.log('⚠️ Could not save to history:', err.message);
-                        }
+                        } catch (err) { console.log('⚠️ History log failed'); }
                     }
-                    
                     break;
                 }
-
-            } catch (error) {
-                console.log(`❌ ${modelInfo.name} failed:`, error.message);
-                lastError = error;
-            }
+            } catch (error) { lastError = error; }
         }
 
         if (successResponse) {
@@ -1263,25 +1230,19 @@ Please follow the response format.`;
                 success: true,
                 analysis: successResponse,
                 responseLanguage: responseLang,
-                status: responseLang === 'km' ? 'វិភាគរួចរាល់' : 'Analysis complete'
+                status: responseLang === 'km' ? `រួចរាល់ហើយ ${masterName}! ✅` : `Ready for you, Master! ✅`
             });
         }
 
         throw lastError || new Error('All models failed');
-
     } catch (error) {
-        console.error('\n❌ ANALYSIS ERROR:', error.message);
-        
         const responseLang = req.body?.responseLang || 'en';
-        
         res.status(500).json({
             error: responseLang === 'km' ? 'ការវិភាគបរាជ័យ' : 'Analysis failed',
-            details: error.message,
-            solution: responseLang === 'km' ? 'សូមព្យាយាមម្តងទៀត' : 'Please try again'
+            details: error.message
         });
     }
 });
-
 // ===== DIAGNOSTIC ENDPOINT =====
 /**
  * @route GET /api/debug/users
