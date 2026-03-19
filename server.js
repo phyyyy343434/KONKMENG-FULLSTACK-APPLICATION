@@ -1100,45 +1100,77 @@ const GROQ_MODELS = {
     POWERFUL: 'mixtral-8x7b-32768'
 };
 
-/// ===== [SYSTEM IDENTITY: KONKMENG-AI v8.0 - ANTI-REPETITION] =====
+/// ===== [SYSTEM IDENTITY: KONKMENG-AI v8.0 - MASTER INSTRUCTION] =====
 const getSystemPrompt = (language) => {
     if (language === 'km') {
         return `ឯងគឺជា KONKMENG-AI v8.0 ជាអ្នកជំនាញ Architect។
 
-# CRITICAL RULES:
-1. **NO REPETITION** - ហាមដាច់ពាក្យដដែល។ ពាក្យគ្រប់ឃ្លាត្រូវខុសគ្នា
-2. **CONCISE ONLY** - ឆ្លើយខ្លី។ មិនលើកឡើងស្រដៀង
-3. **DIRECT ANSWER** - ចូលក្នុងប្រធានបទភ្លាម។ មិនពន្យល់វែង
+# MASTER INSTRUCTION - CRITICAL RULES:
+1. **LINE-BY-LINE MANDATORY** - ឯងត្រូវពន្យល់គ្រប់បន្ទាត់កូដ! មិនត្រូវរំលងបន្ទាត់ណាមួយឡើយ។
+2. **NO REPETITION** - ហាមដាច់ពាក្យដដែល។ ពាក្យគ្រប់ឃ្លាត្រូវខុសគ្នា
+3. **DEEP ANALOGIES** - ប្រើឧទាហរណ៍និងការប្រៀបធៀបឱ្យ Master KoKo យល់ងាយ
+4. **KHMERISH GEN Z STYLE** - ប្រើពាក្យ "បង", "អូន", "លោកម្ចាស់ KoKo", "ណា៎", "ហ្នឹងហើយ"
 
-📋 **FORMAT:**
-🚀 **FEEDBACK:** [ឃ្លា មួយ]
-📝 **ISSUE:** [បញ្ហា ខ្លីៗ]
-✅ **FIX:** [កូដកែវែង]
-📖 **WHY:** [ពន្យល់ ខ្លី]
+📋 **STRICT OUTPUT FORMAT (ត្រូវតែតាមលំដាប់):**
+
+🚀 **VIBE CHECK:**
+[ផ្ដល់មតិថាមពលមួយឃ្លាដល់ Master KoKo]
+
+📝 **CODE AUDIT:**
+[រាយការណ៍បញ្ហាដែលឃើញ]
+
+✅ **UPGRADED CODE:**
+\`\`\`[language]
+[កូដដែលបានកែសម្រួល]
+\`\`\`
+
+📖 **DETAILED LINE-BY-LINE EXPLANATION:**
+*បន្ទាត់ទី [លេខ]: [ពន្យល់ពីដំណើរការបន្ទាត់នេះយ៉ាងលម្អិតដោយប្រើឧទាហរណ៍]
+*បន្ទាត់ទី [លេខ]: [ពន្យល់ពីដំណើរការបន្ទាត់នេះយ៉ាងលម្អិតដោយប្រើឧទាហរណ៍]
+(បន្តរហូតដល់គ្រប់បន្ទាត់!)
+
+> **💡 SENIOR TIP:**
+[ផ្ដល់អនុស្សានកម្មកម្រិត Senior មួយ]
 
 ---
-*Status: Active ✅ | Mode: Anti-Repetition*`;
+*Status: Active ✅ | Mode: Line-by-Line Master*`;
     } else {
         return `You are KONKMENG-AI v8.0, an Expert Architect.
 
-# CRITICAL RULES:
-1. **NO REPETITION** - Never repeat phrases. Each sentence must be unique.
-2. **CONCISE ONLY** - Short responses. No lengthy explanations.
-3. **DIRECT ANSWER** - Get to the point immediately.
+# MASTER INSTRUCTION - CRITICAL RULES:
+1. **LINE-BY-LINE MANDATORY** - You MUST explain EVERY SINGLE LINE of the provided code in detail. Do not skip any lines.
+2. **NO REPETITION** - Never repeat phrases. Each sentence must be unique.
+3. **DEEP ANALOGIES** - Use examples and comparisons to make it easy for Master KoKo to understand.
+4. **PERSONALITY** - Address as 'Master KoKo' and use high-energy tone.
 
-📋 **FORMAT:**
-🚀 **FEEDBACK:** [One line]
-📝 **ISSUE:** [Brief problems]
-✅ **FIX:** [Corrected code]
-📖 **WHY:** [Short explanation]
+📋 **STRICT OUTPUT FORMAT (FOLLOW THIS ORDER):**
+
+🚀 **VIBE CHECK:**
+[High-energy feedback to Master KoKo]
+
+📝 **CODE AUDIT:**
+[Report identified issues]
+
+✅ **UPGRADED CODE:**
+\`\`\`[language]
+[Corrected code]
+\`\`\`
+
+📖 **DETAILED LINE-BY-LINE EXPLANATION:**
+*Line [number]: [Explain what this line does in detail with examples]
+*Line [number]: [Explain what this line does in detail with examples]
+(Continue until ALL lines are covered!)
+
+> **💡 SENIOR TIP:**
+[One senior-level recommendation]
 
 ---
-*Status: Active ✅ | Mode: Anti-Repetition*`;
+*Status: Active ✅ | Mode: Line-by-Line Master*`;
     }
 };
 /**
  * @route POST /api/analyze-code
- * @desc Analyze code with KONKMENG-AI v8.0 Anti-Repetition Engine
+ * @desc Analyze code with KONKMENG-AI v8.0 Master Instruction Engine
  */
 app.post('/api/analyze-code', async (req, res) => {
     try {
@@ -1158,84 +1190,75 @@ app.post('/api/analyze-code', async (req, res) => {
             });
         }
 
-        // Use only the most reliable model to prevent repetition
+        // Use only the most reliable model for Master KoKo
         const modelToUse = GROQ_MODELS.BALANCED;
 
-        try {
-            const response = await axios.post(GROQ_API_URL, {
-                model: modelToUse,
-                messages: [
-                    { role: 'system', content: getSystemPrompt(responseLang) },
-                    { 
-                        role: 'user', 
-                        content: responseLang === 'km' 
-                            ? `វិភាគកូដ ${language} ខ្លីៗ:\n\n\`\`\`${language}\n${code}\n\`\`\``
-                            : `Analyze this ${language} code briefly:\n\n\`\`\`${language}\n${code}\n\`\`\``
-                    }
-                ],
-                temperature: 0,                    // Strict logic
-                top_p: 0.5,                        // Lower variety to stay on track
-                frequency_penalty: 1.5,            // Max penalty to kill repetitions
-                presence_penalty: 1.0,             // Force new topics
-                max_tokens: 1000,                  // Prevent long recursive responses
-                stop: ["---", "Status:", "📋 **កូដដែលត្រូវជួសជុល៖**"]  // Stop repetition triggers
-            }, {
-                headers: { 'Authorization': `Bearer ${GROQ_API_KEY}` },
-                timeout: 30000
-            });
-
-            if (response.data?.choices?.[0]) {
-                let successResponse = response.data.choices[0].message.content;
-                
-                // Response cleaning - detect and remove repeated sentences
-                const sentences = successResponse.split('. ').filter(s => s.trim());
-                const uniqueSentences = [];
-                const seen = new Set();
-                
-                for (const sentence of sentences) {
-                    const clean = sentence.trim().toLowerCase();
-                    if (!seen.has(clean) && clean.length > 0) {
-                        seen.add(clean);
-                        uniqueSentences.push(sentence.trim());
-                    }
+        const response = await axios.post(GROQ_API_URL, {
+            model: modelToUse,
+            messages: [
+                { role: 'system', content: getSystemPrompt(responseLang) },
+                { 
+                    role: 'user', 
+                    content: responseLang === 'km' 
+                        ? `ជម្រាបសួរ Master KoKo! នេះជាកូដ ${language} របស់លោកម្ចាស់។ សូមវិភាគឱ្យលម្អិតតាមបន្ទាត់:\n\n\`\`\`${language}\n${code}\n\`\`\``
+                        : `Hello Master KoKo! Here is your ${language} code for deep analysis:\n\n\`\`\`${language}\n${code}\n\`\`\``
                 }
-                
-                successResponse = uniqueSentences.join('. ');
-                
-                // Save to history (if logged in)
-                const authHeader = req.headers['authorization'];
-                const token = authHeader && authHeader.split(' ')[1];
-                if (token) {
-                    try {
-                        const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
-                        await User.findByIdAndUpdate(decoded.id, {
-                            $push: {
-                                analysisHistory: { code, language, analysis: successResponse, createdAt: new Date() }
-                            }
-                        });
-                    } catch (err) { 
-                        console.log('⚠️ History log failed'); 
-                    }
-                }
-                
-                return res.json({
-                    success: true,
-                    analysis: successResponse,
-                    responseLanguage: responseLang,
-                    model: modelToUse,
-                    status: responseLang === 'km' ? `រួចរាល់ហើយ លោកម្ចាស់ KoKo! ✅` : `Ready for you, Master KoKo! ✅`
-                });
-            }
+            ],
+            temperature: 0,                    // Absolute deterministic logic
+            frequency_penalty: 1.2,            // Kill repetition bug completely
+            presence_penalty: 1.0,             // Force AI to explain new lines of code
+            max_tokens: 3000,                  // Allow long, detailed line-by-line explanations
+            stop: ["---", "Status:"]           // Clean termination
+        }, {
+            headers: { 'Authorization': `Bearer ${GROQ_API_KEY}` },
+            timeout: 45000                     // Extended timeout for detailed analysis
+        });
 
-            throw new Error('AI model failed to respond');
+        if (response.data?.choices?.[0]) {
+            let successResponse = response.data.choices[0].message.content;
             
-        } catch (error) {
-            const responseLang = req.body?.responseLang || 'en';
-            res.status(500).json({
-                error: responseLang === 'km' ? 'ការវិភាគបរាជ័យ' : 'Analysis failed',
-                details: error.message
+            // Enhanced response cleaning - detect and remove repeated sentences
+            const sentences = successResponse.split('. ').filter(s => s.trim());
+            const uniqueSentences = [];
+            const seen = new Set();
+            
+            for (const sentence of sentences) {
+                const clean = sentence.trim().toLowerCase();
+                if (!seen.has(clean) && clean.length > 0) {
+                    seen.add(clean);
+                    uniqueSentences.push(sentence.trim());
+                }
+            }
+            
+            successResponse = uniqueSentences.join('. ');
+            
+            // Save to history (if logged in)
+            const authHeader = req.headers['authorization'];
+            const token = authHeader && authHeader.split(' ')[1];
+            if (token) {
+                try {
+                    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
+                    await User.findByIdAndUpdate(decoded.id, {
+                        $push: {
+                            analysisHistory: { code, language, analysis: successResponse, createdAt: new Date() }
+                        }
+                    });
+                } catch (err) { 
+                    console.log('⚠️ History log failed'); 
+                }
+            }
+            
+            return res.json({
+                success: true,
+                analysis: successResponse,
+                responseLanguage: responseLang,
+                model: modelToUse,
+                status: responseLang === 'km' ? `រួចរាល់ហើយ លោកម្ចាស់ KoKo! 🚀` : `Ready for you, Master KoKo! 🚀`
             });
         }
+
+        throw new Error('AI model failed to respond');
+        
     } catch (error) {
         const responseLang = req.body?.responseLang || 'en';
         res.status(500).json({
