@@ -1,0 +1,1717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <title>KONKMENG - Master Coding with AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Fira+Code:wght@400;500&family=Noto+Sans+Khmer:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', 'Noto Sans Khmer', sans-serif;
+            scroll-behavior: smooth;
+        }
+        :lang(km), [lang="km"], .font-khmer {
+            font-family: 'Noto Sans Khmer', 'Inter', sans-serif;
+        }
+        .font-mono { font-family: 'Fira Code', monospace; }
+        .bg-grid {
+            background-image: radial-gradient(circle, #4f46e5 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        .page-section { display: none; }
+        .page-section.active { display: block; }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: #f1f5f9; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* Prose styling for AI response */
+        .prose h1 { font-size: 1.5rem; font-weight: 800; color: #1e293b; margin: 1.5rem 0 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid #e2e8f0; }
+        .prose h2 { font-size: 1.25rem; font-weight: 700; color: #334155; margin: 1.25rem 0 0.75rem; }
+        .prose h3 { font-size: 1.1rem; font-weight: 600; color: #334155; margin: 1rem 0 0.5rem; }
+        .prose p { color: #64748b; line-height: 1.7; margin-bottom: 1rem; }
+        .prose ul, .prose ol { margin-left: 1.5rem; margin-bottom: 1rem; color: #64748b; }
+        .prose li { margin-bottom: 0.5rem; }
+        .prose code { background: #f1f5f9; color: #4f46e5; padding: 0.125rem 0.375rem; border-radius: 0.25rem; font-family: 'Fira Code', monospace; font-size: 0.875rem; }
+        .prose pre { background: #0f172a; color: #e2e8f0; padding: 1rem; border-radius: 0.75rem; overflow-x: auto; margin: 1rem 0; font-family: 'Fira Code', monospace; font-size: 0.8rem; }
+        .prose blockquote { border-left: 3px solid #4f46e5; padding-left: 1rem; color: #64748b; font-style: italic; margin: 1rem 0; }
+        .prose strong { font-weight: 600; color: #1e293b; }
+
+        /* Animations */
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        .animate-fade-in { animation: fadeIn 0.5s ease-out forwards; }
+        .animate-spin { animation: spin 1s linear infinite; }
+        .animate-pulse { animation: pulse 2s ease-in-out infinite; }
+        .stagger-1 { animation-delay: 0.1s; opacity: 0; }
+        .stagger-2 { animation-delay: 0.2s; opacity: 0; }
+        .stagger-3 { animation-delay: 0.3s; opacity: 0; }
+
+        /* Modal backdrop */
+        .modal-backdrop { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-900">
+    <!-- Navbar -->
+    <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="h-16 flex items-center justify-between">
+                <!-- Logo & Nav Links -->
+                <div class="flex items-center gap-8">
+                    <div class="flex items-center gap-2.5 font-bold text-xl cursor-pointer" onclick="navigateTo('home')">
+                        <div class="w-9 h-9 bg-gradient-to-br from-indigo-600 to-purple-600 text-white rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200">
+                            <i data-lucide="code-2" class="w-5 h-5"></i>
+                        </div>
+                        <span class="tracking-tight hidden sm:inline">KONKMENG</span>
+                    </div>
+                    <div class="hidden md:flex items-center gap-1" id="nav-links"></div>
+                </div>
+                
+                <!-- Right Side -->
+                <div class="flex items-center gap-3">
+                    <!-- Language Selector -->
+                    <div class="flex items-center gap-1.5 bg-slate-100 px-2.5 py-1.5 rounded-lg border border-slate-200">
+                        <i data-lucide="globe" class="w-4 h-4 text-indigo-600"></i>
+                        <select id="lang-select" onchange="changeLanguage(this.value)" class="bg-transparent text-xs font-medium outline-none cursor-pointer pr-1">
+                            <option value="en">EN</option>
+                            <option value="km">ខ្មែរ</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Auth Buttons -->
+                    <div id="auth-nav" class="hidden sm:flex items-center gap-2"></div>
+                    
+                    <!-- Mobile Menu Button -->
+                    <button class="md:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors" onclick="toggleMobileMenu()">
+                        <i data-lucide="menu" id="mobile-menu-icon" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100">
+            <div class="max-w-7xl mx-auto px-4 py-4 space-y-2" id="mobile-nav-links"></div>
+            <div class="max-w-7xl mx-auto px-4 pb-4" id="mobile-auth-nav"></div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content">
+        <!-- ==================== HOME PAGE ==================== -->
+        <section id="home" class="page-section active">
+            <!-- Hero -->
+            <div class="relative py-20 md:py-32 overflow-hidden bg-white">
+                <div class="absolute inset-0 overflow-hidden pointer-events-none">
+                    <div class="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-indigo-100/50 rounded-full blur-[100px]"></div>
+                    <div class="absolute -bottom-[10%] -right-[10%] w-[60%] h-[60%] bg-purple-100/40 rounded-full blur-[120px]"></div>
+                    <div class="absolute inset-0 bg-grid opacity-[0.12]"></div>
+                    <div class="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white"></div>
+                </div>
+                
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                    <div class="max-w-4xl mx-auto text-center">
+                        <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-white/60 backdrop-blur-sm border border-indigo-100 rounded-full text-indigo-600 text-sm font-semibold mb-8 shadow-sm animate-fade-in">
+                            <i data-lucide="zap" class="w-4 h-4"></i>
+                            <span data-t="hero.badge">Powered by Groq • Lightning Fast</span>
+                        </div>
+                        
+                        <h1 class="text-4xl sm:text-5xl md:text-7xl font-extrabold text-slate-900 leading-[1.1] mb-6 tracking-tight animate-fade-in stagger-1">
+                            <span data-t="hero.title">Master Coding with</span> <br class="hidden sm:block"/>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500">KONKMENG</span>
+                        </h1>
+                        
+                        <p class="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in stagger-2" data-t="hero.subtitle">
+                            AI-powered code analysis that explains your code line by line. Support for 15+ languages with blazing fast responses.
+                        </p>
+                        
+                        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 animate-fade-in stagger-3">
+                            <button onclick="scrollToTool()" class="w-full sm:w-auto px-8 py-4 bg-indigo-600 text-white font-semibold rounded-xl shadow-xl shadow-indigo-200 hover:bg-indigo-700 hover:shadow-2xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2">
+                                <i data-lucide="play" class="w-5 h-5"></i>
+                                <span data-t="hero.cta_start">Try it Free</span>
+                            </button>
+                            <button onclick="window.open('https://github.com', '_blank')" class="w-full sm:w-auto px-8 py-4 bg-white border border-slate-200 text-slate-700 font-semibold rounded-xl shadow-lg hover:border-slate-300 hover:text-indigo-600 transition-all flex items-center justify-center gap-2">
+                                <i data-lucide="github" class="w-5 h-5"></i>
+                                <span>View on GitHub</span>
+                            </button>
+                        </div>
+                        
+                        <div class="grid grid-cols-3 gap-8 max-w-2xl mx-auto animate-fade-in stagger-3">
+                            <div class="text-center">
+                                <div class="text-2xl sm:text-4xl font-bold text-slate-900 mb-1">2M+</div>
+                                <div class="text-xs sm:text-sm text-slate-500 font-medium" data-t="hero.stats_users">Developers</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl sm:text-4xl font-bold text-slate-900 mb-1">15+</div>
+                                <div class="text-xs sm:text-sm text-slate-500 font-medium" data-t="hero.stats_languages">Languages</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl sm:text-4xl font-bold text-slate-900 mb-1">100M+</div>
+                                <div class="text-xs sm:text-sm text-slate-500 font-medium" data-t="hero.stats_analyzed">Analyses</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Features -->
+            <section class="py-16 md:py-24 bg-slate-50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="p-6 md:p-8 bg-white rounded-2xl border border-slate-100 hover:border-indigo-200 hover:shadow-xl hover:-translate-y-1 transition-all">
+                            <div class="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center mb-5">
+                                <i data-lucide="zap" class="w-6 h-6 text-indigo-600"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-2" data-t="features.f1_title">Lightning Fast</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed" data-t="features.f1_desc">Powered by Groq's LPU, get responses in under 500ms.</p>
+                        </div>
+                        <div class="p-6 md:p-8 bg-white rounded-2xl border border-slate-100 hover:border-indigo-200 hover:shadow-xl hover:-translate-y-1 transition-all">
+                            <div class="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center mb-5">
+                                <i data-lucide="shield-check" class="w-6 h-6 text-indigo-600"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-2" data-t="features.f2_title">Secure & Private</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed" data-t="features.f2_desc">Your code is never stored. Analyzed securely and forgotten.</p>
+                        </div>
+                        <div class="p-6 md:p-8 bg-white rounded-2xl border border-slate-100 hover:border-indigo-200 hover:shadow-xl hover:-translate-y-1 transition-all">
+                            <div class="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center mb-5">
+                                <i data-lucide="languages" class="w-6 h-6 text-indigo-600"></i>
+                            </div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-2" data-t="features.f3_title">15+ Languages</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed" data-t="features.f3_desc">Support for JavaScript, Python, Java, C++, and more.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Code Editor Tool -->
+            <section id="tool" class="py-16 md:py-24 bg-white">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <div class="text-center mb-12">
+                        <h2 class="text-2xl md:text-4xl font-bold text-slate-900 mb-4" data-t="tool.title">Try it Now</h2>
+                        <p class="text-slate-600 max-w-xl mx-auto" data-t="tool.subtitle">Paste your code below and let AI explain it line by line</p>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+                        <!-- Editor Panel -->
+                        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                            <div class="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="file-code" class="w-4 h-4 text-indigo-600"></i>
+                                    <span class="text-sm font-medium text-slate-700" data-t="tool.editor_title">Code Editor</span>
+                                </div>
+                                <div class="flex items-center gap-2">
+                                    <select id="language" class="text-xs bg-white border border-slate-200 rounded-lg px-2 py-1.5 outline-none focus:border-indigo-300">
+                                        <option value="JavaScript">JavaScript</option>
+                                        <option value="Python">Python</option>
+                                        <option value="TypeScript">TypeScript</option>
+                                        <option value="Java">Java</option>
+                                        <option value="C++">C++</option>
+                                        <option value="C#">C#</option>
+                                        <option value="PHP">PHP</option>
+                                        <option value="Ruby">Ruby</option>
+                                        <option value="Go">Go</option>
+                                        <option value="Rust">Rust</option>
+                                        <option value="Swift">Swift</option>
+                                        <option value="Kotlin">Kotlin</option>
+                                    </select>
+                                    <button onclick="loadExample()" class="text-xs px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors flex items-center gap-1">
+                                        <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
+                                        <span data-t="tool.example">Example</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <textarea id="code" class="w-full h-72 md:h-96 p-4 font-mono text-sm bg-slate-900 text-slate-100 resize-none outline-none" placeholder="// Paste your code here..."></textarea>
+                            <div class="flex items-center gap-2 px-4 py-3 bg-slate-50 border-t border-slate-200">
+                                <button id="analyzeBtn" onclick="analyzeCode()" class="flex-1 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl transition-colors flex items-center justify-center gap-2">
+                                    <i data-lucide="sparkles" class="w-4 h-4" id="analyze-icon"></i>
+                                    <span data-t="tool.analyze">Analyze Code</span>
+                                </button>
+                                <button onclick="clearCode()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl transition-colors">
+                                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Output Panel -->
+                        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm flex flex-col">
+                            <div class="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
+                                <div class="flex items-center gap-2">
+                                    <i data-lucide="bot" class="w-4 h-4 text-indigo-600"></i>
+                                    <span class="text-sm font-medium text-slate-700" data-t="tool.response_title">AI Response</span>
+                                </div>
+                                <div id="status" class="flex items-center gap-1.5">
+                                    <div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+                                    <span class="text-xs text-slate-500" data-t="tool.status_ready">Ready</span>
+                                </div>
+                            </div>
+                            <div id="output" class="flex-1 h-72 md:h-96 overflow-y-auto p-4">
+                                <div id="placeholder" class="h-full flex flex-col items-center justify-center text-slate-400">
+                                    <i data-lucide="message-square" class="w-12 h-12 mb-4 opacity-50"></i>
+                                    <p class="text-sm" data-t="tool.placeholder">Your analysis will appear here</p>
+                                    <p class="text-xs mt-1 opacity-70" data-t="tool.placeholder_hint">Paste code and click Analyze</p>
+                                </div>
+                            </div>
+                            <div class="px-4 py-2 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
+                                <span class="flex items-center gap-1">
+                                    <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
+                                    Powered by Groq
+                                </span>
+                                <span id="tokenInfo"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Testimonials -->
+            <section class="py-16 md:py-24 bg-slate-50">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-900 text-center mb-12" data-t="testimonials.title">Loved by Developers</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                        <div class="p-6 bg-white rounded-2xl border border-slate-100">
+                            <p class="text-slate-600 italic mb-4">"KONKMENG has dramatically improved my experience of understanding complex codebases."</p>
+                            <div class="font-semibold text-slate-900">PHE SOPHY</div>
+                            <div class="text-sm text-slate-500">Founder, KONKMENG AI</div>
+                        </div>
+                        <div class="p-6 bg-white rounded-2xl border border-slate-100">
+                            <p class="text-slate-600 italic mb-4">"The AI explanations are incredibly accurate and helpful for learning."</p>
+                            <div class="font-semibold text-slate-900">Developer</div>
+                            <div class="text-sm text-slate-500">Senior Engineer</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </section>
+
+        <!-- ==================== PRODUCT PAGE ==================== -->
+        <section id="product" class="page-section">
+            <div class="py-16 md:py-24">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4" data-t="product.title">Our Products</h1>
+                    <p class="text-slate-600 mb-12" data-t="product.subtitle">Choose the perfect solution for your needs</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl">
+                        <div class="p-8 bg-white rounded-2xl border border-slate-200 text-center hover:shadow-xl transition-shadow">
+                            <i data-lucide="cloud" class="w-12 h-12 text-indigo-600 mx-auto mb-4"></i>
+                            <h3 class="text-xl font-bold text-slate-900 mb-2">KONKMENG Cloud</h3>
+                            <div class="text-3xl font-bold text-indigo-600 mb-4">$29<span class="text-base font-normal text-slate-500">/mo</span></div>
+                            <ul class="text-sm text-slate-600 space-y-2 mb-6 text-left">
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> 5 team members</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> 100 analyses/month</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Basic support</li>
+                            </ul>
+                            <button class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl transition-colors">Learn More</button>
+                        </div>
+                        <div class="p-8 bg-white rounded-2xl border border-slate-200 text-center hover:shadow-xl transition-shadow">
+                            <i data-lucide="server" class="w-12 h-12 text-indigo-600 mx-auto mb-4"></i>
+                            <h3 class="text-xl font-bold text-slate-900 mb-2">KONKMENG Enterprise</h3>
+                            <div class="text-3xl font-bold text-indigo-600 mb-4">$99<span class="text-base font-normal text-slate-500">/mo</span></div>
+                            <ul class="text-sm text-slate-600 space-y-2 mb-6 text-left">
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Unlimited team members</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Unlimited analyses</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Priority support</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> SLA guarantee</li>
+                            </ul>
+                            <button class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl transition-colors">Contact Sales</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PRICING PAGE ==================== -->
+        <section id="pricing" class="page-section">
+            <div class="py-16 md:py-24">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4" data-t="pricing.title">Simple Pricing</h1>
+                    <p class="text-slate-600 mb-12" data-t="pricing.subtitle">No hidden fees. Pay as you grow.</p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                        <div class="p-6 bg-white rounded-2xl border border-slate-200 text-center">
+                            <h3 class="text-lg font-bold text-slate-900 mb-2">Starter</h3>
+                            <div class="text-3xl font-bold text-slate-900 mb-1">$19<span class="text-base font-normal text-slate-500">/mo</span></div>
+                            <ul class="text-sm text-slate-600 space-y-2 my-6 text-left">
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> 1 user</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> 50 analyses/month</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Community support</li>
+                            </ul>
+                            <button class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl transition-colors">Get Started</button>
+                        </div>
+                        <div class="p-6 bg-white rounded-2xl border-2 border-indigo-500 text-center relative shadow-xl">
+                            <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 bg-indigo-600 text-white text-xs font-semibold rounded-full">Popular</div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-2">Pro</h3>
+                            <div class="text-3xl font-bold text-indigo-600 mb-1">$49<span class="text-base font-normal text-slate-500">/mo</span></div>
+                            <ul class="text-sm text-slate-600 space-y-2 my-6 text-left">
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> 5 users</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> 500 analyses/month</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Email support</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Advanced analytics</li>
+                            </ul>
+                            <button class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl transition-colors">Get Started</button>
+                        </div>
+                        <div class="p-6 bg-white rounded-2xl border border-slate-200 text-center">
+                            <h3 class="text-lg font-bold text-slate-900 mb-2">Enterprise</h3>
+                            <div class="text-3xl font-bold text-slate-900 mb-1">$199<span class="text-base font-normal text-slate-500">/mo</span></div>
+                            <ul class="text-sm text-slate-600 space-y-2 my-6 text-left">
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Unlimited users</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Unlimited analyses</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> 24/7 phone support</li>
+                                <li class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-emerald-500"></i> Custom integration</li>
+                            </ul>
+                            <button class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-medium rounded-xl transition-colors">Contact Sales</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== DOCS PAGE ==================== -->
+        <section id="docs" class="page-section">
+            <div class="py-16 md:py-24">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-8" data-t="docs.title">Documentation</h1>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                        <div class="md:col-span-1">
+                            <nav class="space-y-1 sticky top-20">
+                                <button onclick="showDoc('getting-started')" class="w-full text-left px-4 py-2 rounded-lg bg-indigo-50 text-indigo-600 font-medium text-sm">Getting Started</button>
+                                <button onclick="showDoc('api-reference')" class="w-full text-left px-4 py-2 rounded-lg hover:bg-slate-100 text-slate-600 text-sm">API Reference</button>
+                                <button onclick="showDoc('examples')" class="w-full text-left px-4 py-2 rounded-lg hover:bg-slate-100 text-slate-600 text-sm">Examples</button>
+                                <button onclick="showDoc('faq')" class="w-full text-left px-4 py-2 rounded-lg hover:bg-slate-100 text-slate-600 text-sm">FAQ</button>
+                            </nav>
+                        </div>
+                        <div class="md:col-span-3 prose max-w-none" id="docs-content">
+                            <h2>Getting Started with KONKMENG</h2>
+                            <p>Welcome to KONKMENG! This guide will help you get started with our code analysis platform.</p>
+                            <h3>Installation</h3>
+                            <p>First, install our CLI tool:</p>
+                            <pre>npm install -g konkmeng</pre>
+                            <h3>Basic Usage</h3>
+                            <p>Analyze your first piece of code:</p>
+                            <pre>konkmeng analyze myfile.js</pre>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== BLOG PAGE ==================== -->
+        <section id="blog" class="page-section">
+            <div class="py-16 md:py-24">
+                <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-8" data-t="blog.title">Latest from Blog</h1>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <article class="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl transition-shadow">
+                            <div class="h-40 bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center">
+                                <i data-lucide="newspaper" class="w-12 h-12 text-indigo-300"></i>
+                            </div>
+                            <div class="p-5">
+                                <h3 class="font-bold text-slate-900 mb-2">Introducing KONKMENG 2.0</h3>
+                                <p class="text-sm text-slate-600 mb-4 line-clamp-2">We're excited to announce the launch of KONKMENG 2.0 with faster analysis and more languages...</p>
+                                <div class="flex items-center justify-between text-xs text-slate-500">
+                                    <span>Mar 15, 2026</span>
+                                    <span>5 min read</span>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl transition-shadow">
+                            <div class="h-40 bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center">
+                                <i data-lucide="book-open" class="w-12 h-12 text-indigo-300"></i>
+                            </div>
+                            <div class="p-5">
+                                <h3 class="font-bold text-slate-900 mb-2">Best Practices for Code Analysis</h3>
+                                <p class="text-sm text-slate-600 mb-4 line-clamp-2">Learn how to get the most out of KONKMENG with these tips and tricks...</p>
+                                <div class="flex items-center justify-between text-xs text-slate-500">
+                                    <span>Mar 10, 2026</span>
+                                    <span>7 min read</span>
+                                </div>
+                            </div>
+                        </article>
+                        <article class="bg-white rounded-2xl border border-slate-200 overflow-hidden hover:shadow-xl transition-shadow">
+                            <div class="h-40 bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center">
+                                <i data-lucide="git-branch" class="w-12 h-12 text-indigo-300"></i>
+                            </div>
+                            <div class="p-5">
+                                <h3 class="font-bold text-slate-900 mb-2">Integrating with CI/CD</h3>
+                                <p class="text-sm text-slate-600 mb-4 line-clamp-2">A comprehensive guide to adding automated code analysis to your pipeline...</p>
+                                <div class="flex items-center justify-between text-xs text-slate-500">
+                                    <span>Mar 5, 2026</span>
+                                    <span>4 min read</span>
+                                </div>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ==================== PROFILE PAGE ==================== -->
+        <section id="profile" class="page-section">
+            <div class="py-16 md:py-24">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <!-- Profile Header -->
+                    <div class="bg-gradient-to-r from-indigo-500 to-purple-600 rounded-2xl p-6 md:p-8 mb-8 text-white">
+                        <div class="flex flex-col md:flex-row items-center gap-6">
+                            <div class="relative">
+                                <div id="profile-avatar" class="w-24 h-24 bg-white/20 rounded-full flex items-center justify-center text-4xl font-bold">
+                                    <span id="profileInitial">U</span>
+                                </div>
+                                <button onclick="document.getElementById('avatarUpload').click()" class="absolute bottom-0 right-0 w-8 h-8 bg-white rounded-full flex items-center justify-center shadow-lg hover:bg-slate-100 transition-colors">
+                                    <i data-lucide="camera" class="w-4 h-4 text-indigo-600"></i>
+                                </button>
+                                <input type="file" id="avatarUpload" class="hidden" accept="image/*" onchange="uploadAvatar(this)">
+                            </div>
+                            <div class="text-center md:text-left flex-1">
+                                <h1 class="text-2xl font-bold mb-1" id="profileName">Loading...</h1>
+                                <p class="text-white/80" id="profileEmail">Loading...</p>
+                            </div>
+                            <button onclick="logout()" class="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-xl transition-colors flex items-center gap-2">
+                                <i data-lucide="log-out" class="w-4 h-4"></i>
+                                <span data-t="profile.logout">Logout</span>
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-3 gap-4 mt-6 pt-6 border-t border-white/20">
+                            <div class="text-center">
+                                <div class="text-2xl font-bold" id="profileSavedCodes">0</div>
+                                <div class="text-sm text-white/80" data-t="profile.saved_codes">Saved Codes</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold" id="profileAnalyses">0</div>
+                                <div class="text-sm text-white/80" data-t="profile.analyses">Analyses</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold" id="profileMemberSince">-</div>
+                                <div class="text-sm text-white/80" data-t="profile.member_since">Member Since</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Profile Tabs -->
+                    <div class="flex border-b border-slate-200 mb-6 overflow-x-auto">
+                        <button onclick="switchProfileTab('saved')" class="profile-tab px-4 py-3 text-sm font-medium border-b-2 border-indigo-600 text-indigo-600" data-tab="saved">
+                            <i data-lucide="bookmark" class="w-4 h-4 inline mr-1"></i> <span data-t="profile.tab_saved">Saved Codes</span>
+                        </button>
+                        <button onclick="switchProfileTab('history')" class="profile-tab px-4 py-3 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700" data-tab="history">
+                            <i data-lucide="history" class="w-4 h-4 inline mr-1"></i> <span data-t="profile.tab_history">History</span>
+                        </button>
+                        <button onclick="switchProfileTab('settings')" class="profile-tab px-4 py-3 text-sm font-medium border-b-2 border-transparent text-slate-500 hover:text-slate-700" data-tab="settings">
+                            <i data-lucide="settings" class="w-4 h-4 inline mr-1"></i> <span data-t="profile.tab_settings">Settings</span>
+                        </button>
+                    </div>
+
+                    <!-- Tab Content -->
+                    <div id="tab-saved" class="profile-tab-content">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="font-semibold text-slate-900" data-t="profile.my_saved">My Saved Codes</h3>
+                            <button onclick="saveCurrentCode()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl transition-colors flex items-center gap-2">
+                                <i data-lucide="plus" class="w-4 h-4"></i>
+                                <span data-t="profile.save_current">Save Current</span>
+                            </button>
+                        </div>
+                        <div id="savedCodesList" class="space-y-3">
+                            <div class="text-center py-12 text-slate-400">
+                                <i data-lucide="bookmark" class="w-12 h-12 mx-auto mb-3 opacity-50"></i>
+                                <p data-t="profile.no_saved">No saved codes yet</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tab-history" class="profile-tab-content hidden">
+                        <h3 class="font-semibold text-slate-900 mb-4" data-t="profile.analysis_history">Analysis History</h3>
+                        <div id="analysisHistoryList" class="space-y-3">
+                            <div class="text-center py-12 text-slate-400">
+                                <i data-lucide="history" class="w-12 h-12 mx-auto mb-3 opacity-50"></i>
+                                <p data-t="profile.no_history">No analysis history yet</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="tab-settings" class="profile-tab-content hidden">
+                        <div class="max-w-md space-y-6">
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2" data-t="profile.display_name">Display Name</label>
+                                <input type="text" id="settingsName" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none">
+                                <button onclick="updateName()" class="mt-2 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl transition-colors" data-t="profile.update_name">Update Name</button>
+                            </div>
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2" data-t="profile.email">Email</label>
+                                <input type="email" id="settingsEmail" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl bg-slate-50" readonly>
+                            </div>
+                            
+                            <hr class="border-slate-200">
+                            
+                            <div>
+                                <label class="block text-sm font-medium text-slate-700 mb-2" data-t="profile.change_password">Change Password</label>
+                                <input type="password" id="settingsCurrentPassword" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl mb-2 focus:border-indigo-500 outline-none" placeholder="Current Password">
+                                <input type="password" id="settingsNewPassword" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl mb-2 focus:border-indigo-500 outline-none" placeholder="New Password">
+                                <input type="password" id="settingsConfirmPassword" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl mb-2 focus:border-indigo-500 outline-none" placeholder="Confirm Password">
+                                <button onclick="changePassword()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-xl transition-colors" data-t="profile.update_password">Update Password</button>
+                            </div>
+                            
+                            <hr class="border-slate-200">
+                            
+                            <button onclick="deleteAccount()" class="px-4 py-2 bg-red-50 hover:bg-red-100 text-red-600 text-sm font-medium rounded-xl transition-colors flex items-center gap-2">
+                                <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                <span data-t="profile.delete_account">Delete Account</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-white border-t border-slate-200 py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <h4 class="font-semibold text-slate-900 mb-4">Product</h4>
+                    <ul class="space-y-2 text-sm text-slate-600">
+                        <li><a onclick="navigateTo('product')" class="hover:text-indigo-600 cursor-pointer">Features</a></li>
+                        <li><a onclick="navigateTo('pricing')" class="hover:text-indigo-600 cursor-pointer">Pricing</a></li>
+                        <li><a onclick="navigateTo('docs')" class="hover:text-indigo-600 cursor-pointer">Documentation</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-slate-900 mb-4">Company</h4>
+                    <ul class="space-y-2 text-sm text-slate-600">
+                        <li><a href="#" class="hover:text-indigo-600">About</a></li>
+                        <li><a onclick="navigateTo('blog')" class="hover:text-indigo-600 cursor-pointer">Blog</a></li>
+                        <li><a href="#" class="hover:text-indigo-600">Careers</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-slate-900 mb-4">Resources</h4>
+                    <ul class="space-y-2 text-sm text-slate-600">
+                        <li><a href="#" class="hover:text-indigo-600">Community</a></li>
+                        <li><a href="#" class="hover:text-indigo-600">GitHub</a></li>
+                        <li><a href="#" class="hover:text-indigo-600">Status</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="font-semibold text-slate-900 mb-4">Legal</h4>
+                    <ul class="space-y-2 text-sm text-slate-600">
+                        <li><a href="#" class="hover:text-indigo-600">Privacy</a></li>
+                        <li><a href="#" class="hover:text-indigo-600">Terms</a></li>
+                        <li><a href="#" class="hover:text-indigo-600">Security</a></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="pt-8 border-t border-slate-200 text-center text-sm text-slate-500">
+                <p>&copy; <span id="currentYear">2026</span> KONKMENG. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Auth Modal -->
+    <div id="authModal" class="fixed inset-0 z-50 hidden">
+        <div class="modal-backdrop absolute inset-0" onclick="closeAuthModal()"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4">
+            <div class="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6 md:p-8 max-h-[90vh] overflow-y-auto">
+                <button onclick="closeAuthModal()" class="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full bg-slate-100 hover:bg-slate-200 transition-colors">
+                    <i data-lucide="x" class="w-4 h-4 text-slate-600"></i>
+                </button>
+                
+                <!-- Login Form -->
+                <div id="loginForm">
+                    <div class="text-center mb-6">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-1" data-t="auth.welcome_back">Welcome back</h2>
+                        <p class="text-slate-600 text-sm" data-t="auth.sign_in_desc">Sign in to your KONKMENG account</p>
+                    </div>
+                    
+                    <form onsubmit="handleLogin(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1" data-t="auth.email">Email</label>
+                            <input type="email" id="loginEmail" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none" placeholder="you@example.com" required>
+                        </div>
+                        <div>
+                            <div class="flex items-center justify-between mb-1">
+                                <label class="block text-sm font-medium text-slate-700" data-t="auth.password">Password</label>
+                                <button type="button" onclick="showForgotPassword()" class="text-xs text-indigo-600 hover:underline" data-t="auth.forgot">Forgot password?</button>
+                            </div>
+                            <input type="password" id="loginPassword" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2">
+                            <span data-t="auth.sign_in">Sign in</span>
+                            <div id="loginLoader" class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                        </button>
+                    </form>
+                    
+                    <div class="my-6 flex items-center gap-4">
+                        <div class="flex-1 h-px bg-slate-200"></div>
+                        <span class="text-xs text-slate-500" data-t="auth.or_continue">or continue with</span>
+                        <div class="flex-1 h-px bg-slate-200"></div>
+                    </div>
+                    
+                    <div class="grid grid-cols-2 gap-3">
+                        <button onclick="socialLogin('google')" class="py-2.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors flex items-center justify-center gap-2 text-sm font-medium">
+                            <svg class="w-5 h-5" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
+                            Google
+                        </button>
+                        <button onclick="socialLogin('github')" class="py-2.5 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors flex items-center justify-center gap-2 text-sm font-medium">
+                            <i data-lucide="github" class="w-5 h-5"></i>
+                            GitHub
+                        </button>
+                    </div>
+                    
+                    <p class="mt-6 text-center text-sm text-slate-600">
+                        <span data-t="auth.no_account">Don't have an account?</span>
+                        <button onclick="switchAuthForm('signup')" class="text-indigo-600 font-medium hover:underline ml-1" data-t="auth.sign_up">Sign up</button>
+                    </p>
+                </div>
+                
+                <!-- Signup Form -->
+                <div id="signupForm" class="hidden">
+                    <div class="text-center mb-6">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-1" data-t="auth.create_account">Create account</h2>
+                        <p class="text-slate-600 text-sm" data-t="auth.get_started">Get started with KONKMENG for free</p>
+                    </div>
+                    
+                    <form onsubmit="handleSignup(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1" data-t="auth.full_name">Full name</label>
+                            <input type="text" id="signupName" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:border-indigo-500 outline-none" placeholder="John Doe" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1" data-t="auth.email">Email</label>
+                            <input type="email" id="signupEmail" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:border-indigo-500 outline-none" placeholder="you@example.com" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1" data-t="auth.password">Password</label>
+                            <input type="password" id="signupPassword" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:border-indigo-500 outline-none" placeholder="At least 8 characters" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1" data-t="auth.confirm_password">Confirm password</label>
+                            <input type="password" id="signupConfirmPassword" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:border-indigo-500 outline-none" placeholder="Confirm password" required>
+                        </div>
+                        <p class="text-xs text-slate-500" data-t="auth.terms">By signing up, you agree to our Terms of Service and Privacy Policy</p>
+                        <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-colors flex items-center justify-center gap-2">
+                            <span data-t="auth.create_account_btn">Create account</span>
+                            <div id="signupLoader" class="hidden w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                        </button>
+                    </form>
+                    
+                    <p class="mt-6 text-center text-sm text-slate-600">
+                        <span data-t="auth.have_account">Already have an account?</span>
+                        <button onclick="switchAuthForm('login')" class="text-indigo-600 font-medium hover:underline ml-1" data-t="auth.sign_in">Sign in</button>
+                    </p>
+                </div>
+                
+                <!-- Forgot Password Form -->
+                <div id="forgotForm" class="hidden">
+                    <div class="text-center mb-6">
+                        <h2 class="text-2xl font-bold text-slate-900 mb-1" data-t="auth.reset_password">Reset password</h2>
+                        <p class="text-slate-600 text-sm" data-t="auth.reset_desc">We'll send you a reset link</p>
+                    </div>
+                    
+                    <form onsubmit="handleForgotPassword(event)" class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-slate-700 mb-1" data-t="auth.email">Email</label>
+                            <input type="email" id="forgotEmail" class="w-full px-4 py-2.5 border border-slate-200 rounded-xl focus:border-indigo-500 outline-none" placeholder="you@example.com" required>
+                        </div>
+                        <button type="submit" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-colors" data-t="auth.send_reset">Send reset link</button>
+                        <button type="button" onclick="switchAuthForm('login')" class="w-full py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-xl transition-colors" data-t="auth.back_to_login">Back to sign in</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cookie Banner -->
+    <div id="cookieBanner" class="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 p-4 z-40 shadow-lg">
+        <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+            <p class="text-sm text-slate-600 text-center sm:text-left">
+                🍪 This website uses cookies to enable essential site functionality and analytics.
+                <a href="#" class="text-indigo-600 hover:underline">Read more</a>
+            </p>
+            <div class="flex items-center gap-2">
+                <button onclick="closeCookieBanner()" class="px-4 py-2 text-sm font-medium text-slate-600 hover:bg-slate-100 rounded-lg transition-colors">Settings</button>
+                <button onclick="acceptCookies()" class="px-4 py-2 text-sm font-medium bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors">Accept</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script>
+        // ===== API CONFIGURATION =====
+        const API_BASE_URL = (() => {
+            if (window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
+                return 'https://konkmeng.onrender.com';
+            }
+            return 'http://localhost:3000';
+        })();
+        console.log('🔗 API Base URL:', API_BASE_URL);
+
+        // ===== TRANSLATIONS =====
+        const translations = {
+            en: {
+                'hero.badge': 'Powered by Groq • Lightning Fast',
+                'hero.title': 'Master Coding with',
+                'hero.subtitle': 'AI-powered code analysis that explains your code line by line. Support for 15+ languages with blazing fast responses.',
+                'hero.cta_start': 'Try it Free',
+                'hero.stats_users': 'Developers',
+                'hero.stats_languages': 'Languages',
+                'hero.stats_analyzed': 'Analyses',
+                'features.f1_title': 'Lightning Fast',
+                'features.f1_desc': "Powered by Groq's LPU, get responses in under 500ms.",
+                'features.f2_title': 'Secure & Private',
+                'features.f2_desc': 'Your code is never stored. Analyzed securely and forgotten.',
+                'features.f3_title': '15+ Languages',
+                'features.f3_desc': 'Support for JavaScript, Python, Java, C++, and more.',
+                'tool.title': 'Try it Now',
+                'tool.subtitle': 'Paste your code below and let AI explain it line by line',
+                'tool.editor_title': 'Code Editor',
+                'tool.response_title': 'AI Response',
+                'tool.analyze': 'Analyze Code',
+                'tool.example': 'Example',
+                'tool.status_ready': 'Ready',
+                'tool.status_analyzing': 'Analyzing...',
+                'tool.status_complete': 'Complete',
+                'tool.status_error': 'Error',
+                'tool.placeholder': 'Your analysis will appear here',
+                'tool.placeholder_hint': 'Paste code and click Analyze',
+                'testimonials.title': 'Loved by Developers',
+                'product.title': 'Our Products',
+                'product.subtitle': 'Choose the perfect solution for your needs',
+                'pricing.title': 'Simple Pricing',
+                'pricing.subtitle': 'No hidden fees. Pay as you grow.',
+                'docs.title': 'Documentation',
+                'blog.title': 'Latest from Blog',
+                'auth.welcome_back': 'Welcome back',
+                'auth.sign_in_desc': 'Sign in to your KONKMENG account',
+                'auth.email': 'Email',
+                'auth.password': 'Password',
+                'auth.forgot': 'Forgot password?',
+                'auth.sign_in': 'Sign in',
+                'auth.or_continue': 'or continue with',
+                'auth.no_account': "Don't have an account?",
+                'auth.sign_up': 'Sign up',
+                'auth.create_account': 'Create account',
+                'auth.get_started': 'Get started with KONKMENG for free',
+                'auth.full_name': 'Full name',
+                'auth.confirm_password': 'Confirm password',
+                'auth.terms': 'By signing up, you agree to our Terms of Service and Privacy Policy',
+                'auth.create_account_btn': 'Create account',
+                'auth.have_account': 'Already have an account?',
+                'auth.reset_password': 'Reset password',
+                'auth.reset_desc': "We'll send you a reset link",
+                'auth.send_reset': 'Send reset link',
+                'auth.back_to_login': 'Back to sign in',
+                'profile.logout': 'Logout',
+                'profile.saved_codes': 'Saved Codes',
+                'profile.analyses': 'Analyses',
+                'profile.member_since': 'Member Since',
+                'profile.tab_saved': 'Saved Codes',
+                'profile.tab_history': 'History',
+                'profile.tab_settings': 'Settings',
+                'profile.my_saved': 'My Saved Codes',
+                'profile.save_current': 'Save Current',
+                'profile.no_saved': 'No saved codes yet',
+                'profile.analysis_history': 'Analysis History',
+                'profile.no_history': 'No analysis history yet',
+                'profile.display_name': 'Display Name',
+                'profile.update_name': 'Update Name',
+                'profile.change_password': 'Change Password',
+                'profile.update_password': 'Update Password',
+                'profile.delete_account': 'Delete Account',
+                'nav.home': 'Home',
+                'nav.product': 'Product',
+                'nav.pricing': 'Pricing',
+                'nav.docs': 'Docs',
+                'nav.blog': 'Blog'
+            },
+            km: {
+                'hero.badge': 'ដំណើរការដោយ Groq • លឿនបំផុត',
+                'hero.title': 'រៀនកូដជាមួយ',
+                'hero.subtitle': 'ការវិភាគកូដដោយ AI ដែលពន្យល់កូដរបស់អ្នកម្តងមួយបន្ទាត់។ គាំទ្រភាសាចំនួន ១៥+ ជាមួយការឆ្លើយតបលឿន។',
+                'hero.cta_start': 'សាកល្បងឥឡូវ',
+                'hero.stats_users': 'អ្នកអភិវឌ្ឍន៍',
+                'hero.stats_languages': 'ភាសា',
+                'hero.stats_analyzed': 'ការវិភាគ',
+                'features.f1_title': 'លឿនខ្លាំង',
+                'features.f1_desc': 'ដំណើរការដោយ LPU របស់ Groq ទទួលបានការឆ្លើយតបក្នុងរយៈពេលក្រោម 500ms។',
+                'features.f2_title': 'សុវត្ថិភាព និងឯកជន',
+                'features.f2_desc': 'កូដរបស់អ្នកមិនត្រូវបានរក្សាទុកទេ។ វិភាគដោយសុវត្ថិភាព។',
+                'features.f3_title': '១៥+ ភាសា',
+                'features.f3_desc': 'គាំទ្រ JavaScript, Python, Java, C++ និងច្រើនទៀត។',
+                'tool.title': 'សាកល្បងឥឡូវ',
+                'tool.subtitle': 'បិទភ្ជាប់កូដរបស់អ្នកខាងក្រោម ហើយអនុញ្ញាតឱ្យ AI ពន្យល់ម្តងមួយបន្ទាត់',
+                'tool.editor_title': 'កម្មវិធីកែកូដ',
+                'tool.response_title': 'ការឆ្លើយតប AI',
+                'tool.analyze': 'វិភាគកូដ',
+                'tool.example': 'ឧទាហរណ៍',
+                'tool.status_ready': 'រួចរាល់',
+                'tool.status_analyzing': 'កំពុងវិភាគ...',
+                'tool.status_complete': 'រួចរាល់',
+                'tool.status_error': 'មានបញ្ហា',
+                'tool.placeholder': 'ការវិភាគរបស់អ្នកនឹងបង្ហាញនៅទីនេះ',
+                'tool.placeholder_hint': 'បិទភ្ជាប់កូដ ហើយចុច វិភាគ',
+                'testimonials.title': 'ត្រូវបានស្រឡាញ់ដោយអ្នកអភិវឌ្ឍន៍',
+                'product.title': 'ផលិតផលរបស់យើង',
+                'product.subtitle': 'ជ្រើសរើសដំណោះស្រាយល្អបំផុតសម្រាប់តម្រូវការរបស់អ្នក',
+                'pricing.title': 'តម្លៃសាមញ្ញ',
+                'pricing.subtitle': 'គ្មានថ្លៃលាក់កំបាំង។ បង់ប្រាក់តាមការរីកចម្រើន។',
+                'docs.title': 'ឯកសារ',
+                'blog.title': 'ប្លក់ថ្មីៗ',
+                'auth.welcome_back': 'សូមស្វាគមន៍មកវិញ',
+                'auth.sign_in_desc': 'ចូលគណនី KONKMENG របស់អ្នក',
+                'auth.email': 'អ៊ីមែល',
+                'auth.password': 'ពាក្យសម្ងាត់',
+                'auth.forgot': 'ភ្លេចពាក្យសម្ងាត់?',
+                'auth.sign_in': 'ចូល',
+                'auth.or_continue': 'ឬបន្តជាមួយ',
+                'auth.no_account': 'មិនមានគណនីទេ?',
+                'auth.sign_up': 'ចុះឈ្មោះ',
+                'auth.create_account': 'បង្កើតគណនី',
+                'auth.get_started': 'ចាប់ផ្តើមជាមួយ KONKMENG ដោយឥតគិតថ្លៃ',
+                'auth.full_name': 'ឈ្មោះពេញ',
+                'auth.confirm_password': 'បញ្ជាក់ពាក្យសម្ងាត់',
+                'auth.terms': 'តាមរយៈការចុះឈ្មោះ អ្នកយល់ព្រមនឹងលក្ខខណ្ឌនៃសេវាកម្ម និងគោលការណ៍ឯកជនភាព',
+                'auth.create_account_btn': 'បង្កើតគណនី',
+                'auth.have_account': 'មានគណនីរួចហើយ?',
+                'auth.reset_password': 'កំណត់ពាក្យសម្ងាត់ឡើងវិញ',
+                'auth.reset_desc': 'យើងនឹងផ្ញើតំណរកំណត់ឡើងវិញ',
+                'auth.send_reset': 'ផ្ញើតំណរកំណត់ឡើងវិញ',
+                'auth.back_to_login': 'ត្រឡប់ទៅចូល',
+                'profile.logout': 'ចាកចេញ',
+                'profile.saved_codes': 'កូដដែលរក្សាទុក',
+                'profile.analyses': 'ការវិភាគ',
+                'profile.member_since': 'សមាជិកតាំងពី',
+                'profile.tab_saved': 'កូដដែលរក្សាទុក',
+                'profile.tab_history': 'ប្រវត្តិ',
+                'profile.tab_settings': 'ការកំណត់',
+                'profile.my_saved': 'កូដដែលរក្សាទុករបស់ខ្ញុំ',
+                'profile.save_current': 'រក្សាទុកបច្ចុប្បន្ន',
+                'profile.no_saved': 'មិនមានកូដដែលរក្សាទុកនៅឡើយទេ',
+                'profile.analysis_history': 'ប្រវត្តិការវិភាគ',
+                'profile.no_history': 'មិនមានប្រវត្តិការវិភាគនៅឡើយទេ',
+                'profile.display_name': 'ឈ្មោះបង្ហាញ',
+                'profile.update_name': 'ធ្វើបច្ចុប្បន្នភាពឈ្មោះ',
+                'profile.change_password': 'ប្តូរពាក្យសម្ងាត់',
+                'profile.update_password': 'ធ្វើបច្ចុប្បន្នភាពពាក្យសម្ងាត់',
+                'profile.delete_account': 'លុបគណនី',
+                'nav.home': 'ទំព័រដើម',
+                'nav.product': 'ផលិតផល',
+                'nav.pricing': 'តម្លៃ',
+                'nav.docs': 'ឯកសារ',
+                'nav.blog': 'ប្លក់'
+            }
+        };
+
+        let currentLang = localStorage.getItem('lang') || 'en';
+
+        // ===== INITIALIZE =====
+        document.addEventListener('DOMContentLoaded', () => {
+            lucide.createIcons();
+            initializeApp();
+        });
+
+        function initializeApp() {
+            // Set language
+            document.getElementById('lang-select').value = currentLang;
+            applyTranslations();
+            
+            // Update nav links
+            updateNavLinks();
+            
+            // Check login status
+            checkLoginStatus();
+            
+            // Cookie banner
+            if (localStorage.getItem('cookiesAccepted')) {
+                document.getElementById('cookieBanner').style.display = 'none';
+            }
+            
+            // Update year
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+        }
+
+        function applyTranslations() {
+            document.querySelectorAll('[data-t]').forEach(el => {
+                const key = el.getAttribute('data-t');
+                if (translations[currentLang] && translations[currentLang][key]) {
+                    el.textContent = translations[currentLang][key];
+                }
+            });
+        }
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            localStorage.setItem('lang', lang);
+            document.documentElement.lang = lang;
+            applyTranslations();
+            updateNavLinks();
+        }
+
+        // ===== NAVIGATION =====
+        const navItems = [
+            { id: 'home', icon: 'home' },
+            { id: 'product', icon: 'box' },
+            { id: 'pricing', icon: 'credit-card' },
+            { id: 'docs', icon: 'book-open' },
+            { id: 'blog', icon: 'newspaper' }
+        ];
+
+        function updateNavLinks() {
+            const navLinksHtml = navItems.map(item => 
+                `<button onclick="navigateTo('${item.id}')" class="nav-link px-3 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-slate-50 transition-colors" data-page="${item.id}">
+                    <span data-t="nav.${item.id}">${translations[currentLang]['nav.' + item.id] || item.id}</span>
+                </button>`
+            ).join('');
+            
+            document.getElementById('nav-links').innerHTML = navLinksHtml;
+            
+            const mobileNavHtml = navItems.map(item => 
+                `<button onclick="navigateTo('${item.id}'); toggleMobileMenu()" class="flex items-center gap-3 px-4 py-3 text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded-xl transition-colors" data-page="${item.id}">
+                    <i data-lucide="${item.icon}" class="w-5 h-5"></i>
+                    <span data-t="nav.${item.id}">${translations[currentLang]['nav.' + item.id] || item.id}</span>
+                </button>`
+            ).join('');
+            
+            document.getElementById('mobile-nav-links').innerHTML = mobileNavHtml;
+            lucide.createIcons();
+        }
+
+        function updateAuthNav() {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            
+            if (token && user.name) {
+                document.getElementById('auth-nav').innerHTML = `
+                    <button onclick="navigateTo('profile')" class="flex items-center gap-2 px-3 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600 rounded-lg hover:bg-slate-50 transition-colors">
+                        <i data-lucide="user" class="w-4 h-4"></i>
+                        <span class="hidden lg:inline">${user.name}</span>
+                    </button>
+                `;
+                document.getElementById('mobile-auth-nav').innerHTML = `
+                    <button onclick="navigateTo('profile'); toggleMobileMenu()" class="flex items-center gap-3 w-full px-4 py-3 text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded-xl transition-colors">
+                        <i data-lucide="user" class="w-5 h-5"></i>
+                        <span>Profile</span>
+                    </button>
+                    <button onclick="logout()" class="flex items-center gap-3 w-full px-4 py-3 text-red-600 hover:bg-red-50 rounded-xl transition-colors">
+                        <i data-lucide="log-out" class="w-5 h-5"></i>
+                        <span>Logout</span>
+                    </button>
+                `;
+            } else {
+                document.getElementById('auth-nav').innerHTML = `
+                    <button onclick="openAuthModal('login')" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors">
+                        Sign in
+                    </button>
+                    <button onclick="openAuthModal('signup')" class="px-4 py-2 text-sm font-medium bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-colors">
+                        Get started
+                    </button>
+                `;
+                document.getElementById('mobile-auth-nav').innerHTML = `
+                    <div class="flex gap-2">
+                        <button onclick="openAuthModal('login'); toggleMobileMenu()" class="flex-1 py-2.5 text-sm font-medium text-slate-600 border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors">Sign in</button>
+                        <button onclick="openAuthModal('signup'); toggleMobileMenu()" class="flex-1 py-2.5 text-sm font-medium bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl transition-colors">Get started</button>
+                    </div>
+                `;
+            }
+            lucide.createIcons();
+        }
+
+        function navigateTo(pageId) {
+            document.querySelectorAll('.page-section').forEach(page => page.classList.remove('active'));
+            const targetPage = document.getElementById(pageId);
+            if (targetPage) targetPage.classList.add('active');
+            
+            // Update active nav link
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('text-indigo-600', 'bg-indigo-50');
+                if (link.getAttribute('data-page') === pageId) {
+                    link.classList.add('text-indigo-600', 'bg-indigo-50');
+                }
+            });
+            
+            // Load profile data if navigating to profile
+            if (pageId === 'profile') {
+                loadProfileData();
+            }
+            
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function scrollToTool() {
+            navigateTo('home');
+            setTimeout(() => {
+                document.getElementById('tool').scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+
+        function toggleMobileMenu() {
+            const menu = document.getElementById('mobile-menu');
+            const icon = document.getElementById('mobile-menu-icon');
+            menu.classList.toggle('hidden');
+            icon.setAttribute('data-lucide', menu.classList.contains('hidden') ? 'menu' : 'x');
+            lucide.createIcons();
+        }
+
+        // ===== AUTH FUNCTIONS =====
+        function checkLoginStatus() {
+            const token = localStorage.getItem('token');
+            const user = localStorage.getItem('user');
+            updateAuthNav();
+            
+            // Check for GitHub callback
+            const params = new URLSearchParams(window.location.search);
+            const githubCode = params.get('github_callback');
+            if (githubCode) {
+                handleGitHubCallback(githubCode);
+                window.history.replaceState({}, document.title, window.location.pathname);
+            }
+        }
+
+        function openAuthModal(type) {
+            document.getElementById('authModal').classList.remove('hidden');
+            switchAuthForm(type);
+            lucide.createIcons();
+        }
+
+        function closeAuthModal() {
+            document.getElementById('authModal').classList.add('hidden');
+        }
+
+        function switchAuthForm(type) {
+            document.getElementById('loginForm').classList.add('hidden');
+            document.getElementById('signupForm').classList.add('hidden');
+            document.getElementById('forgotForm').classList.add('hidden');
+            document.getElementById(type + 'Form').classList.remove('hidden');
+        }
+
+        function showForgotPassword() {
+            switchAuthForm('forgot');
+        }
+
+        async function handleLogin(event) {
+            event.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            const loader = document.getElementById('loginLoader');
+            
+            loader.classList.remove('hidden');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email, password, responseLang: currentLang })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || 'Login failed');
+                }
+                
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                
+                alert(data.message);
+                closeAuthModal();
+                updateAuthNav();
+                
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                loader.classList.add('hidden');
+            }
+        }
+
+        async function handleSignup(event) {
+            event.preventDefault();
+            const name = document.getElementById('signupName').value;
+            const email = document.getElementById('signupEmail').value;
+            const password = document.getElementById('signupPassword').value;
+            const confirmPassword = document.getElementById('signupConfirmPassword').value;
+            const loader = document.getElementById('signupLoader');
+            
+            if (password.length < 8) {
+                alert(currentLang === 'km' ? 'ពាក្យសម្ងាត់ត្រូវមានយ៉ាងហោចណាស់ ៨ តួអក្សរ' : 'Password must be at least 8 characters');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                alert(currentLang === 'km' ? 'ពាក្យសម្ងាត់មិនដូចគ្នាទេ' : 'Passwords do not match');
+                return;
+            }
+            
+            loader.classList.remove('hidden');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/auth/signup`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password, responseLang: currentLang })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok || !data.success) {
+                    throw new Error(data.error || 'Signup failed');
+                }
+                
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                
+                alert(data.message);
+                closeAuthModal();
+                updateAuthNav();
+                
+            } catch (error) {
+                alert(error.message);
+            } finally {
+                loader.classList.add('hidden');
+            }
+        }
+
+        async function handleForgotPassword(event) {
+            event.preventDefault();
+            const email = document.getElementById('forgotEmail').value;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/auth/forgot-password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Check your email for reset instructions.');
+                    switchAuthForm('login');
+                } else {
+                    alert(data.error || 'Failed to send reset link');
+                }
+            } catch (error) {
+                alert('Failed to send reset link');
+            }
+        }
+
+        function socialLogin(provider) {
+            if (provider === 'google') {
+                if (window.google && window.google.accounts) {
+                    window.google.accounts.id.initialize({
+                        client_id: '288817925196-gcql2voharhlbtmppnta0038btq8c7em.apps.googleusercontent.com',
+                        callback: handleGoogleLogin
+                    });
+                    window.google.accounts.id.prompt();
+                } else {
+                    alert('Loading Google Sign-In...');
+                    setTimeout(() => socialLogin('google'), 1000);
+                }
+            } else if (provider === 'github') {
+                const clientId = 'Ov23lidnwM2ui7Rq7lhj';
+                const redirectUri = encodeURIComponent(window.location.origin + '/github-callback.html');
+                const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&scope=user:email`;
+                window.location.href = authUrl;
+            }
+        }
+
+        function handleGoogleLogin(response) {
+            const idToken = response.credential;
+            const base64Url = idToken.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(c => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)).join(''));
+            const userInfo = JSON.parse(jsonPayload);
+            
+            fetch(`${API_BASE_URL}/api/auth/google`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ idToken, email: userInfo.email, name: userInfo.name, picture: userInfo.picture })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    closeAuthModal();
+                    updateAuthNav();
+                    alert('✅ Google login successful!');
+                    navigateTo('profile');
+                } else {
+                    alert('❌ Google login failed: ' + data.error);
+                }
+            })
+            .catch(err => alert('❌ Login failed'));
+        }
+
+        function handleGitHubCallback(code) {
+            fetch(`${API_BASE_URL}/api/auth/github`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ code })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    updateAuthNav();
+                    alert('✅ GitHub login successful!');
+                    navigateTo('profile');
+                } else {
+                    alert('❌ GitHub login failed: ' + data.error);
+                }
+            })
+            .catch(err => alert('❌ Login failed'));
+        }
+
+        function logout() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('user');
+            updateAuthNav();
+            navigateTo('home');
+        }
+
+        // ===== CODE ANALYSIS =====
+        async function analyzeCode() {
+            const code = document.getElementById('code').value.trim();
+            const language = document.getElementById('language').value;
+            const output = document.getElementById('output');
+            const status = document.getElementById('status');
+            const btn = document.getElementById('analyzeBtn');
+            const icon = document.getElementById('analyze-icon');
+            
+            if (!code) {
+                alert(currentLang === 'km' ? 'សូមបញ្ចូលកូដ' : 'Please paste your code');
+                return;
+            }
+            
+            btn.disabled = true;
+            icon.classList.add('animate-spin');
+            status.innerHTML = `<div class="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></div><span class="text-xs text-amber-600" data-t="tool.status_analyzing">${translations[currentLang]['tool.status_analyzing']}</span>`;
+            output.innerHTML = `<div class="h-full flex items-center justify-center text-slate-400"><div class="w-8 h-8 border-2 border-indigo-200 border-t-indigo-600 rounded-full animate-spin"></div></div>`;
+            
+            try {
+                const headers = { 'Content-Type': 'application/json' };
+                const token = localStorage.getItem('token');
+                if (token) headers['Authorization'] = `Bearer ${token}`;
+                
+                const response = await fetch(`${API_BASE_URL}/api/analyze-code`, {
+                    method: 'POST',
+                    headers,
+                    body: JSON.stringify({ code, language, responseLang: currentLang })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    throw new Error(data.error || data.details || 'Analysis failed');
+                }
+                
+                output.innerHTML = `<div class="prose max-w-none">${formatResponse(data.analysis)}</div>`;
+                status.innerHTML = `<div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div><span class="text-xs text-emerald-600" data-t="tool.status_complete">${translations[currentLang]['tool.status_complete']}</span>`;
+                
+                if (data.usage) {
+                    document.getElementById('tokenInfo').textContent = `${data.usage.total_tokens} tokens`;
+                }
+                
+            } catch (error) {
+                output.innerHTML = `<div class="h-full flex flex-col items-center justify-center text-red-500"><i data-lucide="alert-circle" class="w-12 h-12 mb-3"></i><p class="font-medium">${error.message}</p></div>`;
+                status.innerHTML = `<div class="w-2 h-2 bg-red-500 rounded-full"></div><span class="text-xs text-red-600" data-t="tool.status_error">${translations[currentLang]['tool.status_error']}</span>`;
+                lucide.createIcons();
+            } finally {
+                btn.disabled = false;
+                icon.classList.remove('animate-spin');
+            }
+        }
+
+        function formatResponse(text) {
+            if (!text) return '';
+            return text
+                .replace(/### (.*)/g, '<h3>$1</h3>')
+                .replace(/## (.*)/g, '<h2>$1</h2>')
+                .replace(/# (.*)/g, '<h1>$1</h1>')
+                .replace(/```(\w+)?\n([\s\S]*?)```/g, '<pre><code>$2</code></pre>')
+                .replace(/`([^`]+)`/g, '<code>$1</code>')
+                .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*([^*]+)\*/g, '<em>$1</em>')
+                .replace(/^- (.+)$/gm, '<li>$1</li>')
+                .replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>')
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/\n/g, '<br>');
+        }
+
+        function loadExample() {
+            document.getElementById('code').value = `// Fibonacci sequence
+function fibonacci(n) {
+    if (n <= 1) return n;
+    return fibonacci(n - 1) + fibonacci(n - 2);
+}
+
+// Test
+console.log(fibonacci(10)); // 55
+
+// Bug: This will cause stack overflow for large n
+console.log(fibonacci(100));`;
+        }
+
+        function clearCode() {
+            document.getElementById('code').value = '';
+            document.getElementById('output').innerHTML = `
+                <div id="placeholder" class="h-full flex flex-col items-center justify-center text-slate-400">
+                    <i data-lucide="message-square" class="w-12 h-12 mb-4 opacity-50"></i>
+                    <p class="text-sm" data-t="tool.placeholder">${translations[currentLang]['tool.placeholder']}</p>
+                    <p class="text-xs mt-1 opacity-70" data-t="tool.placeholder_hint">${translations[currentLang]['tool.placeholder_hint']}</p>
+                </div>`;
+            document.getElementById('tokenInfo').textContent = '';
+            document.getElementById('status').innerHTML = `<div class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div><span class="text-xs text-slate-500" data-t="tool.status_ready">${translations[currentLang]['tool.status_ready']}</span>`;
+            lucide.createIcons();
+        }
+
+        // ===== PROFILE FUNCTIONS =====
+        async function loadProfileData() {
+            const token = localStorage.getItem('token');
+            const user = JSON.parse(localStorage.getItem('user') || '{}');
+            
+            if (!token) {
+                navigateTo('home');
+                openAuthModal('login');
+                return;
+            }
+            
+            // Display basic info
+            document.getElementById('profileName').textContent = user.name || 'User';
+            document.getElementById('profileEmail').textContent = user.email || '';
+            document.getElementById('profileInitial').textContent = (user.name || 'U').charAt(0).toUpperCase();
+            document.getElementById('settingsName').value = user.name || '';
+            document.getElementById('settingsEmail').value = user.email || '';
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/auth/profile`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success && data.user) {
+                    const userData = data.user;
+                    document.getElementById('profileSavedCodes').textContent = userData.savedCodes?.length || 0;
+                    document.getElementById('profileAnalyses').textContent = userData.analysisHistory?.length || 0;
+                    
+                    if (userData.createdAt) {
+                        const memberDate = new Date(userData.createdAt);
+                        document.getElementById('profileMemberSince').textContent = memberDate.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+                    }
+                    
+                    renderSavedCodes(userData.savedCodes || []);
+                    renderAnalysisHistory(userData.analysisHistory || []);
+                }
+            } catch (error) {
+                console.error('Error loading profile:', error);
+            }
+        }
+
+        function renderSavedCodes(codes) {
+            const container = document.getElementById('savedCodesList');
+            
+            if (!codes || codes.length === 0) {
+                container.innerHTML = `<div class="text-center py-12 text-slate-400"><i data-lucide="bookmark" class="w-12 h-12 mx-auto mb-3 opacity-50"></i><p data-t="profile.no_saved">${translations[currentLang]['profile.no_saved']}</p></div>`;
+                lucide.createIcons();
+                return;
+            }
+            
+            container.innerHTML = codes.map((code, i) => `
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-100 hover:border-indigo-200 transition-colors cursor-pointer" onclick="viewSavedCode(${i})">
+                    <div class="flex items-center justify-between mb-2">
+                        <h4 class="font-medium text-slate-900">${code.title || 'Untitled'}</h4>
+                        <button onclick="event.stopPropagation(); deleteSavedCode('${code._id}')" class="p-1.5 text-red-500 hover:bg-red-50 rounded-lg transition-colors">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                    <p class="text-xs text-slate-500 mb-2">${code.language} • ${new Date(code.createdAt).toLocaleDateString()}</p>
+                    <pre class="text-xs bg-slate-900 text-slate-300 p-2 rounded-lg overflow-hidden max-h-20">${(code.code || '').substring(0, 100)}...</pre>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function renderAnalysisHistory(history) {
+            const container = document.getElementById('analysisHistoryList');
+            
+            if (!history || history.length === 0) {
+                container.innerHTML = `<div class="text-center py-12 text-slate-400"><i data-lucide="history" class="w-12 h-12 mx-auto mb-3 opacity-50"></i><p data-t="profile.no_history">${translations[currentLang]['profile.no_history']}</p></div>`;
+                lucide.createIcons();
+                return;
+            }
+            
+            container.innerHTML = history.slice(0, 20).map((item, i) => `
+                <div class="p-4 bg-slate-50 rounded-xl border border-slate-100">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-sm font-medium text-slate-900">${item.language || 'Code'}</span>
+                        <span class="text-xs text-slate-500">${new Date(item.createdAt).toLocaleString()}</span>
+                    </div>
+                    <pre class="text-xs bg-slate-900 text-slate-300 p-2 rounded-lg overflow-hidden max-h-16">${(item.code || '').substring(0, 80)}...</pre>
+                </div>
+            `).join('');
+            lucide.createIcons();
+        }
+
+        function switchProfileTab(tabId) {
+            document.querySelectorAll('.profile-tab').forEach(tab => {
+                tab.classList.remove('border-indigo-600', 'text-indigo-600');
+                tab.classList.add('border-transparent', 'text-slate-500');
+            });
+            document.querySelector(`.profile-tab[data-tab="${tabId}"]`).classList.remove('border-transparent', 'text-slate-500');
+            document.querySelector(`.profile-tab[data-tab="${tabId}"]`).classList.add('border-indigo-600', 'text-indigo-600');
+            
+            document.querySelectorAll('.profile-tab-content').forEach(content => content.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+        }
+
+        async function saveCurrentCode() {
+            const code = document.getElementById('code')?.value;
+            const language = document.getElementById('language')?.value;
+            const token = localStorage.getItem('token');
+            
+            if (!code) {
+                alert('Please enter some code first');
+                return;
+            }
+            
+            const title = prompt('Enter a title for this code:');
+            if (!title) return;
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/codes/save`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ title, code, language })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Code saved successfully!');
+                    loadProfileData();
+                } else {
+                    alert(data.error || 'Failed to save code');
+                }
+            } catch (error) {
+                alert('Failed to save code');
+            }
+        }
+
+        async function deleteSavedCode(codeId) {
+            if (!confirm('Delete this saved code?')) return;
+            
+            const token = localStorage.getItem('token');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/codes/${codeId}`, {
+                    method: 'DELETE',
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    loadProfileData();
+                } else {
+                    alert(data.error || 'Failed to delete code');
+                }
+            } catch (error) {
+                alert('Failed to delete code');
+            }
+        }
+
+        function viewSavedCode(index) {
+            // Could implement a modal to view saved code
+            alert('Code viewer coming soon!');
+        }
+
+        async function updateName() {
+            const newName = document.getElementById('settingsName').value;
+            const token = localStorage.getItem('token');
+            
+            if (!newName) {
+                alert('Please enter a name');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/auth/update`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ name: newName })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Name updated successfully');
+                    const user = JSON.parse(localStorage.getItem('user') || '{}');
+                    user.name = newName;
+                    localStorage.setItem('user', JSON.stringify(user));
+                    loadProfileData();
+                    updateAuthNav();
+                } else {
+                    alert(data.error || 'Failed to update name');
+                }
+            } catch (error) {
+                alert('Failed to update name');
+            }
+        }
+
+        async function changePassword() {
+            const currentPassword = document.getElementById('settingsCurrentPassword').value;
+            const newPassword = document.getElementById('settingsNewPassword').value;
+            const confirmPassword = document.getElementById('settingsConfirmPassword').value;
+            const token = localStorage.getItem('token');
+            
+            if (!currentPassword || !newPassword || !confirmPassword) {
+                alert('Please fill in all password fields');
+                return;
+            }
+            
+            if (newPassword.length < 8) {
+                alert('Password must be at least 8 characters');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                alert('Passwords do not match');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/auth/change-password`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({ currentPassword, newPassword })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('Password changed successfully');
+                    document.getElementById('settingsCurrentPassword').value = '';
+                    document.getElementById('settingsNewPassword').value = '';
+                    document.getElementById('settingsConfirmPassword').value = '';
+                } else {
+                    alert(data.error || 'Failed to change password');
+                }
+            } catch (error) {
+                alert('Failed to change password');
+            }
+        }
+
+        function deleteAccount() {
+            if (!confirm('Are you sure you want to delete your account? This action cannot be undone.')) return;
+            
+            const token = localStorage.getItem('token');
+            
+            fetch(`${API_BASE_URL}/api/auth/delete`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    alert('Account deleted successfully');
+                    logout();
+                } else {
+                    alert(data.error || 'Failed to delete account');
+                }
+            })
+            .catch(() => alert('Failed to delete account'));
+        }
+
+        async function uploadAvatar(input) {
+            const file = input.files[0];
+            if (!file) return;
+            
+            if (file.size > 5 * 1024 * 1024) {
+                alert('Image size must be less than 5MB');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = async (e) => {
+                const base64 = e.target.result;
+                const token = localStorage.getItem('token');
+                
+                try {
+                    const response = await fetch(`${API_BASE_URL}/api/auth/upload-avatar`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify({ avatar: base64 })
+                    });
+                    
+                    const data = await response.json();
+                    
+                    if (data.success) {
+                        alert('Avatar uploaded successfully!');
+                        loadProfileData();
+                    } else {
+                        alert(data.error || 'Failed to upload avatar');
+                    }
+                } catch (error) {
+                    alert('Failed to upload avatar');
+                }
+            };
+            reader.readAsDataURL(file);
+        }
+
+        // ===== DOCS =====
+        function showDoc(docId) {
+            const docs = {
+                'getting-started': `<h2>Getting Started with KONKMENG</h2><p>Welcome to KONKMENG! This guide will help you get started with our code analysis platform.</p><h3>Installation</h3><p>First, install our CLI tool:</p><pre>npm install -g konkmeng</pre><h3>Basic Usage</h3><p>Analyze your first piece of code:</p><pre>konkmeng analyze myfile.js</pre>`,
+                'api-reference': `<h2>API Reference</h2><p>The KONKMENG API provides programmatic access to our code analysis engine.</p><h3>Authentication</h3><p>Include your API key in the Authorization header:</p><pre>Authorization: Bearer YOUR_API_KEY</pre><h3>Endpoints</h3><p><strong>POST /api/analyze-code</strong> - Analyze a piece of code</p>`,
+                'examples': `<h2>Code Examples</h2><h3>JavaScript Analysis</h3><pre>const result = await fetch('/api/analyze-code', {
+  method: 'POST',
+  body: JSON.stringify({ code: 'function sum(a,b) { return a + b }', language: 'JavaScript' })
+});</pre>`,
+                'faq': `<h2>Frequently Asked Questions</h2><h3>What languages do you support?</h3><p>We support 15+ languages including JavaScript, Python, Java, C++, and more.</p><h3>How fast is the analysis?</h3><p>Most analyses complete in under 500ms thanks to Groq's LPU technology.</p>`
+            };
+            document.getElementById('docs-content').innerHTML = docs[docId] || docs['getting-started'];
+        }
+
+        // ===== COOKIES =====
+        function acceptCookies() {
+            localStorage.setItem('cookiesAccepted', 'true');
+            document.getElementById('cookieBanner').style.display = 'none';
+        }
+
+        function closeCookieBanner() {
+            document.getElementById('cookieBanner').style.display = 'none';
+        }
+
+        // ===== KEYBOARD SHORTCUTS =====
+        document.addEventListener('keydown', (e) => {
+            if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+                analyzeCode();
+            }
+            if (e.key === 'Escape') {
+                closeAuthModal();
+            }
+        });
+    </script>
+    
+    <!-- Google Sign-In Library -->
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+</body>
+</html>

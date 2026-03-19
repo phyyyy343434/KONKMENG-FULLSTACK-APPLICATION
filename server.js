@@ -62,7 +62,7 @@ mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/konkmen')
 .then(() => console.log('✅ MongoDB connected successfully'))
 .catch(err => {
     console.error('❌ MongoDB connection error:', err);
-    process.exit(1);
+    console.log('⚠️ Server will continue running without database - some features will be unavailable');
 });
 
 // ===== USER SCHEMA & MODEL =====
