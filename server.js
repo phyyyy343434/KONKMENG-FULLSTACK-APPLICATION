@@ -18,7 +18,7 @@ const PORT = process.env.PORT || 3000;
 // ===== MIDDLEWARE =====
 const corsOptions = {
     origin: process.env.NODE_ENV === 'production' 
-        ? ['https://konkmeng.onrender.com', 'https://www.konkmeng.com']
+        ? ['https://konkmeng.onrender.com', 'https://www.konkmeng.com', 'https://www.konkmeng-ai.fun', 'https://konkmeng-ai.fun']
         : ['http://localhost:3000', 'http://127.0.0.1:3000'],
     credentials: true,
     optionsSuccessStatus: 200
