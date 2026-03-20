@@ -9,13 +9,22 @@ const nodemailer = require('nodemailer');
 const path = require('path');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const redis = require('redis');
+const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 // ===== MIDDLEWARE =====
-app.use(cors());                    
+const corsOptions = {
+    origin: process.env.NODE_ENV === 'production' 
+        ? ['https://konkmeng.onrender.com', 'https://www.konkmeng.com']
+        : ['http://localhost:3000', 'http://127.0.0.1:3000'],
+    credentials: true,
+    optionsSuccessStatus: 200
+};
+
+app.use(cors(corsOptions));                    
 app.use(express.json());            
 app.use(express.static('public'));  
 
@@ -1154,12 +1163,120 @@ const GEMINI_MODELS = [
     'gemini-1.0-pro-latest'     // Last resort: 1.0 Pro (stable)
 ];
 
-// Track model usage for monitoring
+// Track model usage for monitoring with auto-reset
+const STATS_RESET_INTERVAL = 24 * 60 * 60 * 1000; // 24 hours
+
 let modelUsageStats = {
-    'gemini-1.5-flash-latest': { success: 0, failed: 0 },
-    'gemini-1.5-pro-latest': { success: 0, failed: 0 },
-    'gemini-1.0-pro-latest': { success: 0, failed: 0 }
+    'gemini-1.5-flash-latest': { success: 0, failed: 0, lastReset: Date.now() },
+    'gemini-1.5-pro-latest': { success: 0, failed: 0, lastReset: Date.now() },
+    'gemini-1.0-pro-latest': { success: 0, failed: 0, lastReset: Date.now() }
 };
+
+let statsHistory = []; // Keep last 7 days
+
+// Reset stats every 24 hours to prevent memory leaks
+setInterval(() => {
+    // Save current stats to history
+    statsHistory.push({
+        timestamp: new Date().toISOString(),
+        stats: JSON.parse(JSON.stringify(modelUsageStats))
+    });
+    
+    // Keep only last 7 days
+    if (statsHistory.length > 7) {
+        statsHistory.shift();
+    }
+    
+    // Reset current stats
+    Object.keys(modelUsageStats).forEach(model => {
+        modelUsageStats[model] = { success: 0, failed: 0, lastReset: Date.now() };
+    });
+    
+    console.log('📊 Model stats reset - saved to history');
+}, STATS_RESET_INTERVAL);
+
+// ===== SERVER-SIDE SECURITY SCANNING =====
+/**
+ * Performs server-side vulnerability scanning before sending to Gemini
+ * Detects SQL injection, XSS, and hardcoded secrets (including obfuscated)
+ */
+function performSecurityScan(code) {
+    const vulnerabilities = [];
+    
+    // 1. SQL Injection patterns (including obfuscated)
+    const sqlPatterns = [
+        { pattern: /SELECT\s+.*\s+FROM/gi, name: 'SQL SELECT' },
+        { pattern: /INSERT\s+INTO/gi, name: 'SQL INSERT' },
+        { pattern: /UPDATE\s+.*\s+SET/gi, name: 'SQL UPDATE' },
+        { pattern: /DELETE\s+FROM/gi, name: 'SQL DELETE' },
+        { pattern: /DROP\s+TABLE/gi, name: 'SQL DROP' },
+        { pattern: /UNION\s+SELECT/gi, name: 'SQL UNION' },
+        { pattern: /exec\s*\(/gi, name: 'SQL EXEC' },
+        { pattern: /execute\s*\(/gi, name: 'SQL EXECUTE' },
+        { pattern: /eval\s*\(\s*atob/gi, name: 'Obfuscated eval(atob)' },
+        { pattern: /String\.fromCharCode/gi, name: 'String.fromCharCode obfuscation' },
+        { pattern: /Buffer\.from.*base64/gi, name: 'Base64 Buffer obfuscation' }
+    ];
+    
+    sqlPatterns.forEach(({ pattern, name }) => {
+        if (pattern.test(code)) {
+            vulnerabilities.push({
+                type: 'SQL_INJECTION',
+                severity: 'HIGH',
+                pattern: name,
+                message: `រកឃើញលំនាំ ${name} ដែលអាចបង្កគ្រោះថ្នាក់`
+            });
+        }
+    });
+    
+    // 2. XSS patterns
+    const xssPatterns = [
+        { pattern: /<script[^>]*>.*<\/script>/gi, name: '<script> tag' },
+        { pattern: /javascript:/gi, name: 'javascript: protocol' },
+        { pattern: /on\w+\s*=/gi, name: 'Event handler (onclick, onerror, etc.)' },
+        { pattern: /eval\s*\(/gi, name: 'eval() function' },
+        { pattern: /innerHTML\s*=/gi, name: 'innerHTML assignment' },
+        { pattern: /document\.write/gi, name: 'document.write()' }
+    ];
+    
+    xssPatterns.forEach(({ pattern, name }) => {
+        if (pattern.test(code)) {
+            vulnerabilities.push({
+                type: 'XSS',
+                severity: 'HIGH',
+                pattern: name,
+                message: `រកឃើញលំនាំ ${name} ដែលអាចបង្កគ្រោះថ្នាក់ XSS`
+            });
+        }
+    });
+    
+    // 3. Hardcoded secrets (including encoded)
+    const secretPatterns = [
+        { pattern: /api[_-]?key\s*[:=]\s*['"][^'"]+['"]/gi, name: 'API Key' },
+        { pattern: /password\s*[:=]\s*['"][^'"]+['"]/gi, name: 'Password' },
+        { pattern: /secret\s*[:=]\s*['"][^'"]+['"]/gi, name: 'Secret' },
+        { pattern: /token\s*[:=]\s*['"][^'"]+['"]/gi, name: 'Token' },
+        { pattern: /AIza[0-9A-Za-z_-]{35}/g, name: 'Google API Key' },
+        { pattern: /sk-[a-zA-Z0-9]{48}/g, name: 'OpenAI API Key' },
+        { pattern: /ghp_[a-zA-Z0-9]{36}/g, name: 'GitHub Token' },
+        { pattern: /['"][A-Za-z0-9+/]{40,}={0,2}['"]/g, name: 'Base64 encoded secret' }
+    ];
+    
+    secretPatterns.forEach(({ pattern, name }) => {
+        const matches = code.match(pattern);
+        if (matches) {
+            vulnerabilities.push({
+                type: 'HARDCODED_SECRET',
+                severity: 'CRITICAL',
+                pattern: name,
+                count: matches.length,
+                message: `រកឃើញ ${name} ដែលបានបង្កប់ក្នុងកូដ (${matches.length} កន្លែង)`
+            });
+        }
+    });
+    
+    return vulnerabilities;
+}
 
 /// ===== [SYSTEM IDENTITY: KONKMENG-AI v5.0 - GEMINI POWERED WITH SECURITY] =====
 /**
@@ -1248,15 +1365,30 @@ Version: 5.0 | Engine: Gemini 1.5 Flash | Security: Advanced`;
 
 /**
  * @route POST /api/analyze-code
- * @desc Analyze code with KONKMENG-AI v5.0 (Gemini + Redis Cache)
+ * @desc Analyze code with KONKMENG-AI v5.0 (Gemini + Redis Cache + Security Hardened)
  */
+const CACHE_LOCK_TTL = 30; // 30 seconds lock
+const MAX_CODE_LENGTH = 50000; // 50KB max
+
 const analyzeCode = async (req, res) => {
     const { code, language, responseLang = 'en' } = req.body;
     const masterName = req.user?.name || "Master";
     
+    // Input validation
     if (!code) {
         return res.status(400).json({ 
             error: responseLang === 'km' ? `អត់ឃើញកូដផង ${masterName}! បញ្ជូនមកអូនឆែកឱ្យភ្លាម!` : `No code found, Master ${masterName}!`
+        });
+    }
+    
+    if (code.length > MAX_CODE_LENGTH) {
+        return res.status(400).json({
+            success: false,
+            error: responseLang === 'km' 
+                ? `កូដវែងពេក! កំណត់អតិបរមា ${MAX_CODE_LENGTH} តួអក្សរ`
+                : `Code too long! Maximum ${MAX_CODE_LENGTH} characters`,
+            currentLength: code.length,
+            maxLength: MAX_CODE_LENGTH
         });
     }
 
@@ -1291,12 +1423,48 @@ const analyzeCode = async (req, res) => {
                         message: responseLang === 'km' ? 'លទ្ធផលពី Cache (សន្សំ API Credits)' : 'Result from cache (API credits saved)'
                     });
                 }
+                
+                // Try to acquire lock to prevent race condition
+                const lockKey = `lock:${cacheKey}`;
+                const lockAcquired = await redisClient.set(lockKey, '1', {
+                    NX: true,  // Only set if not exists
+                    EX: CACHE_LOCK_TTL
+                });
+                
+                if (!lockAcquired) {
+                    // Another request is processing, wait and retry
+                    console.log('⏳ Another request is processing this code, waiting...');
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    
+                    // Check cache again after waiting
+                    const retryResult = await redisClient.get(cacheKey);
+                    if (retryResult) {
+                        console.log('✅ Cache HIT after waiting - Returning cached result');
+                        return res.json({
+                            success: true,
+                            analysis: retryResult,
+                            cached: true,
+                            message: responseLang === 'km' ? 'លទ្ធផលពី Cache (រង់ចាំបន្តិច)' : 'Result from cache (waited)'
+                        });
+                    }
+                    // If still no cache, proceed with API call
+                }
+                
                 console.log('⚠️  Cache MISS - Will call Gemini API');
             } catch (cacheError) {
-                console.log('⚠️  Redis read error:', cacheError.message);
+                console.log('⚠️  Redis error:', cacheError.message);
             }
         } else {
             console.log('⚠️  Redis not connected - Skipping cache check');
+        }
+
+        // Server-side security scan
+        const serverSideVulnerabilities = performSecurityScan(code);
+        let securityContext = '';
+        if (serverSideVulnerabilities.length > 0) {
+            securityContext = responseLang === 'km' 
+                ? `\n\n⚠️ ការស្កេនសុវត្ថិភាពរកឃើញបញ្ហា:\n${serverSideVulnerabilities.map(v => `- ${v.type}: ${v.message}`).join('\n')}`
+                : `\n\nSecurity scan found issues:\n${serverSideVulnerabilities.map(v => `- ${v.type}: ${v.message}`).join('\n')}`;
         }
 
         // Call Gemini API with model fallback and retry logic
@@ -1313,12 +1481,18 @@ const analyzeCode = async (req, res) => {
                 const model = genAI.getGenerativeModel({ model: modelName });
                 
                 const prompt = responseLang === 'km' 
-                    ? `វិភាគកូដ ${language} នេះ:\n\n\`\`\`${language}\n${code}\n\`\`\``
-                    : `Analyze this ${language} code:\n\n\`\`\`${language}\n${code}\n\`\`\``;
+                    ? `វិភាគកូដ ${language} នេះ:${securityContext}\n\n\`\`\`${language}\n${code}\n\`\`\``
+                    : `Analyze this ${language} code:${securityContext}\n\n\`\`\`${language}\n${code}\n\`\`\``;
 
-                const result = await model.generateContent([
-                    { text: getSystemPrompt(responseLang) },
-                    { text: prompt }
+                // Call with timeout
+                const result = await Promise.race([
+                    model.generateContent([
+                        { text: getSystemPrompt(responseLang) },
+                        { text: prompt }
+                    ]),
+                    new Promise((_, reject) => 
+                        setTimeout(() => reject(new Error('Gemini API timeout after 30s')), 30000)
+                    )
                 ]);
 
                 const response = await result.response;
@@ -1371,36 +1545,52 @@ const analyzeCode = async (req, res) => {
             throw new Error('Failed to generate analysis');
         }
 
-        // Save to Redis cache with 24-hour TTL
+        // Save to Redis cache with 24-hour TTL and release lock
         if (isRedisConnected && redisClient) {
             try {
                 await redisClient.setEx(cacheKey, 86400, analysis); // 24 hours = 86400 seconds
                 console.log('✅ Cached result for 24 hours');
+                
+                // Release lock
+                const lockKey = `lock:${cacheKey}`;
+                await redisClient.del(lockKey);
+                console.log('✅ Released cache lock');
             } catch (cacheError) {
                 console.log('⚠️  Redis write error:', cacheError.message);
             }
         }
 
-        // Save to user history if authenticated
+        // Save to user history (fire and forget with proper error handling)
         if (req.headers.authorization) {
             const token = req.headers.authorization.split(' ')[1];
             if (token) {
-                try {
-                    const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
-                    await User.findByIdAndUpdate(decoded.id, {
-                        $push: {
-                            analysisHistory: { 
-                                code, 
-                                language, 
-                                analysis, 
-                                createdAt: new Date() 
+                jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key', async (err, decoded) => {
+                    if (err) {
+                        console.log('⚠️  JWT verification failed:', err.message);
+                        return;
+                    }
+                    
+                    try {
+                        await User.findByIdAndUpdate(decoded.id, {
+                            $push: {
+                                analysisHistory: {
+                                    $each: [{
+                                        code: code.substring(0, 1000), // Store only first 1KB
+                                        language,
+                                        analysis: analysis.substring(0, 5000), // Store only first 5KB
+                                        createdAt: new Date()
+                                    }],
+                                    $slice: -50 // Keep only last 50 entries
+                                }
                             }
-                        }
-                    });
-                    console.log('✅ Saved to user history');
-                } catch (err) { 
-                    console.log('⚠️  History save failed:', err.message); 
-                }
+                        }, { 
+                            timeout: 5000 // 5 second timeout
+                        });
+                        console.log('✅ Saved to user history');
+                    } catch (historyError) {
+                        console.error('❌ History save failed:', historyError.message);
+                    }
+                });
             }
         }
 
@@ -1411,12 +1601,26 @@ const analyzeCode = async (req, res) => {
             analysis,
             cached: false,
             model: usedModel,
+            securityScan: serverSideVulnerabilities.length > 0 ? {
+                found: serverSideVulnerabilities.length,
+                issues: serverSideVulnerabilities
+            } : null,
             message: responseLang === 'km' ? 'វិភាគជោគជ័យ' : 'Analysis successful'
         });
 
     } catch (error) {
         console.error('❌ Analysis error:', error.message);
         console.log('📊 Current Model Usage Stats:', JSON.stringify(modelUsageStats, null, 2));
+        
+        // Release lock on error
+        if (isRedisConnected && redisClient) {
+            try {
+                const lockKey = `lock:${cacheKey}`;
+                await redisClient.del(lockKey);
+            } catch (e) {
+                // Ignore lock cleanup errors
+            }
+        }
         
         // Handle quota exceeded error with clear Khmer message
         if (error.message === 'QUOTA_EXCEEDED') {
@@ -1455,13 +1659,45 @@ const analyzeCode = async (req, res) => {
     }
 };
 
-app.post('/api/analyze-code', analyzeCode);
+// ===== RATE LIMITING FOR ANALYZE-CODE ENDPOINT =====
+const analyzeCodeLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 50, // 50 requests per 15 minutes per IP
+    message: {
+        success: false,
+        error: 'ចំនួនសំណើរហួសកម្រិត សូមរង់ចាំ ១៥ នាទី',
+        errorEn: 'Too many requests, please wait 15 minutes'
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+    // Skip rate limit for cached responses
+    skip: async (req) => {
+        if (!req.body.code) return false;
+        
+        const cacheKey = crypto.createHash('sha256')
+            .update(`${req.body.code}:${req.body.language}:${req.body.responseLang || 'en'}`)
+            .digest('hex');
+        
+        if (isRedisConnected && redisClient) {
+            try {
+                const cached = await redisClient.get(cacheKey);
+                return !!cached; // Skip rate limit if cached
+            } catch (e) {
+                return false;
+            }
+        }
+        return false;
+    }
+});
+
+app.post('/api/analyze-code', analyzeCodeLimiter, analyzeCode);
 
 // ===== MODEL STATS ENDPOINT =====
 app.get('/api/model-stats', (req, res) => {
     res.json({
         success: true,
-        stats: modelUsageStats,
+        current: modelUsageStats,
+        history: statsHistory,
         models: GEMINI_MODELS,
         message: 'Model usage statistics'
     });
@@ -1526,17 +1762,30 @@ const healthCheck = (req, res) => {
 app.get('/api/health', healthCheck);
 
 // ===== SPA CATCH-ALL ROUTE =====
-const spaCatchAll = (req, res) => {
-    if (req.path.startsWith('/api/')) {
-        return res.status(404).json({
-            success: false,
-            error: 'API endpoint not found'
-        });
+// Serve SPA for all non-API routes
+app.use((req, res, next) => {
+    // Skip if it's an API route
+    if (req.path.startsWith('/api')) {
+        return next();
     }
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
-};
+    
+    // Serve SPA for all other routes
+    res.sendFile(path.join(__dirname, 'public', 'index.html'), (err) => {
+        if (err) {
+            console.error('Error serving index.html:', err);
+            res.status(500).send('Internal Server Error');
+        }
+    });
+});
 
-app.get(/^\/(?!api\/).*/, spaCatchAll);
+// 404 handler for API routes (must be AFTER all API routes)
+app.use('/api/*', (req, res) => {
+    res.status(404).json({
+        success: false,
+        error: 'API endpoint not found',
+        path: req.path
+    });
+});
 
 // ===== START SERVER =====
 const startServer = () => {
