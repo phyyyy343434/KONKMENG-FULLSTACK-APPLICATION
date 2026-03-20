@@ -6,8 +6,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const crypto = require('crypto');
 const nodemailer = require('nodemailer');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
+const path = require('path');
+const Groq = require('groq-sdk');
 const redis = require('redis');
+const rateLimit = require('express-rate-limit');
 require('dotenv').config();
 
 const app = express();
@@ -15,21 +17,14 @@ const PORT = process.env.PORT || 3000;
 
 // ===== MIDDLEWARE =====
 const corsOptions = {
-    origin: function (origin, callback) {
-        // អនុញ្ញាតគ្រប់ origin ទាំងអស់ (រួមទាំងទូរស័ព្ទ និងកុំព្យូទ័រផ្សេង)
-        callback(null, true);
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    origin: process.env.NODE_ENV === 'production' 
+        ? ['https://konkmeng.onrender.com', 'https://www.konkmeng.com']
+        : ['http://localhost:3000', 'http://127.0.0.1:3000'],
     credentials: true,
     optionsSuccessStatus: 200
 };
 
-app.use(cors(corsOptions));
-
-// Handle preflight requests for all routes
-
-
+app.use(cors(corsOptions));                    
 app.use(express.json());            
 app.use(express.static('public'));  
 
@@ -72,8 +67,12 @@ let isRedisConnected = false;
 
 async function setupRedis() {
     try {
+        // Explicitly use 127.0.0.1:6379 for local Redis
+        const redisUrl = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
+        console.log('🔌 Attempting Redis connection to:', redisUrl);
+        
         redisClient = redis.createClient({
-            url: process.env.REDIS_URL || 'redis://localhost:6379',
+            url: redisUrl,
             socket: {
                 reconnectStrategy: (retries) => {
                     if (retries > 3) {
@@ -91,7 +90,7 @@ async function setupRedis() {
         });
 
         redisClient.on('connect', () => {
-            console.log('✅ Redis connected successfully');
+            console.log('✅ Redis connected successfully to 127.0.0.1:6379');
             isRedisConnected = true;
         });
 
@@ -103,7 +102,7 @@ async function setupRedis() {
         await redisClient.connect();
     } catch (error) {
         console.log('⚠️  Redis connection failed:', error.message);
-        console.log('⚠️  Server will continue without caching');
+        console.log('⚠️  Server will continue without caching (Graceful Degradation)');
         isRedisConnected = false;
     }
 }
@@ -111,21 +110,35 @@ async function setupRedis() {
 // Initialize Redis
 setupRedis();
 
-console.log('\n🔍 ===== KONKMENG AI SYSTEM =====');
-console.log('🔑 GEMINI_API_KEY exists:', !!process.env.GEMINI_API_KEY);
+// ===== GROQ API CONFIGURATION =====
+const GROQ_API_KEY = process.env.GROQ_API_KEY;
+const groq = GROQ_API_KEY ? new Groq({ apiKey: GROQ_API_KEY }) : null;
+const GROQ_MODEL = 'llama-3.3-70b-versatile';
+
+// Groq usage stats
+let groqUsageStats = {
+    success: 0,
+    failed: 0,
+    totalTokens: 0,
+    lastUsed: null
+};
+
+console.log('\n🔍 ===== KONKMENG AI SYSTEM v5.1 | Groq Edition =====');
+console.log('🔑 GROQ_API_KEY exists:', !!process.env.GROQ_API_KEY);
 console.log('🔑 MONGODB_URI exists:', !!process.env.MONGODB_URI);
 console.log('🔑 JWT_SECRET exists:', !!process.env.JWT_SECRET);
 console.log('📧 EMAIL_SERVICE: Ethereal Email (Test/Development)');
 console.log('💾 REDIS_CACHE: Initializing...');
+console.log('🤖 AI_ENGINE: Groq (Llama 3.3 70B Versatile)');
 console.log('🔑 PORT:', PORT);
-console.log('================================\n');
+console.log('====================================\n');
 
 // ===== DATABASE CONNECTION =====
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/konkmen')
 .then(() => console.log('✅ MongoDB connected successfully'))
 .catch(err => {
-    console.error('⚠️  MongoDB connection error:', err.message);
-    console.log('⚠️  Server will continue without database features');
+    console.error('❌ MongoDB connection error:', err);
+    console.log('⚠️ Server will continue running without database - some features will be unavailable');
 });
 
 // ===== USER SCHEMA & MODEL =====
@@ -663,9 +676,8 @@ app.post('/api/auth/forgot-password', async (req, res) => {
         
         await user.save();
         
-        // Create reset link - Use environment URL or request origin
-        const baseUrl = process.env.APP_URL || `${req.protocol}://${req.get('host')}`;
-        const resetLink = `${baseUrl}/?resetToken=${resetToken}`;
+        // Create reset link
+        const resetLink = `http://localhost:3000/?resetToken=${resetToken}`;
         
         // Send email
         try {
@@ -1153,270 +1165,463 @@ app.post('/api/auth/github', async (req, res) => {
 
 // ===== CODE ANALYSIS ROUTE =====
 
-// GOOGLE GEMINI API CONFIGURATION
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-const genAI = GEMINI_API_KEY ? new GoogleGenerativeAI(GEMINI_API_KEY) : null;
+// Reset stats every 24 hours
+const STATS_RESET_INTERVAL = 24 * 60 * 60 * 1000;
+setInterval(() => {
+    groqUsageStats = { success: 0, failed: 0, totalTokens: 0, lastUsed: null };
+    console.log('📊 Groq stats reset');
+}, STATS_RESET_INTERVAL);
 
-// System prompts optimized for Khmer language
-// System prompts optimized for Khmer language with Security Audit
+/// ===== [SYSTEM IDENTITY: KONKMENG-AI v5.1 | Groq Edition - MINIMALIST CODE EXPLAINER] =====
+/**
+ * Convert language name to proper markdown language tag
+ * @param {string} language - The language name (e.g., "JavaScript", "Python")
+ * @returns {string} The markdown language tag (e.g., "javascript", "python")
+ */
+const getLanguageTag = (language) => {
+    const languageMap = {
+        'JavaScript': 'javascript',
+        'TypeScript': 'typescript',
+        'Python': 'python',
+        'Java': 'java',
+        'C++': 'cpp',
+        'C#': 'csharp',
+        'C': 'c',
+        'PHP': 'php',
+        'Ruby': 'ruby',
+        'Go': 'go',
+        'Rust': 'rust',
+        'Swift': 'swift',
+        'Kotlin': 'kotlin',
+        'SQL': 'sql',
+        'HTML': 'html',
+        'CSS': 'css',
+        'JSON': 'json',
+        'XML': 'xml',
+        'YAML': 'yaml',
+        'Markdown': 'markdown',
+        'Shell': 'bash',
+        'Bash': 'bash',
+        'PowerShell': 'powershell',
+        'R': 'r',
+        'Scala': 'scala',
+        'Perl': 'perl',
+        'Lua': 'lua',
+        'Dart': 'dart',
+        'Objective-C': 'objectivec'
+    };
+    
+    return languageMap[language] || language.toLowerCase();
+};
+
+/**
+ * Returns the system prompt for the given language.
+ * 
+ * @param {string} language - The language to generate the prompt for.
+ * @returns {string} The system prompt.
+ */
 const getSystemPrompt = (language) => {
+    const langTag = getLanguageTag(language);
     if (language === 'km') {
-        return `អ្នកគឺជាគ្រូបង្រៀនសរសេរកម្មវិធីជំនាញខ្ពស់ដែលឆ្លើយតែជាភាសាខ្មែរប្រើប្រាស់ពាក្យសាមញ្ញ និងងាយយល់។
+        return `អ្នកគឺជា KONKMENG AI v5.1 - AI ជំនាញពន្យល់កូដដ៏ឆ្លាតវៃ។
 
-🎯 **គោលការណ៍សំខាន់:**
-- ឆ្លើយជាភាសាខ្មែរ ១០០% ប្រើពាក្យធម្មតាដែលមនុស្សខ្មែរប្រើប្រចាំថ្ងៃ
-- ពន្យល់ច្បាស់លាស់ សាមញ្ញ និងងាយយល់សម្រាប់អ្នកចាប់ផ្តើម
-- ប្រើឧទាហរណ៍ជាក់ស្តែងនៅពេលចាំបាច់
-- កុំប្រើពាក្យបច្ចេកទេសច្រើនពេក ប្រសិនបើប្រើត្រូវពន្យល់ជាភាសាសាមញ្ញ
-- ត្រូវពិនិត្យសុវត្ថិភាពកូដជានិច្ច
+📋 **ទម្រង់ឆ្លើយតប (ប្រើ Markdown styling):**
 
-📋 **ទម្រង់ចម្លើយ:**
+┌─────────────────────────────────────┐
+│ 🎯 **សង្ខេបកូដ**                      │
+└─────────────────────────────────────┘
+[ពន្យល់សង្ខេបអំពីអ្វីដែលកូដធ្វើ ក្នុង 2-3 ប្រយោគ]
 
-📝 **កូដដែលត្រូវពិនិត្យ:**
-*បន្ទាត់ទី [លេខ]: [បង្ហាញកូដដើម]
+┌─────────────────────────────────────┐
+│ 🔍 **វិភាគលម្អិត**                    │
+└─────────────────────────────────────┘
+[ពន្យល់លម្អិតអំពី logic, algorithm, និង design patterns]
 
-🔧 **បញ្ហាដែលរកឃើញ:**
-- [ពន្យល់បញ្ហាជាភាសាខ្មែរសាមញ្ញ]
+┌─────────────────────────────────────┐
+│ ⚠️ **បញ្ហា & ការកែលម្អ**              │
+└─────────────────────────────────────┘
+${language === 'km' ? '✅ **អ្វីដែលល្អ:**' : '✅ **Good:**'}
+• [ចំណុចវិជ្ជមាន]
 
-🔒 **ការត្រួតពិនិត្យសុវត្ថិភាព:**
-- **SQL Injection:** [ពិនិត្យមើលថាតើមានហានិភ័យ SQL Injection ឬទេ]
-- **XSS (Cross-Site Scripting):** [ពិនិត្យមើលថាតើមានហានិភ័យ XSS ឬទេ]
-- **ពាក្យសម្ងាត់ដាក់ក្នុងកូដ:** [ពិនិត្យមើលថាតើមាន API keys, passwords ក្នុងកូដឬទេ]
-- **ចំណុចសុវត្ថិភាពផ្សេងៗ:** [បញ្ហាសុវត្ថិភាពផ្សេងទៀត]
-- **ពិន្ទុសុវត្ថិភាព:** [ពិន្ទុ]/១០ ([ពន្យល់ហេតុផល])
+${language === 'km' ? '⚠️ **អ្វីដែលត្រូវកែ:**' : '⚠️ **Needs Improvement:**'}
+• [ចំណុចដែលត្រូវកែលម្អ]
 
-✅ **កូដដែលបានកែប្រែ:**
-\`\`\`[language]
-[កូដថ្មីដែលត្រឹមត្រូវ និងមានសុវត្ថិភាព]
+${language === 'km' ? '💡 **ដំបូន្មាន:**' : '💡 **Suggestions:**'}
+• [ដំបូន្មានកែលម្អ]
+
+┌─────────────────────────────────────┐
+│ 📖 **ពន្យល់បន្ទាត់ម្តងមួយៗ**          │
+└─────────────────────────────────────┘
+\`\`\`${langTag}
+[បង្ហាញកូដដើមជាមួយលេខបន្ទាត់]
 \`\`\`
 
-📖 **ការពន្យល់លម្អិត:**
-*បន្ទាត់ទី [លេខ]: [ពន្យល់ជាភាសាខ្មែរងាយយល់ថាកូដនេះធ្វើអ្វី និងហេតុអ្វីត្រូវកែ]
+**ការពន្យល់:**
+• **បន្ទាត់ 1-X:** [ពន្យល់ក្រុមបន្ទាត់ដែលទាក់ទង]
+• **បន្ទាត់ Y:** [ពន្យល់បន្ទាត់សំខាន់]
 
-💡 **ចំណេះដឹងបន្ថែម:**
-[ផ្តល់ព័ត៌មានបន្ថែមដែលមានប្រយោជន៍ជាភាសាខ្មែរ]`;
+┌─────────────────────────────────────┐
+│ 🎨 **ឧទាហរណ៍ប្រើប្រាស់**              │
+└─────────────────────────────────────┘
+\`\`\`${langTag}
+[បង្ហាញឧទាហរណ៍របៀបប្រើកូដនេះ]
+\`\`\`
+
+**Output:**
+\`\`\`
+[បង្ហាញលទ្ធផលដែលរំពឹងទុក]
+\`\`\`
+
+---
+💬 **សន្និដ្ឋាន:** [សង្ខេបចុងក្រោយ 1 ប្រយោគ]
+
+**ច្បាប់សំខាន់:**
+- ប្រើ emojis ឱ្យច្រើនដើម្បីឱ្យគួរឱ្យចាប់អារម្មណ៍
+- ប្រើ boxes (┌─┐ │ └─┘) ដើម្បីបែងចែក sections
+- ប្រើ **bold** សម្រាប់ពាក្យសំខាន់
+- ប្រើ \`code\` សម្រាប់ code snippets
+- ប្រើ bullet points (•) ជំនួស hyphens (-)
+- Code blocks ត្រូវតែប្រើ \`\`\`${langTag}\`\`\` (មិនមែន \`\`\`km\`\`\`)`;
     } else {
-        return `You are an expert programming teacher providing clear, simple explanations in English.
+        return `You are KONKMENG AI v5.1 - An intelligent code explanation AI.
 
-🎯 **Key Principles:**
-- Respond 100% in English using simple, everyday language
-- Provide clear, concise explanations suitable for beginners
-- Use practical examples when necessary
-- Avoid excessive technical jargon; if used, explain in simple terms
-- Always perform security audits on code
+📋 **Response Format (Use Markdown styling):**
 
-📋 **RESPONSE FORMAT:**
+┌─────────────────────────────────────┐
+│ 🎯 **Code Summary**                  │
+└─────────────────────────────────────┘
+[Brief 2-3 sentence summary of what the code does]
 
-📝 **Code to Review:**
-*Line [number]: [show original code]
+┌─────────────────────────────────────┐
+│ 🔍 **Detailed Analysis**             │
+└─────────────────────────────────────┘
+[Detailed explanation of logic, algorithms, and design patterns]
 
-🔧 **Issues Found:**
-- [brief explanation in simple English]
+┌─────────────────────────────────────┐
+│ ⚠️ **Issues & Improvements**         │
+└─────────────────────────────────────┘
+✅ **Good Points:**
+• [Positive aspects]
 
-🔒 **Security Audit:**
-- **SQL Injection:** [check for SQL injection vulnerabilities]
-- **XSS (Cross-Site Scripting):** [check for XSS vulnerabilities]
-- **Hardcoded Secrets:** [check for API keys, passwords, tokens in code]
-- **Other Security Issues:** [any other security concerns]
-- **Security Score:** [score]/10 ([brief explanation])
+⚠️ **Needs Improvement:**
+• [Areas that need improvement]
 
-✅ **Fixed Code:**
-\`\`\`[language]
-[corrected and secure code]
+💡 **Suggestions:**
+• [Improvement recommendations]
+
+┌─────────────────────────────────────┐
+│ 📖 **Line-by-Line Breakdown**        │
+└─────────────────────────────────────┘
+\`\`\`${langTag}
+[Show original code with line numbers]
 \`\`\`
 
-📖 **Detailed Explanation:**
-*Line [number]: [explain in simple English what this code does and why it was changed]
+**Explanation:**
+• **Lines 1-X:** [Explain related group of lines]
+• **Line Y:** [Explain important line]
 
-💡 **Additional Tips:**
-[provide helpful additional information in English]`;
+┌─────────────────────────────────────┐
+│ 🎨 **Usage Example**                 │
+└─────────────────────────────────────┘
+\`\`\`${langTag}
+[Show example of how to use this code]
+\`\`\`
+
+**Output:**
+\`\`\`
+[Show expected output]
+\`\`\`
+
+---
+💬 **Conclusion:** [Final 1-sentence summary]
+
+**Important Rules:**
+- Use plenty of emojis to make it engaging
+- Use boxes (┌─┐ │ └─┘) to separate sections
+- Use **bold** for important terms
+- Use \`code\` for code snippets
+- Use bullet points (•) instead of hyphens (-)
+- Code blocks must use \`\`\`${langTag}\`\`\` (not other tags)`;
     }
-}
+};
 
 /**
  * @route POST /api/analyze-code
- * @desc Analyze code with Google Gemini AI
+ * @desc Analyze code with KONKMENG-AI v5.1 | Groq Edition (Llama 3.3 70B + Redis Cache)
  */
-app.post('/api/analyze-code', async (req, res) => {
+const CACHE_LOCK_TTL = 30; // 30 seconds lock
+const MAX_CODE_LENGTH = 50000; // 50KB max
+
+const analyzeCode = async (req, res) => {
+    const { code, language, responseLang = 'en' } = req.body;
+    const masterName = req.user?.name || "Master";
+    
+    // Input validation
+    if (!code) {
+        return res.status(400).json({ 
+            error: responseLang === 'km' ? `អត់ឃើញកូដផង ${masterName}! បញ្ជូនមកអូនឆែកឱ្យភ្លាម!` : `No code found, Master ${masterName}!`
+        });
+    }
+    
+    if (code.length > MAX_CODE_LENGTH) {
+        return res.status(400).json({
+            success: false,
+            error: responseLang === 'km' 
+                ? `កូដវែងពេក! កំណត់អតិបរមា ${MAX_CODE_LENGTH} តួអក្សរ`
+                : `Code too long! Maximum ${MAX_CODE_LENGTH} characters`,
+            currentLength: code.length,
+            maxLength: MAX_CODE_LENGTH
+        });
+    }
+
+    if (!GROQ_API_KEY || !groq) {
+        return res.status(500).json({ 
+            error: responseLang === 'km' ? 'API Key មិនត្រឹមត្រូវ សូមពិនិត្យការកំណត់រចនាសម្ព័ន្ធ' : 'Groq API Key not configured'
+        });
+    }
+
+    // Generate cache key using SHA-256
+    const cacheKey = crypto.createHash('sha256')
+        .update(`${code}:${language}:${responseLang}`)
+        .digest('hex');
+
+    console.log('\n📥 ===== ANALYSIS REQUEST =====');
+    console.log('Language:', language);
+    console.log('Response Language:', responseLang);
+    console.log('Code length:', code.length);
+    console.log('Cache Key:', cacheKey.substring(0, 16) + '...');
+
     try {
-        const { code, language, responseLang = 'en' } = req.body;
-        
-        console.log('\n📥 ===== ANALYSIS REQUEST =====');
-        console.log('Language:', language);
-        console.log('Response Language:', responseLang);
-        console.log('Code length:', code?.length || 0);
-
-        // Validation
-        if (!code) {
-            return res.status(400).json({ 
-                error: responseLang === 'km' ? 'សូមបញ្ចូលកូដ' : 'Please enter code'
-            });
-        }
-
-        if (!GEMINI_API_KEY || !genAI) {
-            return res.status(500).json({ 
-                error: responseLang === 'km' ? 'API Key មិនត្រឹមត្រូវ' : 'API Key not configured'
-            });
-        }
-
-        // ===== REDIS CACHING =====
-        // Create cache key from code + language + responseLang
-        const cacheKey = crypto
-            .createHash('sha256')
-            .update(`${code}:${language}:${responseLang}`)
-            .digest('hex');
-
         // Check Redis cache first
         if (isRedisConnected && redisClient) {
             try {
-                const cachedResult = await redisClient.get(`analysis:${cacheKey}`);
+                const cachedResult = await redisClient.get(cacheKey);
                 if (cachedResult) {
                     console.log('✅ Cache HIT - Returning cached result');
-                    const parsed = JSON.parse(cachedResult);
                     return res.json({
-                        ...parsed,
+                        success: true,
+                        analysis: cachedResult,
                         cached: true,
-                        cacheKey: cacheKey.substring(0, 8) + '...'
+                        message: responseLang === 'km' ? 'លទ្ធផលពី Cache (សន្សំ API Credits)' : 'Result from cache (API credits saved)'
                     });
                 }
-                console.log('⚠️  Cache MISS - Calling Gemini API');
+                
+                // Try to acquire lock to prevent race condition
+                const lockKey = `lock:${cacheKey}`;
+                const lockAcquired = await redisClient.set(lockKey, '1', {
+                    NX: true,  // Only set if not exists
+                    EX: CACHE_LOCK_TTL
+                });
+                
+                if (!lockAcquired) {
+                    // Another request is processing, wait and retry
+                    console.log('⏳ Another request is processing this code, waiting...');
+                    await new Promise(resolve => setTimeout(resolve, 2000));
+                    
+                    // Check cache again after waiting
+                    const retryResult = await redisClient.get(cacheKey);
+                    if (retryResult) {
+                        console.log('✅ Cache HIT after waiting - Returning cached result');
+                        return res.json({
+                            success: true,
+                            analysis: retryResult,
+                            cached: true,
+                            message: responseLang === 'km' ? 'លទ្ធផលពី Cache (រង់ចាំបន្តិច)' : 'Result from cache (waited)'
+                        });
+                    }
+                    // If still no cache, proceed with API call
+                }
+                
+                console.log('⚠️  Cache MISS - Will call Groq API');
             } catch (cacheError) {
-                console.log('⚠️  Cache read error:', cacheError.message);
+                console.log('⚠️  Redis error:', cacheError.message);
+            }
+        } else {
+            console.log('⚠️  Redis not connected - Skipping cache check');
+        }
+
+        // Call Groq API
+        let analysis = null;
+        let lastError = null;
+
+        try {
+            console.log(`🤖 Calling Groq API with model: ${GROQ_MODEL}`);
+            
+            const prompt = responseLang === 'km' 
+                ? `វិភាគកូដ ${language} នេះ:\n\n\`\`\`${language}\n${code}\n\`\`\``
+                : `Analyze this ${language} code:\n\n\`\`\`${language}\n${code}\n\`\`\``;
+
+            // Call Groq API with timeout
+            const completion = await Promise.race([
+                groq.chat.completions.create({
+                    messages: [
+                        { role: 'system', content: getSystemPrompt(responseLang) },
+                        { role: 'user', content: prompt }
+                    ],
+                    model: GROQ_MODEL,
+                    temperature: 0.3,
+                    max_tokens: 4096
+                }),
+                new Promise((_, reject) => 
+                    setTimeout(() => reject(new Error('Groq API timeout after 30s')), 30000)
+                )
+            ]);
+
+            analysis = completion.choices[0]?.message?.content;
+            
+            if (!analysis) {
+                throw new Error('Empty response from Groq API');
+            }
+            
+            // Update success stats
+            groqUsageStats.success++;
+            groqUsageStats.totalTokens += (completion.usage?.total_tokens || 0);
+            groqUsageStats.lastUsed = new Date().toISOString();
+            
+            console.log(`✅ Success with Groq API`);
+            console.log(`📊 Tokens used: ${completion.usage?.total_tokens || 0}`);
+            console.log(`📊 Groq Stats: ${JSON.stringify(groqUsageStats)}`);
+            
+        } catch (groqError) {
+            lastError = groqError;
+            groqUsageStats.failed++;
+            
+            console.log(`❌ Groq API failed:`, groqError.message);
+            throw new Error('GROQ_API_FAILED');
+        }
+
+        // Save to Redis cache with 24-hour TTL and release lock
+        if (isRedisConnected && redisClient) {
+            try {
+                await redisClient.setEx(cacheKey, 86400, analysis); // 24 hours = 86400 seconds
+                console.log('✅ Cached result for 24 hours');
+                
+                // Release lock
+                const lockKey = `lock:${cacheKey}`;
+                await redisClient.del(lockKey);
+                console.log('✅ Released cache lock');
+            } catch (cacheError) {
+                console.log('⚠️  Redis write error:', cacheError.message);
             }
         }
 
-        // Try Gemini models in order (trying paid tier models which might work)
-        const modelsToTry = [
-            { name: 'gemini-2.5-flash', type: 'Fast' },
-            { name: 'gemini-2.0-flash-lite-001', type: 'Lite' },
-            { name: 'gemini-2.0-flash', type: 'Standard' }
-        ];
-
-        let lastError = null;
-        let successResponse = null;
-
-        for (const modelInfo of modelsToTry) {
-            try {
-                console.log(`🤔 Trying ${modelInfo.name}...`);
-
-                const model = genAI.getGenerativeModel({ 
-                    model: modelInfo.name,
-                    generationConfig: {
-                        temperature: 0.3,
-                        topP: 0.85,
-                        topK: 40,
-                        maxOutputTokens: 2048,
+        // Save to user history (fire and forget with proper error handling)
+        if (req.headers.authorization) {
+            const token = req.headers.authorization.split(' ')[1];
+            if (token) {
+                jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key', async (err, decoded) => {
+                    if (err) {
+                        console.log('⚠️  JWT verification failed:', err.message);
+                        return;
+                    }
+                    
+                    try {
+                        await User.findByIdAndUpdate(decoded.id, {
+                            $push: {
+                                analysisHistory: {
+                                    $each: [{
+                                        code: code.substring(0, 1000), // Store only first 1KB
+                                        language,
+                                        analysis: analysis.substring(0, 5000), // Store only first 5KB
+                                        createdAt: new Date()
+                                    }],
+                                    $slice: -50 // Keep only last 50 entries
+                                }
+                            }
+                        }, { 
+                            timeout: 5000 // 5 second timeout
+                        });
+                        console.log('✅ Saved to user history');
+                    } catch (historyError) {
+                        console.error('❌ History save failed:', historyError.message);
                     }
                 });
-
-                const systemPrompt = getSystemPrompt(responseLang);
-                
-                const userPrompt = responseLang === 'km' 
-                    ? `ពន្យល់កូដ ${language} នេះជាភាសាខ្មែរសាមញ្ញ និងងាយយល់ ហើយត្រូវពិនិត្យសុវត្ថិភាពផងដែរ៖
-
-\`\`\`${language}
-${code}
-\`\`\`
-
-សូមឆ្លើយតាមទម្រង់ដែលបានកំណត់ ហើយប្រើតែភាសាខ្មែរប៉ុណ្ណោះ។ ត្រូវរួមបញ្ចូលផ្នែក "ការត្រួតពិនិត្យសុវត្ថិភាព" ជាមួយពិន្ទុសុវត្ថិភាព។`
-                    : `Explain this ${language} code in simple English and perform a security audit:
-
-\`\`\`${language}
-${code}
-\`\`\`
-
-Please follow the response format and use only English. Must include "Security Audit" section with security score.`;
-
-                const fullPrompt = `${systemPrompt}\n\n${userPrompt}`;
-                
-                const result = await model.generateContent(fullPrompt);
-                const response = await result.response;
-                const text = response.text();
-
-                if (text) {
-                    console.log(`✅ Success with ${modelInfo.name}`);
-                    successResponse = text;
-                    
-                    // Save to user history if authenticated
-                    const authHeader = req.headers['authorization'];
-                    const token = authHeader && authHeader.split(' ')[1];
-                    
-                    if (token) {
-                        try {
-                            const decoded = jwt.verify(token, process.env.JWT_SECRET || 'your-secret-key');
-                            await User.findByIdAndUpdate(decoded.id, {
-                                $push: {
-                                    analysisHistory: {
-                                        code,
-                                        language,
-                                        analysis: successResponse,
-                                        createdAt: new Date()
-                                    }
-                                }
-                            });
-                            console.log('✅ Analysis saved to user history');
-                        } catch (err) {
-                            console.log('⚠️ Could not save to history:', err.message);
-                        }
-                    }
-                    
-                    break;
-                }
-
-            } catch (error) {
-                console.log(`❌ ${modelInfo.name} failed:`, error.message);
-                lastError = error;
             }
         }
 
-        if (successResponse) {
-            const responseData = {
-                success: true,
-                analysis: successResponse,
-                responseLanguage: responseLang,
-                status: responseLang === 'km' ? 'វិភាគរួចរាល់' : 'Analysis complete',
-                cached: false
-            };
+        console.log('✅ Analysis completed successfully\n');
 
-            // ===== SAVE TO REDIS CACHE =====
-            if (isRedisConnected && redisClient) {
-                try {
-                    // Cache for 24 hours (86400 seconds)
-                    await redisClient.setEx(
-                        `analysis:${cacheKey}`,
-                        86400,
-                        JSON.stringify(responseData)
-                    );
-                    console.log('✅ Result cached for 24 hours');
-                } catch (cacheError) {
-                    console.log('⚠️  Cache write error:', cacheError.message);
-                }
-            }
-
-            return res.json(responseData);
-        }
-
-        throw lastError || new Error('All models failed');
+        res.json({
+            success: true,
+            analysis,
+            cached: false,
+            model: GROQ_MODEL,
+            message: responseLang === 'km' ? 'វិភាគជោគជ័យ' : 'Analysis successful'
+        });
 
     } catch (error) {
-        console.error('\n❌ ANALYSIS ERROR:', error.message);
+        console.error('❌ Analysis error:', error.message);
+        console.log('📊 Current Groq Stats:', JSON.stringify(groqUsageStats, null, 2));
         
-        const responseLang = req.body?.responseLang || 'en';
+        // Release lock on error
+        if (isRedisConnected && redisClient) {
+            try {
+                const lockKey = `lock:${cacheKey}`;
+                await redisClient.del(lockKey);
+            } catch (e) {
+                // Ignore lock cleanup errors
+            }
+        }
+        
+        // Handle Groq API error with Khmer message
+        const errorMsg = responseLang === 'km' 
+            ? 'មានបញ្ហាបច្ចេកទេសជាមួយ Groq API សូមព្យាយាមម្តងទៀត' 
+            : 'Technical issue with Groq API, please try again';
         
         res.status(500).json({
-            error: responseLang === 'km' ? 'ការវិភាគបរាជ័យ' : 'Analysis failed',
+            success: false,
+            error: errorMsg,
             details: error.message,
-            solution: responseLang === 'km' ? 'សូមព្យាយាមម្តងទៀត' : 'Please try again'
+            groqStats: groqUsageStats
         });
+    }
+};
+
+// ===== RATE LIMITING FOR ANALYZE-CODE ENDPOINT =====
+const analyzeCodeLimiter = rateLimit({
+    windowMs: 15 * 60 * 1000, // 15 minutes
+    max: 50, // 50 requests per 15 minutes per IP
+    message: {
+        success: false,
+        error: 'ចំនួនសំណើរហួសកម្រិត សូមរង់ចាំ ១៥ នាទី',
+        errorEn: 'Too many requests, please wait 15 minutes'
+    },
+    standardHeaders: true,
+    legacyHeaders: false,
+    // Skip rate limit for cached responses
+    skip: async (req) => {
+        if (!req.body.code) return false;
+        
+        const cacheKey = crypto.createHash('sha256')
+            .update(`${req.body.code}:${req.body.language}:${req.body.responseLang || 'en'}`)
+            .digest('hex');
+        
+        if (isRedisConnected && redisClient) {
+            try {
+                const cached = await redisClient.get(cacheKey);
+                return !!cached; // Skip rate limit if cached
+            } catch (e) {
+                return false;
+            }
+        }
+        return false;
     }
 });
 
+app.post('/api/analyze-code', analyzeCodeLimiter, analyzeCode);
+
+// ===== MODEL STATS ENDPOINT =====
+app.get('/api/model-stats', (req, res) => {
+    res.json({
+        success: true,
+        stats: groqUsageStats,
+        model: GROQ_MODEL,
+        message: 'Groq API usage statistics'
+    });
+});
+
 // ===== DIAGNOSTIC ENDPOINT =====
-/**
- * @route GET /api/debug/users
- * @desc Get all users in database (FOR TESTING ONLY)
- */
-app.get('/api/debug/users', async (req, res) => {
+const debugUsers = async (req, res) => {
     try {
         const users = await User.find().select('-password');
         res.json({
@@ -1436,34 +1641,95 @@ app.get('/api/debug/users', async (req, res) => {
             error: error.message
         });
     }
-});
+};
+
+app.get('/api/debug/users', debugUsers);
 
 // ===== HEALTH CHECK =====
-app.get('/api/health', (req, res) => {
+const healthCheck = (req, res) => {
+    const redisUrl = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
+    
     res.json({ 
         status: '✅ KONKMENG is running',
-        message: 'Full-stack with Authentication',
-        version: '5.0 (with Gemini AI + Redis Cache + Security Audit)',
-        apiKey: GEMINI_API_KEY ? '✅ Configured' : '❌ Missing',
+        message: 'Full-stack with Authentication + Redis Cache',
+        version: '5.1 | Groq Edition',
+        engine: 'Groq Llama 3.3 70B Versatile | Ultra-Fast Performance',
+        apiKey: GROQ_API_KEY ? '✅ Configured' : '❌ Missing',
         mongodb: mongoose.connection.readyState === 1 ? '✅ Connected' : '❌ Disconnected',
-        redis: isRedisConnected ? '✅ Connected' : '❌ Disconnected',
+        redis: {
+            status: isRedisConnected ? '✅ Connected' : '⚠️  Disconnected (Graceful Degradation)',
+            url: redisUrl,
+            caching: isRedisConnected ? 'Active (24h TTL)' : 'Disabled'
+        },
+        groqModel: {
+            name: GROQ_MODEL,
+            stats: groqUsageStats
+        },
+        features: {
+            authentication: '✅ Enabled',
+            caching: isRedisConnected ? '✅ Active (24h TTL)' : '⚠️  Disabled',
+            minimalistPrompt: '✅ Enabled (No security scans, no greetings)'
+        },
         timestamp: new Date().toISOString()
+    });
+};
+
+app.get('/api/health', healthCheck);
+
+// ===== SPA CATCH-ALL ROUTE =====
+// Serve SPA for all non-API routes
+app.use((req, res, next) => {
+    // Skip if it's an API route
+    if (req.path.startsWith('/api')) {
+        return next();
+    }
+    
+    // Serve SPA for all other routes
+    res.sendFile(path.join(__dirname, 'public', 'index.html'), (err) => {
+        if (err) {
+            console.error('Error serving index.html:', err);
+            res.status(500).send('Internal Server Error');
+        }
     });
 });
 
+// 404 handler for API routes (must be AFTER all API routes)
+app.use((req, res, next) => {
+    // Only handle API routes that weren't matched
+    if (req.path.startsWith('/api')) {
+        return res.status(404).json({
+            success: false,
+            error: 'API endpoint not found',
+            path: req.path
+        });
+    }
+    next();
+});
+
 // ===== START SERVER =====
-app.listen(PORT, () => {
+const startServer = () => {
+    const redisUrl = process.env.REDIS_URL || 'redis://127.0.0.1:6379';
+    
     console.log('\n🚀 ============================================');
-    console.log(`🚀 KONKMENG Server running on http://localhost:${PORT}`);
+    console.log(`🚀 KONKMENG v5.1 | Groq Edition running on http://localhost:${PORT}`);
     console.log('🚀 ============================================\n');
     console.log('📋 AUTHENTICATION:');
     console.log('   • Signup: POST /api/auth/signup');
     console.log('   • Login: POST /api/auth/login');
     console.log('   • Profile: GET /api/auth/profile\n');
     console.log('📋 CODE ANALYSIS:');
-    console.log('   • POST /api/analyze-code (with optional token)\n');
-    console.log('📋 DATABASE:');
+    console.log('   • POST /api/analyze-code (Groq + Redis Cache)');
+    console.log('   • GET /api/model-stats (Groq usage statistics)\n');
+    console.log('📋 INFRASTRUCTURE:');
     console.log('   • MongoDB:', mongoose.connection.readyState === 1 ? 'Connected ✅' : 'Disconnected ❌');
-    console.log('   • Users collection: ready\n');
+    console.log('   • Redis Cache:', isRedisConnected ? `Active ✅ (${redisUrl})` : `Inactive ⚠️  (${redisUrl})`);
+    console.log('   • Redis TTL: 24 hours (86400 seconds)\n');
+    console.log('📋 GROQ MODEL:');
+    console.log('   • Model: llama-3.3-70b-versatile');
+    console.log('   • Context: 128K tokens');
+    console.log('   • Speed: Ultra-fast inference');
+    console.log('   • Languages: English + Khmer support ✅\n');
     console.log('✅ Ready! Server is waiting for requests...\n');
-});
+};
+
+app.listen(PORT, startServer);
