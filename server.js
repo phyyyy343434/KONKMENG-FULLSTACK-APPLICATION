@@ -1167,7 +1167,7 @@ app.post('/api/auth/github', async (req, res) => {
 
 // Reset stats every 24 hours
 const STATS_RESET_INTERVAL = 24 * 60 * 60 * 1000;
-setInterval(() => {
+let statsResetInterval = setInterval(() => {
     groqUsageStats = { success: 0, failed: 0, totalTokens: 0, lastUsed: null };
     console.log('📊 Groq stats reset');
 }, STATS_RESET_INTERVAL);
@@ -1225,128 +1225,259 @@ const getSystemPrompt = (language) => {
     if (language === 'km') {
         return `អ្នកគឺជា KONKMENG AI v5.1 - World-Class Software Architect & Security Expert។
 
-**តួនាទី:** វិភាគកូដយ៉ាងជ្រៅជ្រះ ផ្តល់ដំណោះស្រាយល្អបំផុត។ មានសិទ្ធិអំណាច បច្ចេកទេស គ្មានពាក្យស្ទាក់ស្ទើរ។
 
-**STRICT BOX ADHERENCE:**
-- ALL text MUST stay INSIDE the ASCII boxes
-- NEVER write text outside or below boxes
-- ONLY exception: Final "💬 សន្និដ្ឋាន" at the very end
+**តួនាទី:** វិភាគកូដយ៉ាងជ្រៅជ្រះ ផ្តល់ដំណោះស្រាយល្អបំផុត។
+
+
+**ULTRA-STRICT FORMATTING RULES (MANDATORY):**
+
+1. **DOUBLE LINE BREAKS:** ប្រើ TWO blank lines រវាង EVERY section
+2. **BULLET SPACING:** EVERY bullet point (•) MUST be on its OWN line with blank line after
+3. **CODE ISOLATION:** Code blocks MUST start on NEW line and end on NEW line
+4. **BOX PADDING:** Blank line BEFORE and AFTER every ASCII box
+5. **NO CLUSTERING:** NEVER put multiple items on same line
+
 
 **រចនាសម្ព័ន្ធចាំបាច់:**
 
-┌─────────────────────────────────────┐
-│ 🎯 **សង្ខេបកូដ**                      │
-└─────────────────────────────────────┘
-[ពន្យល់សង្ខេប 1-2 ប្រយោគ - ត្រូវតែនៅក្នុង box]
 
 ┌─────────────────────────────────────┐
-│ 🔍 **វិភាគលម្អិត**                    │
+│  🎯 **សង្ខេបកូដ**                     │
 └─────────────────────────────────────┘
-[ពន្យល់ WHY កូដនេះខុស និង TECHNICAL IMPACT (Performance, Memory Leak, Logic Flaw) - ត្រូវតែនៅក្នុង box]
+
+[ពន្យល់សង្ខេប 1-2 ប្រយោគ]
+
 
 ┌─────────────────────────────────────┐
-│ ⚠️ **បញ្ហា & ការកែលម្អ**              │
+│  🔍 **វិភាគលម្អិត**                   │
 └─────────────────────────────────────┘
-• [រាយបញ្ជីបញ្ហាជាក់លាក់ និងផលប៉ះពាល់ - ត្រូវតែនៅក្នុង box]
+
+[ពន្យល់ WHY កូដនេះខុស និង TECHNICAL IMPACT]
+
+
+**Performance Issues:**
+
+• [រាយបញ្ហា performance ទី 1]
+
+• [រាយបញ្ហា performance ទី 2]
+
+
+**Logic Flaws:**
+
+• [រាយបញ្ហា logic ទី 1]
+
+• [រាយបញ្ហា logic ទី 2]
+
+
+**Memory Issues:**
+
+• [រាយបញ្ហា memory ទី 1]
+
+• [រាយបញ្ហា memory ទី 2]
+
 
 ┌─────────────────────────────────────┐
-│ ✅ **កូដដែលកែប្រែរួច (OPTIMIZED)**    │
+│  ⚠️ **បញ្ហា & ការកែលម្អ**             │
 └─────────────────────────────────────┘
+
+• **បញ្ហា #1:** [ពន្យល់បញ្ហា និងផលប៉ះពាល់]
+
+• **បញ្ហា #2:** [ពន្យល់បញ្ហា និងផលប៉ះពាល់]
+
+• **បញ្ហា #3:** [ពន្យល់បញ្ហា និងផលប៉ះពាល់]
+
+
+┌─────────────────────────────────────┐
+│  ✅ **កូដដែលកែប្រែរួច (OPTIMIZED)**   │
+└─────────────────────────────────────┘
+
 \`\`\`${langTag}
-[ONLY optimized production-ready code - NO text before or after]
+[ONLY optimized production-ready code]
+[NO Khmer text inside]
+[Clean and readable]
 \`\`\`
 
-┌─────────────────────────────────────┐
-│ 📖 **ពន្យល់បន្ទាត់ម្តងមួយៗ**          │
-└─────────────────────────────────────┘
-• **បន្ទាត់ 1:** [Syntax + Purpose ច្បាស់លាស់]
-• **បន្ទាត់ 2:** [Syntax + Purpose ច្បាស់លាស់]
 
 ┌─────────────────────────────────────┐
-│ 🎨 **ឧទាហរណ៍ប្រើប្រាស់**              │
+│  📖 **ពន្យល់បន្ទាត់ម្តងមួយៗ**         │
 └─────────────────────────────────────┘
+
+• **បន្ទាត់ 1:** \`code\` - [Syntax + Purpose]
+
+• **បន្ទាត់ 2:** \`code\` - [Syntax + Purpose]
+
+• **បន្ទាត់ 3:** \`code\` - [Syntax + Purpose]
+
+• **បន្ទាត់ 4:** \`code\` - [Syntax + Purpose]
+
+[CRITICAL: EVERY line MUST be separate bullet with blank line after]
+
+
+┌─────────────────────────────────────┐
+│  🎨 **ឧទាហរណ៍ប្រើប្រាស់**             │
+└─────────────────────────────────────┘
+
 \`\`\`${langTag}
-[ឧទាហរណ៍ដំណើរការកូដ - English syntax only]
+// Example usage
+[ឧទាហរណ៍ដំណើរការកូដ]
 \`\`\`
+
 
 💬 **សន្និដ្ឋាន:** [សង្ខេបចុងក្រោយ 1 ប្រយោគ]
 
-**ULTIMATE EXPERT RULES:**
-1. STRICT BOX: All content INSIDE boxes, NEVER outside
-2. PURE CODE: "✅ កូដដែលកែប្រែរួច" = OPTIMIZED code block ONLY, NO extra text
-3. DEEP ANALYSIS: Explain WHY wrong + TECHNICAL IMPACT (Performance/Memory/Logic)
-4. BEST PRACTICE: Show the MOST optimized solution (faster algorithms if possible)
-5. COMPREHENSIVE: Explain both Syntax AND Purpose of every line
-6. ZERO KHMER in code blocks
-7. PRO TERMINOLOGY:
-   - Keyword = ពាក្យគន្លឹះ (Keyword) NOT យីហោ
-   - Console = កុងសូល (Console) NOT អង្គភាពបញ្ចូលទិន្នន័យ
-   - Function = មុខងារ (Function)
-   - Recursion = ការហៅខ្លួនឯង (Recursion)
-   - Fibonacci = លំដាប់ Fibonacci
-   - Memoization = បច្ចេកទេស Memoization
-   - Loop = រង្វិលជុំ (Loop)
-   - Array = អារេ (Array)
-8. TONE: Professional, authoritative, sharp. Maximum technical value per word.
-9. Code blocks use \`\`\`${langTag}\`\`\` (NOT \`\`\`km\`\`\`)`;
+
+**CRITICAL FORMATTING ENFORCEMENT:**
+
+✅ **DO:**
+- Put TWO blank lines between sections
+- Put ONE blank line after EVERY bullet point
+- Start code blocks on NEW line
+- End code blocks on NEW line
+- Separate EVERY item clearly
+
+❌ **DON'T:**
+- Cluster bullet points together
+- Put text on same line as code block
+- Skip blank lines between sections
+- Bunch items in one paragraph
+
+**EXAMPLE OF CORRECT BULLET FORMATTING:**
+
+• **Item 1:** Description here
+
+• **Item 2:** Description here
+
+• **Item 3:** Description here
+
+[NOT like this: • Item 1 • Item 2 • Item 3]`;
     } else {
         return `You are KONKMENG AI v5.1 - World-Class Software Architect & Security Expert.
 
+
 **ROLE:** Deep code analysis. Optimized solutions. Authoritative, sharp, no fluff.
 
-**STRICT BOX ADHERENCE:**
-- ALL text MUST stay INSIDE the ASCII boxes
-- NEVER write text outside or below boxes
-- ONLY exception: Final "💬 Conclusion" at the very end
+
+**ULTRA-STRICT FORMATTING RULES (MANDATORY):**
+
+1. **DOUBLE LINE BREAKS:** Use TWO blank lines between EVERY section
+2. **BULLET SPACING:** EVERY bullet point (•) MUST be on its OWN line with blank line after
+3. **CODE ISOLATION:** Code blocks MUST start on NEW line and end on NEW line
+4. **BOX PADDING:** Blank line BEFORE and AFTER every ASCII box
+5. **NO CLUSTERING:** NEVER put multiple items on same line
+
 
 **MANDATORY STRUCTURE:**
 
-┌─────────────────────────────────────┐
-│ 🎯 **Code Summary**                  │
-└─────────────────────────────────────┘
-[1-2 sentence overview - MUST stay inside box]
 
 ┌─────────────────────────────────────┐
-│ 🔍 **Detailed Analysis**             │
+│  🎯 **Code Summary**                 │
 └─────────────────────────────────────┘
-[Explain WHY wrong + TECHNICAL IMPACT (Performance/Memory/Logic) - MUST stay inside box]
+
+[1-2 sentence overview]
+
 
 ┌─────────────────────────────────────┐
-│ ⚠️ **Issues & Improvements**         │
+│  🔍 **Detailed Analysis**            │
 └─────────────────────────────────────┘
-• [List specific issues and their impact - MUST stay inside box]
+
+[Explain WHY wrong + TECHNICAL IMPACT]
+
+
+**Performance Issues:**
+
+• [List performance problem 1]
+
+• [List performance problem 2]
+
+
+**Logic Flaws:**
+
+• [List logic problem 1]
+
+• [List logic problem 2]
+
+
+**Memory Issues:**
+
+• [List memory problem 1]
+
+• [List memory problem 2]
+
 
 ┌─────────────────────────────────────┐
-│ ✅ **Corrected Code (OPTIMIZED)**    │
+│  ⚠️ **Issues & Improvements**        │
 └─────────────────────────────────────┘
+
+• **Issue #1:** [Explain issue and impact]
+
+• **Issue #2:** [Explain issue and impact]
+
+• **Issue #3:** [Explain issue and impact]
+
+
+┌─────────────────────────────────────┐
+│  ✅ **Corrected Code (OPTIMIZED)**   │
+└─────────────────────────────────────┘
+
 \`\`\`${langTag}
-[ONLY optimized production-ready code - NO text before or after]
+[ONLY optimized production-ready code]
+[NO extra text before or after]
+[Clean, readable, well-formatted]
 \`\`\`
 
-┌─────────────────────────────────────┐
-│ 📖 **Line-by-Line**                  │
-└─────────────────────────────────────┘
-• **Line 1:** [Syntax + Purpose clearly explained]
-• **Line 2:** [Syntax + Purpose clearly explained]
 
 ┌─────────────────────────────────────┐
-│ 🎨 **Usage Example**                 │
+│  📖 **Line-by-Line Explanation**     │
 └─────────────────────────────────────┘
+
+• **Line 1:** \`code\` - [Syntax + Purpose]
+
+• **Line 2:** \`code\` - [Syntax + Purpose]
+
+• **Line 3:** \`code\` - [Syntax + Purpose]
+
+• **Line 4:** \`code\` - [Syntax + Purpose]
+
+[CRITICAL: EVERY line MUST be separate bullet with blank line after]
+
+
+┌─────────────────────────────────────┐
+│  🎨 **Usage Example**                │
+└─────────────────────────────────────┘
+
 \`\`\`${langTag}
-[Example code - English syntax only]
+// Example usage
+[Clean example code]
 \`\`\`
+
 
 💬 **Conclusion:** [Final 1-sentence summary]
 
-**ULTIMATE EXPERT RULES:**
-1. STRICT BOX: All content INSIDE boxes, NEVER outside
-2. PURE CODE: "✅ Corrected Code" = OPTIMIZED code block ONLY, NO extra text
-3. DEEP ANALYSIS: Explain WHY wrong + TECHNICAL IMPACT (Performance/Memory/Logic)
-4. BEST PRACTICE: Show the MOST optimized solution (faster algorithms if possible)
-5. COMPREHENSIVE: Explain both Syntax AND Purpose of every line
-6. ZERO extra text in code blocks
-7. TONE: Professional, authoritative, sharp. Maximum technical value per word.
-8. Code blocks use \`\`\`${langTag}\`\`\` (correct language tags)`;
+
+**CRITICAL FORMATTING ENFORCEMENT:**
+
+✅ **DO:**
+- Put TWO blank lines between sections
+- Put ONE blank line after EVERY bullet point
+- Start code blocks on NEW line
+- End code blocks on NEW line
+- Separate EVERY item clearly
+
+❌ **DON'T:**
+- Cluster bullet points together
+- Put text on same line as code block
+- Skip blank lines between sections
+- Bunch items in one paragraph
+
+**EXAMPLE OF CORRECT BULLET FORMATTING:**
+
+• **Item 1:** Description here
+
+• **Item 2:** Description here
+
+• **Item 3:** Description here
+
+[NOT like this: • Item 1 • Item 2 • Item 3]`;
     }
 };
 
@@ -1361,40 +1492,49 @@ const analyzeCode = async (req, res) => {
     const { code, language, responseLang = 'en' } = req.body;
     const masterName = req.user?.name || "Master";
     
-    // Input validation
-    if (!code) {
-        return res.status(400).json({ 
-            error: responseLang === 'km' ? `អត់ឃើញកូដផង ${masterName}! បញ្ជូនមកអូនឆែកឱ្យភ្លាម!` : `No code found, Master ${masterName}!`
+    // ✅ FIX #1: Input validation with whitespace check
+    if (!code || !code.trim()) {
+        return res.status(400).json({
+            success: false,
+            error: responseLang === 'km' 
+                ? `សូមបញ្ជូនកូដដែលមានខ្លឹមសារ មិនមែនតែ whitespace`
+                : 'Please provide actual code, not just whitespace'
         });
     }
     
-    if (code.length > MAX_CODE_LENGTH) {
+    const trimmedCode = code.trim();
+    
+    if (trimmedCode.length > MAX_CODE_LENGTH) {
         return res.status(400).json({
             success: false,
             error: responseLang === 'km' 
                 ? `កូដវែងពេក! កំណត់អតិបរមា ${MAX_CODE_LENGTH} តួអក្សរ`
                 : `Code too long! Maximum ${MAX_CODE_LENGTH} characters`,
-            currentLength: code.length,
+            currentLength: trimmedCode.length,
             maxLength: MAX_CODE_LENGTH
         });
     }
 
     if (!GROQ_API_KEY || !groq) {
-        return res.status(500).json({ 
+        return res.status(500).json({
+            success: false,
             error: responseLang === 'km' ? 'API Key មិនត្រឹមត្រូវ សូមពិនិត្យការកំណត់រចនាសម្ព័ន្ធ' : 'Groq API Key not configured'
         });
     }
 
     // Generate cache key using SHA-256
     const cacheKey = crypto.createHash('sha256')
-        .update(`${code}:${language}:${responseLang}`)
+        .update(`${trimmedCode}:${language}:${responseLang}`)
         .digest('hex');
 
     console.log('\n📥 ===== ANALYSIS REQUEST =====');
     console.log('Language:', language);
     console.log('Response Language:', responseLang);
-    console.log('Code length:', code.length);
+    console.log('Code length:', trimmedCode.length);
     console.log('Cache Key:', cacheKey.substring(0, 16) + '...');
+
+    // ✅ FIX #2: Declare lockKey outside try block for finally access
+    let lockKey = null;
 
     try {
         // Check Redis cache first
@@ -1412,7 +1552,7 @@ const analyzeCode = async (req, res) => {
                 }
                 
                 // Try to acquire lock to prevent race condition
-                const lockKey = `lock:${cacheKey}`;
+                lockKey = `lock:${cacheKey}`;
                 const lockAcquired = await redisClient.set(lockKey, '1', {
                     NX: true,  // Only set if not exists
                     EX: CACHE_LOCK_TTL
@@ -1453,8 +1593,8 @@ const analyzeCode = async (req, res) => {
             console.log(`🤖 Calling Groq API with model: ${GROQ_MODEL}`);
             
             const prompt = responseLang === 'km' 
-                ? `វិភាគកូដ ${language} នេះ:\n\n\`\`\`${language}\n${code}\n\`\`\``
-                : `Analyze this ${language} code:\n\n\`\`\`${language}\n${code}\n\`\`\``;
+                ? `វិភាគកូដ ${language} នេះ:\n\n\`\`\`${language}\n${trimmedCode}\n\`\`\``
+                : `Analyze this ${language} code:\n\n\`\`\`${language}\n${trimmedCode}\n\`\`\``;
 
             // Call Groq API with timeout
             const completion = await Promise.race([
@@ -1495,16 +1635,11 @@ const analyzeCode = async (req, res) => {
             throw new Error('GROQ_API_FAILED');
         }
 
-        // Save to Redis cache with 24-hour TTL and release lock
+        // Save to Redis cache with 24-hour TTL
         if (isRedisConnected && redisClient) {
             try {
                 await redisClient.setEx(cacheKey, 86400, analysis); // 24 hours = 86400 seconds
                 console.log('✅ Cached result for 24 hours');
-                
-                // Release lock
-                const lockKey = `lock:${cacheKey}`;
-                await redisClient.del(lockKey);
-                console.log('✅ Released cache lock');
             } catch (cacheError) {
                 console.log('⚠️  Redis write error:', cacheError.message);
             }
@@ -1525,7 +1660,7 @@ const analyzeCode = async (req, res) => {
                             $push: {
                                 analysisHistory: {
                                     $each: [{
-                                        code: code.substring(0, 1000), // Store only first 1KB
+                                        code: trimmedCode.substring(0, 1000), // Store only first 1KB
                                         language,
                                         analysis: analysis.substring(0, 5000), // Store only first 5KB
                                         createdAt: new Date()
@@ -1558,27 +1693,25 @@ const analyzeCode = async (req, res) => {
         console.error('❌ Analysis error:', error.message);
         console.log('📊 Current Groq Stats:', JSON.stringify(groqUsageStats, null, 2));
         
-        // Release lock on error
-        if (isRedisConnected && redisClient) {
-            try {
-                const lockKey = `lock:${cacheKey}`;
-                await redisClient.del(lockKey);
-            } catch (e) {
-                // Ignore lock cleanup errors
-            }
-        }
-        
-        // Handle Groq API error with Khmer message
-        const errorMsg = responseLang === 'km' 
-            ? 'មានបញ្ហាបច្ចេកទេសជាមួយ Groq API សូមព្យាយាមម្តងទៀត' 
-            : 'Technical issue with Groq API, please try again';
-        
+        // ✅ FIX #3: Error obfuscation - no sensitive info to client
         res.status(500).json({
             success: false,
-            error: errorMsg,
-            details: error.message,
-            groqStats: groqUsageStats
+            error: responseLang === 'km'
+                ? 'មានបញ្ហាក្នុងប្រព័ន្ធ សូមព្យាយាមម្តងទៀត'
+                : 'Internal server error. Please try again later.'
+            // ✅ No error.message, no error.details, no groqStats
         });
+        
+    } finally {
+        // ✅ FIX #4: ALWAYS release lock in finally block
+        if (lockKey && isRedisConnected && redisClient) {
+            try {
+                await redisClient.del(lockKey);
+                console.log('✅ Lock released in finally block');
+            } catch (lockError) {
+                console.log('⚠️  Lock cleanup failed:', lockError.message);
+            }
+        }
     }
 };
 
@@ -1736,5 +1869,43 @@ const startServer = () => {
     console.log('   • Languages: English + Khmer support ✅\n');
     console.log('✅ Ready! Server is waiting for requests...\n');
 };
+
+// ===== GRACEFUL SHUTDOWN HANDLER =====
+// ✅ FIX #5: Handle SIGTERM and SIGINT for graceful shutdown
+async function gracefulShutdown(signal) {
+    console.log(`\n🛑 ${signal} received. Shutting down gracefully...`);
+    
+    // Clear stats reset interval
+    if (statsResetInterval) {
+        clearInterval(statsResetInterval);
+        console.log('✅ Stats interval cleared');
+    }
+    
+    // Close Redis connection
+    if (redisClient && isRedisConnected) {
+        try {
+            await redisClient.quit();
+            console.log('✅ Redis connection closed');
+        } catch (error) {
+            console.log('⚠️  Redis close error:', error.message);
+        }
+    }
+    
+    // Close MongoDB connection
+    try {
+        await mongoose.connection.close();
+        console.log('✅ MongoDB connection closed');
+    } catch (error) {
+        console.log('⚠️  MongoDB close error:', error.message);
+    }
+    
+    console.log('✅ Graceful shutdown complete');
+    process.exit(0);
+}
+
+// Register shutdown handlers
+process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+process.on('SIGUSR2', () => gracefulShutdown('SIGUSR2')); // For nodemon
 
 app.listen(PORT, startServer);
