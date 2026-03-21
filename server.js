@@ -1591,15 +1591,20 @@ const analyzeCode = async (req, res) => {
 
     } catch (error) {
         console.error('❌ Analysis error:', error.message);
+        console.error('❌ Error stack:', error.stack);
         console.log('📊 Current Groq Stats:', JSON.stringify(groqUsageStats, null, 2));
         
-        // ✅ FIX #3: Error obfuscation - no sensitive info to client
+        // Temporary debug mode - show real error for troubleshooting
         res.status(500).json({
             success: false,
             error: responseLang === 'km'
-                ? 'មានបញ្ហាក្នុងប្រព័ន្ធ សូមព្យាយាមម្តងទៀត'
-                : 'Internal server error. Please try again later.'
-            // ✅ No error.message, no error.details, no groqStats
+                ? `មានបញ្ហាក្នុងប្រព័ន្ធ: ${error.message}`
+                : `Internal server error: ${error.message}`,
+            debug: {
+                errorName: error.name,
+                errorMessage: error.message,
+                groqStats: groqUsageStats
+            }
         });
         
     } finally {
