@@ -1,8 +1,9 @@
 #!/bin/bash
 
-# 🚀 Quick Deploy Script for Version 5.0
+# 🚀 Quick Deploy Script for Version 5.1 - Production Ready
 
-echo "🚀 ===== KONKMENG v5.0 Deployment ====="
+echo "🚀 ===== KONKMENG v5.1 Deployment ====="
+echo "📦 Race Condition Fixes + Security Hardening"
 echo ""
 
 # Check if we're in a git repository
@@ -32,22 +33,31 @@ git add .
 
 # Commit
 echo "💾 Committing changes..."
-git commit -m "feat: Deploy v5.0 - Redis caching + Advanced security audit
+git commit -m "feat: Deploy v5.1 - Production-ready with critical fixes
 
-Features:
-- Redis edge caching with 24-hour TTL
-- SHA-256 hash-based cache keys
-- Advanced security audit in 100% natural Khmer
-- SQL Injection, XSS, and secrets detection
-- Graceful degradation for Redis
-- Version 5.0 with enhanced features
+Critical Fixes:
+- Redis lock with try-catch-finally pattern (race condition fix)
+- Whitespace input validation (prevent API waste)
+- Error obfuscation (no sensitive info leakage)
+- Graceful shutdown handler (SIGTERM, SIGINT, SIGUSR2)
+- Stats interval management (memory leak prevention)
 
-Changes:
-- Updated server.js with Redis integration
-- Added security audit to system prompts
-- Implemented cache check before API calls
-- Added 24-hour TTL for cached results
-- Enhanced error handling and logging"
+Security Improvements:
+- JWT_SECRET validation (server exits if missing)
+- Generic error messages to clients
+- Proper resource cleanup on shutdown
+- No error.message or error.stack exposed
+
+Performance:
+- Redis caching with 24-hour TTL
+- Lock mechanism prevents race conditions
+- Database query timeouts (5 seconds)
+- Groq API timeout protection (30 seconds)
+- Graceful degradation if Redis fails
+
+Version: 5.1 | Groq Edition
+Engine: Llama 3.3 70B Versatile
+Status: Production Ready ✅"
 
 # Push to production
 echo "🚀 Pushing to production..."
@@ -56,15 +66,19 @@ git push origin main || git push origin master
 echo ""
 echo "✅ Deployment initiated!"
 echo ""
-echo "⏳ Waiting for Render to deploy (this takes ~3 minutes)..."
+echo "⏳ Waiting for deployment (this takes ~3-5 minutes)..."
 echo ""
 echo "📊 Monitor deployment:"
 echo "   Dashboard: https://dashboard.render.com/"
 echo "   Logs: Check your service logs"
 echo ""
 echo "🧪 Test after deployment:"
-echo "   curl https://konkmeng.onrender.com/api/health"
+echo "   Health: curl https://konkmeng.onrender.com/api/health"
+echo "   Stats:  curl https://konkmeng.onrender.com/api/model-stats"
 echo ""
-echo "Expected version: 5.0 (with Gemini AI + Redis Cache + Security Audit)"
+echo "Expected version: 5.1 (Production Ready)"
+echo "Features: Race condition fixes + Security hardening"
 echo ""
-echo "🎉 Deployment complete! Wait 3 minutes then test."
+echo "🎉 Deployment complete! Wait 3-5 minutes then test."
+echo ""
+echo "📖 Full deployment guide: 🚀_DEPLOY_TO_PRODUCTION_v5.1.md"
