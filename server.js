@@ -1495,12 +1495,17 @@ const analyzeCode = async (req, res) => {
             const prompt = responseLang === 'km' 
                 ? `វិភាគកូដ ${language} នេះ:\n\n\`\`\`${language}\n${trimmedCode}\n\`\`\``
                 : `Analyze this ${language} code:\n\n\`\`\`${language}\n${trimmedCode}\n\`\`\``;
-
+            
+            console.log(`📝 System prompt length: ${getSystemPrompt(responseLang).length}`);
+            console.log(`📝 User prompt: ${prompt.substring(0, 100)}...`);
+            
+            const systemPrompt = getSystemPrompt(responseLang);
+            
             // Call Groq API with timeout
             const completion = await Promise.race([
                 groq.chat.completions.create({
                     messages: [
-                        { role: 'system', content: getSystemPrompt(responseLang) },
+                        { role: 'system', content: systemPrompt },
                         { role: 'user', content: prompt }
                     ],
                     model: GROQ_MODEL,
@@ -1511,6 +1516,13 @@ const analyzeCode = async (req, res) => {
                     setTimeout(() => reject(new Error('Groq API timeout after 30s')), 30000)
                 )
             ]);
+
+            console.log(`📊 Groq API Response:`, {
+                id: completion.id,
+                model: completion.model,
+                choices: completion.choices?.length,
+                usage: completion.usage
+            });
 
             analysis = completion.choices[0]?.message?.content;
             
@@ -1532,7 +1544,15 @@ const analyzeCode = async (req, res) => {
             groqUsageStats.failed++;
             
             console.log(`❌ Groq API failed:`, groqError.message);
-            throw new Error('GROQ_API_FAILED');
+            console.log(`❌ Groq Error Details:`, {
+                name: groqError.name,
+                message: groqError.message,
+                status: groqError.status,
+                code: groqError.code
+            });
+            
+            // Throw the actual error instead of generic message
+            throw groqError;
         }
 
         // Save to Redis cache with 24-hour TTL
@@ -1594,17 +1614,28 @@ const analyzeCode = async (req, res) => {
         console.error('❌ Error stack:', error.stack);
         console.log('📊 Current Groq Stats:', JSON.stringify(groqUsageStats, null, 2));
         
-        // Temporary debug mode - show real error for troubleshooting
+        // Show user-friendly error with real error details for debugging
+        const userError = responseLang === 'km'
+            ? 'មានបញ្ហាក្នុងប្រព័ន្ធ សូមព្យាយាមម្តងទៀត'
+            : 'Internal server error. Please try again later.';
+            
+        const debugInfo = {
+            errorType: error.name,
+            errorMessage: error.message,
+            groqStats: groqUsageStats,
+            timestamp: new Date().toISOString()
+        };
+        
+        // If it's a Groq API error, provide more specific info
+        if (error.status) {
+            debugInfo.httpStatus = error.status;
+            debugInfo.apiError = true;
+        }
+        
         res.status(500).json({
             success: false,
-            error: responseLang === 'km'
-                ? `មានបញ្ហាក្នុងប្រព័ន្ធ: ${error.message}`
-                : `Internal server error: ${error.message}`,
-            debug: {
-                errorName: error.name,
-                errorMessage: error.message,
-                groqStats: groqUsageStats
-            }
+            error: userError,
+            debug: debugInfo
         });
         
     } finally {
