@@ -69,11 +69,14 @@
         .prose-invert p { @apply text-slate-300 leading-relaxed mb-5 text-base; }
         .prose-invert ul { @apply list-disc list-outside ml-6 space-y-3 mb-6 text-slate-300; }
         .prose-invert ol { @apply list-decimal list-outside ml-6 space-y-3 mb-6 text-slate-300; }
-        .prose-invert code { @apply bg-slate-800 text-indigo-400 px-2 py-0.5 rounded-md font-mono text-sm font-medium; }
-        .prose-invert pre { @apply bg-slate-800 text-slate-100 p-5 rounded-2xl overflow-x-auto mb-8 font-mono text-sm shadow-xl border border-slate-700; }
-        .prose-invert blockquote { @apply border-l-4 border-indigo-400 pl-6 italic text-slate-300 mb-6 bg-slate-800/30 py-4 rounded-r-2xl; }
+        .prose-invert code { @apply bg-slate-700 text-cyan-300 px-2 py-0.5 rounded-md font-mono text-sm font-medium; }
+        .prose-invert pre { @apply bg-slate-800 text-slate-100 p-5 rounded-2xl overflow-x-auto mb-8 font-mono text-sm shadow-xl border border-slate-600; }
+        .prose-invert pre code { @apply bg-transparent text-slate-100 p-0; }
+        .prose-invert blockquote { @apply border-l-4 border-cyan-400 pl-6 italic text-slate-300 mb-6 bg-slate-800/50 py-4 rounded-r-2xl; }
         .prose-invert hr { @apply border-slate-700 my-10; }
-        .prose-invert strong { @apply font-semibold text-slate-100; }
+        .prose-invert strong { @apply font-semibold text-white; }
+        .prose-invert em { @apply italic text-cyan-300; }
+        .prose-invert a { @apply text-cyan-400 hover:text-cyan-300 underline; }
 
         /* Animations */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
