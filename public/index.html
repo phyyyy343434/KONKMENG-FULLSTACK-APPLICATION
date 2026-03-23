@@ -778,6 +778,15 @@
                             <option value="TypeScript">TypeScript</option>
                             <option value="Java">Java</option>
                             <option value="C++">C++</option>
+                            <option value="C#">C#</option>
+                            <option value="PHP">PHP</option>
+                            <option value="Ruby">Ruby</option>
+                            <option value="Go">Go</option>
+                            <option value="Rust">Rust</option>
+                            <option value="Swift">Swift</option>
+                            <option value="Kotlin">Kotlin</option>
+                            <option value="SQL">SQL</option>
+                            <option value="HTML/CSS">HTML/CSS</option>
                         </select>
                         <button onclick="loadExampleFullscreen()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-sm rounded-lg transition-colors flex items-center gap-1">
                             <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
@@ -1131,7 +1140,9 @@
         };
 
         window.loadExampleFullscreen = () => {
-            document.getElementById('fullscreenCode').value = `// Fibonacci sequence\nfunction fibonacci(n) {\n    if (n <= 1) return n;\n    return fibonacci(n - 1) + fibonacci(n - 2);\n}\n\nconsole.log(fibonacci(10));`;
+            const language = document.getElementById('fullscreenLanguage').value;
+            const example = codeExamples[language] || codeExamples['JavaScript'];
+            document.getElementById('fullscreenCode').value = example;
         };
 
         window.clearCodeFullscreen = () => {
