@@ -545,9 +545,10 @@
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Blog Post 1: Introducing KONKMENG 2.0 -->
                     <article class="bg-white rounded-xl border border-slate-200 overflow-hidden hover:border-indigo-200 hover:shadow-xl transition-all animate-fade-in">
-                        <div class="h-48 bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-                            <i data-lucide="file-text" class="w-12 h-12 text-white"></i>
+                        <div class="h-48 bg-slate-900 overflow-hidden">
+                            <img src="images/blog/artificial-intelligence-new-technology-science-futuristic-abstract-human-brain-ai-technology-cpu-central-processor-unit-chipset-big-data-machine-learning-cyber-mind-domination-generative-ai-scaled-1.jpg" alt="AI Technology Brain" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
                         </div>
                         <div class="p-6">
                             <div class="flex items-center gap-4 text-sm text-slate-500 mb-3">
@@ -566,9 +567,10 @@
                         </div>
                     </article>
                     
+                    <!-- Blog Post 2: Best Practices -->
                     <article class="bg-white rounded-xl border border-slate-200 overflow-hidden hover:border-indigo-200 hover:shadow-xl transition-all animate-fade-in stagger-1">
-                        <div class="h-48 bg-gradient-to-br from-purple-500 to-pink-600 flex items-center justify-center">
-                            <i data-lucide="book-open" class="w-12 h-12 text-white"></i>
+                        <div class="h-48 bg-slate-900 overflow-hidden">
+                            <img src="images/blog/VFLt5vHV7aCoLrLGjP9Qwm.jpg" alt="AI Code Analysis" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
                         </div>
                         <div class="p-6">
                             <div class="flex items-center gap-4 text-sm text-slate-500 mb-3">
@@ -587,9 +589,10 @@
                         </div>
                     </article>
                     
+                    <!-- Blog Post 3: CI/CD Integration -->
                     <article class="bg-white rounded-xl border border-slate-200 overflow-hidden hover:border-indigo-200 hover:shadow-xl transition-all animate-fade-in stagger-2">
-                        <div class="h-48 bg-gradient-to-br from-green-500 to-teal-600 flex items-center justify-center">
-                            <i data-lucide="git-branch" class="w-12 h-12 text-white"></i>
+                        <div class="h-48 bg-slate-900 overflow-hidden">
+                            <img src="images/blog/a20b27404d38-acemoglu-header-ai-illustration-by-justin-metz.jpg" alt="AI Integration" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
                         </div>
                         <div class="p-6">
                             <div class="flex items-center gap-4 text-sm text-slate-500 mb-3">
@@ -1648,7 +1651,9 @@
             
             // Handle different plans
             if (plan === 'free') {
-                openPaymentQRModal('Free Plan', '$0/month');
+                // Free plan: Navigate directly to code analysis tool
+                console.log('Free plan selected - navigating to tool section');
+                window.scrollToTool();
             } else if (plan === 'pro') {
                 openPaymentQRModal('Pro Plan', '$29/month');
             } else if (plan === 'enterprise') {
