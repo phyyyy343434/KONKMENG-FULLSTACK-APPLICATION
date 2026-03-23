@@ -378,87 +378,107 @@
         </section>
 
         <!-- Pricing Page -->
-        <section id="pricing" class="page-section py-20 bg-slate-50">
+        <section id="pricing" class="page-section py-20 bg-gray-50">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4" data-t="pricing.title"></h1>
-                    <p class="text-slate-600 max-w-2xl mx-auto" data-t="pricing.subtitle"></p>
+                <!-- Khmer Title -->
+                <div class="text-center mb-12">
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-900 mb-3" style="font-family: 'Kantumruy Pro', sans-serif;">
+                        គ្មានថ្លៃលាក់កំបាំង។ បង់ប្រាក់តាមការប្រើប្រាស់។
+                    </h2>
+                    <p class="text-lg text-slate-600 max-w-2xl mx-auto" data-t="pricing.subtitle">
+                        Choose the perfect plan for your needs
+                    </p>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="bg-white p-8 rounded-2xl border border-slate-200 hover:border-indigo-200 transition-all animate-fade-in">
-                        <h3 class="text-xl font-bold text-slate-900 mb-2">Free</h3>
-                        <div class="text-3xl font-bold text-slate-900 mb-4">$0<span class="text-lg text-slate-500">/month</span></div>
-                        <ul class="space-y-3 mb-8 text-sm text-slate-600">
-                            <li class="flex items-center gap-2">
-                                <i data-lucide="check" class="w-4 h-4 text-green-500"></i>
-                                100 Analyses per month
+                <!-- Pricing Cards -->
+                <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Free Plan -->
+                    <div class="bg-white rounded-2xl border border-slate-200 p-8 hover:shadow-lg transition-all duration-300 cursor-pointer group" onclick="handlePricingClick('free')">
+                        <h3 class="text-2xl font-bold text-slate-900 mb-2">Free</h3>
+                        <div class="mb-6">
+                            <span class="text-4xl font-bold text-slate-900">$0</span>
+                            <span class="text-slate-500">/month</span>
+                        </div>
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check" class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-slate-600">100 Analyses per month</span>
                             </li>
-                            <li class="flex items-center gap-2">
-                                <i data-lucide="check" class="w-4 h-4 text-green-500"></i>
-                                Basic languages support
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check" class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-slate-600">Basic languages support</span>
                             </li>
-                            <li class="flex items-center gap-2">
-                                <i data-lucide="check" class="w-4 h-4 text-green-500"></i>
-                                Community support
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check" class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-slate-600">Community support</span>
                             </li>
                         </ul>
-                        <button class="w-full px-6 py-3 bg-slate-100 text-slate-700 rounded-xl hover:bg-slate-200 transition-colors">
+                        <button class="w-full px-6 py-3 bg-slate-100 text-slate-700 font-semibold rounded-xl hover:bg-slate-200 transition-colors group-hover:bg-slate-200">
                             Get Started
                         </button>
                     </div>
                     
-                    <div class="bg-white p-8 rounded-2xl border-2 border-indigo-500 relative hover:shadow-xl transition-all animate-fade-in stagger-1">
-                        <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-indigo-600 text-white px-3 py-1 rounded-full text-xs font-semibold">
-                            POPULAR
+                    <!-- Pro Plan (Featured) -->
+                    <div class="bg-white rounded-2xl border-2 border-indigo-600 p-8 hover:shadow-2xl transition-all duration-300 cursor-pointer group relative transform md:scale-105" onclick="handlePricingClick('pro')">
+                        <!-- Popular Badge -->
+                        <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
+                            <span class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-1.5 rounded-full text-sm font-bold shadow-lg">
+                                POPULAR
+                            </span>
                         </div>
-                        <h3 class="text-xl font-bold text-slate-900 mb-2">Pro</h3>
-                        <div class="text-3xl font-bold text-indigo-600 mb-4">$29<span class="text-lg text-slate-500">/month</span></div>
-                        <ul class="space-y-3 mb-8 text-sm text-slate-600">
-                            <li class="flex items-center gap-2">
-                                <i data-lucide="check" class="w-4 h-4 text-green-500"></i>
-                                Unlimited Analyses
+                        <h3 class="text-2xl font-bold text-slate-900 mb-2 mt-2">Pro</h3>
+                        <div class="mb-6">
+                            <span class="text-4xl font-bold text-indigo-600">$29</span>
+                            <span class="text-slate-500">/month</span>
+                        </div>
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check" class="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-slate-600">Unlimited Analyses</span>
                             </li>
-                            <li class="flex items-center gap-2">
-                                <i data-lucide="check" class="w-4 h-4 text-green-500"></i>
-                                All languages support
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check" class="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-slate-600">All languages support</span>
                             </li>
-                            <li class="flex items-center gap-2">
-                                <i data-lucide="check" class="w-4 h-4 text-green-500"></i>
-                                Priority support
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check" class="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-slate-600">Priority support</span>
                             </li>
-                            <li class="flex items-center gap-2">
-                                <i data-lucide="check" class="w-4 h-4 text-green-500"></i>
-                                API access
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check" class="w-5 h-5 text-indigo-600 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-slate-600">API access</span>
                             </li>
                         </ul>
-                        <button class="w-full px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors">
+                        <button class="w-full px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg group-hover:shadow-xl">
                             Start Free Trial
                         </button>
                     </div>
                     
-                    <div class="bg-white p-8 rounded-2xl border border-slate-200 hover:border-indigo-200 transition-all animate-fade-in stagger-2">
-                        <h3 class="text-xl font-bold text-slate-900 mb-2">Enterprise</h3>
-                        <div class="text-3xl font-bold text-slate-900 mb-4">Custom</div>
-                        <ul class="space-y-3 mb-8 text-sm text-slate-600">
-                            <li class="flex items-center gap-2">
-                                <i data-lucide="check" class="w-4 h-4 text-green-500"></i>
-                                Everything in Pro
+                    <!-- Enterprise Plan -->
+                    <div class="bg-white rounded-2xl border border-slate-200 p-8 hover:shadow-lg transition-all duration-300 cursor-pointer group" onclick="handlePricingClick('enterprise')">
+                        <h3 class="text-2xl font-bold text-slate-900 mb-2">Enterprise</h3>
+                        <div class="mb-6">
+                            <span class="text-4xl font-bold text-slate-900">Custom</span>
+                        </div>
+                        <ul class="space-y-4 mb-8">
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check" class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-slate-600">Everything in Pro</span>
                             </li>
-                            <li class="flex items-center gap-2">
-                                <i data-lucide="check" class="w-4 h-4 text-green-500"></i>
-                                Custom integrations
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check" class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-slate-600">Custom integrations</span>
                             </li>
-                            <li class="flex items-center gap-2">
-                                <i data-lucide="check" class="w-4 h-4 text-green-500"></i>
-                                Dedicated support
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check" class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-slate-600">Dedicated support</span>
                             </li>
-                            <li class="flex items-center gap-2">
-                                <i data-lucide="check" class="w-4 h-4 text-green-500"></i>
-                                On-premise option
+                            <li class="flex items-start gap-3">
+                                <i data-lucide="check" class="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5"></i>
+                                <span class="text-slate-600">On-premise option</span>
                             </li>
                         </ul>
-                        <button class="w-full px-6 py-3 bg-slate-900 text-white rounded-xl hover:bg-slate-800 transition-colors">
+                        <button class="w-full px-6 py-3 bg-slate-900 text-white font-semibold rounded-xl hover:bg-slate-800 transition-colors group-hover:bg-slate-800">
                             Contact Sales
                         </button>
                     </div>
@@ -1475,6 +1495,28 @@
             localStorage.removeItem('user');
             updateAuthUI(false);
             navigateTo('home');
+        };
+
+        // Handle pricing card clicks
+        window.handlePricingClick = (plan) => {
+            console.log('Pricing plan clicked:', plan);
+            
+            // Add active state animation
+            const cards = document.querySelectorAll('#pricing .group');
+            cards.forEach(card => {
+                card.classList.add('scale-95');
+                setTimeout(() => card.classList.remove('scale-95'), 200);
+            });
+            
+            // Handle different plans
+            if (plan === 'free') {
+                openSignUpModal();
+            } else if (plan === 'pro') {
+                openSignUpModal();
+            } else if (plan === 'enterprise') {
+                // Open contact or email
+                window.location.href = 'mailto:sales@konkmeng.com?subject=Enterprise Plan Inquiry';
+            }
         };
 
         // Check login status on page load
