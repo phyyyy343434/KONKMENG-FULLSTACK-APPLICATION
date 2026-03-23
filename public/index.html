@@ -308,7 +308,7 @@
                             <div class="px-4 py-2 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
                                 <span class="flex items-center gap-1">
                                     <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
-                                    Powered by Groq
+                                    Powered by KONKMENG
                                 </span>
                                 <span id="tokenInfo"></span>
                             </div>
@@ -745,7 +745,7 @@
                     <div class="flex items-center gap-6 text-sm text-slate-400">
                         <span class="flex items-center gap-1">
                             <i data-lucide="cpu" class="w-4 h-4 text-indigo-400"></i>
-                            Powered by Groq
+                            Powered by KONKMENG
                         </span>
                         <span class="flex items-center gap-1">
                             <i data-lucide="zap" class="w-4 h-4 text-yellow-400"></i>
@@ -949,7 +949,7 @@
         // ===== TRANSLATIONS =====
         const translations = {
             en: {
-                'hero.badge': 'Powered by Groq • Lightning Fast',
+                'hero.badge': 'Powered by KONKMENG • Lightning Fast',
                 'hero.title': 'Master Coding with',
                 'hero.subtitle': 'AI-powered code analysis that explains your code line by line. Support for 15+ languages with blazing fast responses.',
                 'hero.cta_start': 'Try it Free',
@@ -957,7 +957,7 @@
                 'hero.stats_languages': 'Languages',
                 'hero.stats_analyzed': 'Analyses',
                 'features.f1_title': 'Lightning Fast',
-                'features.f1_desc': "Powered by Groq, get responses in seconds.",
+                'features.f1_desc': "Powered by KONKMENG, get responses in seconds.",
                 'features.f2_title': 'Secure & Private',
                 'features.f2_desc': 'Your code is never stored. Analyzed securely and forgotten.',
                 'features.f3_title': '15+ Languages',
@@ -988,7 +988,7 @@
                 'nav.blog': 'Blog'
             },
             km: {
-                'hero.badge': 'ដំណើរការដោយ Gemini • លឿនបំផុត',
+                'hero.badge': 'ដំណើរការដោយ KONKMENG • លឿនបំផុត',
                 'hero.title': 'រៀនសរសេរកូដជាមួយ',
                 'hero.subtitle': 'ការវិភាគកូដដោយ AI ដែលពន្យល់កូដរបស់អ្នកម្តងមួយបន្ទាត់។ គាំទ្រភាសាចំនួន ១៥+ ជាមួយការឆ្លើយតបលឿនបំផុត។',
                 'hero.cta_start': 'ចាប់ផ្តើមសាកល្បងដោយឥតគិតថ្លៃ',
@@ -996,7 +996,7 @@
                 'hero.stats_languages': 'ភាសា',
                 'hero.stats_analyzed': 'ការវិភាគ',
                 'features.f1_title': 'ល្បឿនលឿនបំផុត',
-                'features.f1_desc': 'ដំណើរការដោយ Gemini ទទួលបានការឆ្លើយតបក្នុងរយៈពេលដ៏ខ្លី។',
+                'features.f1_desc': 'ដំណើរការដោយ KONKMENG ទទួលបានការឆ្លើយតបក្នុងរយៈពេលដ៏ខ្លី។',
                 'features.f2_title': 'សុវត្ថិភាព និងឯកជនភាព',
                 'features.f2_desc': 'កូដរបស់អ្នកមិនត្រូវបានរក្សាទុកទេ។ វិភាគដោយសុវត្ថិភាពបំផុត។',
                 'features.f3_title': 'គាំទ្រ ១៥+ ភាសា',
@@ -1267,8 +1267,8 @@
                                 <button onclick="location.reload()" class="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors">
                                     ${currentLang === 'km' ? 'ព្យាយាមម្តងទៀត' : 'Try Again'}
                                 </button>
-                                <button onclick="window.open('https://console.groq.com/settings/billing', '_blank')" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm">
-                                    ${currentLang === 'km' ? 'Upgrade Plan' : 'Upgrade Plan'}
+                                <button onclick="navigateTo('pricing')" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm">
+                                    ${currentLang === 'km' ? 'View Plans' : 'View Plans'}
                                 </button>
                             </div>
                         </div>
@@ -1786,8 +1786,8 @@ LIMIT 10;`,
                                 <button onclick="location.reload()" class="px-4 py-2 bg-amber-500 text-white rounded-lg hover:bg-amber-600 transition-colors">
                                     ${currentLang === 'km' ? 'ព្យាយាមម្តងទៀត' : 'Try Again'}
                                 </button>
-                                <button onclick="window.open('https://console.groq.com/settings/billing', '_blank')" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm">
-                                    ${currentLang === 'km' ? 'Upgrade Plan' : 'Upgrade Plan'}
+                                <button onclick="navigateTo('pricing')" class="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors text-sm">
+                                    ${currentLang === 'km' ? 'View Plans' : 'View Plans'}
                                 </button>
                             </div>
                         </div>
