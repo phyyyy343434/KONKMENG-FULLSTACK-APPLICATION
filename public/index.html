@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
@@ -7,13 +8,48 @@
     <meta http-equiv="Expires" content="0">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
     <meta name="version" content="v5.1-restored-<?php echo time(); ?>">
-    <title>KONKMENG - Master Coding with AI</title>
+    <title>KONKMENG - AI Code Debugger & Refactorer | AI Coding Assistant</title>
+    <meta name="description"
+        content="KONKMENG is a powerful AI coding assistant. Debug, explain, write, and refactor your code with line-by-line explanations. Available in Khmer and English.">
+    <meta name="keywords"
+        content="konkmeng, konkmeng ai, ai code, ai debugger, code refactoring, khmer ai, programming tool, web development, coding assistant, javascript ai, python ai, chatgpt alternative code">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://konkmeng.onrender.com/">
+    <meta property="og:title" content="KONKMENG - AI Code Debugger & Refactorer">
+    <meta property="og:description"
+        content="Debug, explain, write, and refactor your code with KONKMENG. Powerful AI assistance in Khmer and English.">
+    <meta property="og:image" content="https://konkmeng.onrender.com/favicon.svg">
+
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:url" content="https://konkmeng.onrender.com/">
+    <meta property="twitter:title" content="KONKMENG - AI Code Debugger & Refactorer">
+    <meta property="twitter:description"
+        content="Debug, explain, write, and refactor your code with KONKMENG. Powerful AI assistance in Khmer and English.">
+    <meta property="twitter:image" content="https://konkmeng.onrender.com/favicon.svg">
+
+    <!-- General SEO Optimization -->
+    <link rel="canonical" href="https://konkmeng.onrender.com/">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="KONKMENG Team">
+    <meta name="language" content="English">
     <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=5.2.7">
     <link rel="alternate icon" href="/favicon.ico?v=5.2.7">
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=5.2.7">
     <script src="https://cdn.tailwindcss.com?3.0.2"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Kantumruy+Pro:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Font Awesome v6.4.0 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl0GPuFOBknRB/GBqtsfM9v9JUlmVs5pO3gkP/0Y47a0Ckg/YW75JcFh+a/4q3yD6a25g6hA+t6eA=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <!-- AOS - Animate On Scroll Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Kantumruy+Pro:wght@300;400;500;600;700&family=Fira+Code:wght@400;500&display=swap"
+        rel="stylesheet">
     <style type="text/tailwindcss">
         @theme {
             --font-sans: 'Inter', 'Kantumruy Pro', sans-serif;
@@ -36,24 +72,96 @@
         ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        /* Prose styling for clean AI response */
-        .prose { @apply max-w-none; }
-        .prose h1 { @apply text-3xl font-extrabold text-slate-900 mb-6 mt-8 pb-2 border-b border-slate-200; }
-        .prose h2 { @apply text-2xl font-bold text-slate-800 mb-4 mt-8 flex items-center gap-2; }
-        .prose h3 { @apply text-xl font-bold text-slate-800 mb-3 mt-6; }
-        .prose p { @apply text-slate-600 leading-relaxed mb-5 text-base; }
-        .prose ul { @apply list-disc list-outside ml-6 space-y-3 mb-6 text-slate-600; }
-        .prose ol { @apply list-decimal list-outside ml-6 space-y-3 mb-6 text-slate-600; }
-        .prose code { @apply bg-slate-100 text-indigo-600 px-2 py-0.5 rounded-md font-mono text-sm font-medium; }
-        .prose pre { @apply bg-slate-900 text-indigo-100 p-5 rounded-2xl overflow-x-auto mb-8 font-mono text-sm shadow-xl border border-slate-800 relative; }
-        .prose pre code { @apply bg-transparent text-indigo-100 p-0; }
-        .prose blockquote { @apply border-l-4 border-indigo-500 pl-6 italic text-slate-600 mb-6 bg-indigo-50/30 py-4 rounded-r-2xl; }
-        .prose hr { @apply border-slate-200 my-10; }
-        .prose strong { @apply font-semibold text-slate-900; }
-        
+        /* Prose styling for clean AI response - MODERN DESIGN */
+        .prose { @apply max-w-none text-base; }
+        .prose h1 { @apply text-2xl font-extrabold text-slate-900 mb-4 mt-6 pb-2 border-b border-slate-200; }
+        .prose h2 { @apply text-xl font-bold text-slate-800 mb-3 mt-6 flex items-center gap-2; }
+        .prose h3 { @apply text-lg font-bold text-slate-800 mb-2 mt-5; }
+        .prose p { @apply text-slate-600 leading-relaxed mb-4 text-[15px]; }
+        .prose ul { @apply list-none ml-0 space-y-2 mb-5 text-slate-600; }
+        .prose ol { @apply list-decimal list-outside ml-6 space-y-2 mb-5 text-slate-600; }
+        .prose li { @apply text-[15px] leading-relaxed list-none flex items-start gap-0; }
+        .prose code { @apply bg-red-50 text-red-600 px-1.5 py-0.5 rounded font-mono text-[13px] font-medium border border-red-100; }
+        .prose pre { @apply bg-[#1e1e2e] text-slate-200 p-0 rounded-xl overflow-hidden mb-5 font-mono text-[13px] shadow-lg border border-slate-700/50 relative; }
+        .prose pre code { @apply bg-transparent text-slate-200 px-5 py-5 block overflow-x-auto border-0; }
+        .prose blockquote { @apply border-l-4 border-indigo-400 pl-4 italic text-slate-500 mb-5 bg-indigo-50/40 py-3 pr-4 rounded-r-xl text-sm; }
+        .prose hr { @apply border-slate-200 my-6; }
+        .prose strong { @apply font-semibold text-slate-800; }
+        .prose em { @apply italic text-indigo-600; }
+        .prose a { @apply text-indigo-600 hover:text-indigo-700 underline; }
+
+        /* AI Response Section Cards */
+        .ai-section {
+            @apply rounded-xl border mb-5 overflow-hidden;
+            animation: sectionFadeIn 0.4s ease-out forwards;
+        }
+        .ai-section-header {
+            @apply flex items-center gap-2.5 px-4 py-3 text-sm font-bold;
+        }
+        .ai-section-body {
+            @apply px-4 pb-4 pt-2;
+        }
+        .ai-section-body > *:last-child {
+            margin-bottom: 0 !important;
+        }
+
+        /* Section types */
+        .ai-section.summary { @apply border-blue-200 bg-gradient-to-br from-blue-50/80 to-white; }
+        .ai-section.summary .ai-section-header { @apply text-blue-800 bg-blue-100/60; }
+
+        .ai-section.analysis { @apply border-amber-200 bg-gradient-to-br from-amber-50/80 to-white; }
+        .ai-section.analysis .ai-section-header { @apply text-amber-800 bg-amber-100/60; }
+
+        .ai-section.corrected { @apply border-emerald-200 bg-gradient-to-br from-emerald-50/80 to-white; }
+        .ai-section.corrected .ai-section-header { @apply text-emerald-800 bg-emerald-100/60; }
+
+        .ai-section.explanation { @apply border-purple-200 bg-gradient-to-br from-purple-50/80 to-white; }
+        .ai-section.explanation .ai-section-header { @apply text-purple-800 bg-purple-100/60; }
+
+        .ai-section.tip { @apply border-cyan-200 bg-gradient-to-br from-cyan-50/80 to-white; }
+        .ai-section.tip .ai-section-header { @apply text-cyan-800 bg-cyan-100/60; }
+
+        /* Line explanation items */
+        .line-item {
+            @apply flex items-start gap-3 py-2.5 px-3 rounded-lg hover:bg-white/80 transition-colors;
+        }
+        .line-badge {
+            @apply inline-flex items-center justify-center min-w-[28px] h-7 px-2 bg-purple-100 text-purple-700 text-xs font-bold rounded-md shrink-0 mt-0.5;
+        }
+        .line-content {
+            @apply text-sm text-slate-600 leading-relaxed;
+        }
+        .line-content code {
+            @apply bg-slate-100 text-indigo-600 px-1.5 py-0.5 rounded font-mono text-xs font-medium border border-slate-200;
+        }
+
+        /* Code block header */
+        .code-block-header {
+            @apply flex items-center justify-between px-4 py-2 bg-[#181825] border-b border-slate-700/50;
+        }
+        .code-block-lang {
+            @apply text-xs font-medium text-slate-400 uppercase tracking-wider;
+        }
+        .code-copy-btn {
+            @apply px-2.5 py-1 text-xs text-slate-400 hover:text-white hover:bg-slate-600 rounded transition-colors cursor-pointer flex items-center gap-1;
+        }
+
+        /* Conclusion card */
+        .conclusion-card {
+            @apply bg-gradient-to-r from-indigo-50 via-purple-50 to-pink-50 border border-indigo-200 rounded-xl p-4 mt-4;
+        }
+        .conclusion-card p {
+            @apply text-slate-700 text-sm leading-relaxed mb-0;
+        }
+
+        @keyframes sectionFadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         /* Corrected code box */
         .corrected-code-box {
-            @apply bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl p-6 mt-8 mb-4 shadow-lg;
+            @apply bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-xl p-6 mt-6 mb-4 shadow-lg;
         }
         .corrected-code-box h4 {
             @apply text-lg font-bold text-green-800 mb-4 flex items-center gap-2;
@@ -65,23 +173,83 @@
             @apply absolute top-2 right-2 px-3 py-1 bg-green-600 hover:bg-green-700 text-white text-xs rounded-md cursor-pointer transition-colors;
         }
 
-        /* Dark theme prose for fullscreen IDE - HIGH CONTRAST */
+        /* Dark theme prose for fullscreen IDE */
         .prose-invert { @apply text-slate-200; }
-        .prose-invert h1 { @apply text-3xl font-extrabold text-white mb-6 mt-8 pb-2 border-b border-slate-600; }
-        .prose-invert h2 { @apply text-2xl font-bold text-white mb-4 mt-8 flex items-center gap-2; }
-        .prose-invert h3 { @apply text-xl font-bold text-slate-100 mb-3 mt-6; }
-        .prose-invert p { @apply text-slate-200 leading-relaxed mb-5 text-base; }
-        .prose-invert ul { @apply list-disc list-outside ml-6 space-y-3 mb-6 text-slate-200; }
-        .prose-invert ol { @apply list-decimal list-outside ml-6 space-y-3 mb-6 text-slate-200; }
-        .prose-invert li { @apply text-slate-200; }
-        .prose-invert code { @apply bg-indigo-900/50 text-cyan-300 px-2 py-1 rounded-md font-mono text-sm font-bold border border-indigo-700; }
-        .prose-invert pre { @apply bg-slate-800 text-slate-100 p-5 rounded-2xl overflow-x-auto mb-8 font-mono text-sm shadow-xl border border-slate-600; }
-        .prose-invert pre code { @apply bg-transparent text-slate-100 p-0 border-0; }
-        .prose-invert blockquote { @apply border-l-4 border-cyan-400 pl-6 italic text-slate-200 mb-6 bg-slate-800/50 py-4 rounded-r-2xl; }
-        .prose-invert hr { @apply border-slate-600 my-10; }
+        .prose-invert h1 { @apply text-2xl font-extrabold text-white mb-4 mt-6 pb-2 border-b border-slate-600; }
+        .prose-invert h2 { @apply text-xl font-bold text-white mb-3 mt-6 flex items-center gap-2; }
+        .prose-invert h3 { @apply text-lg font-bold text-slate-100 mb-2 mt-5; }
+        .prose-invert p { @apply text-slate-300 leading-relaxed mb-4 text-[15px]; }
+        .prose-invert ul { @apply list-none ml-0 space-y-2 mb-5 text-slate-300; }
+        .prose-invert ol { @apply list-decimal list-outside ml-6 space-y-2 mb-5 text-slate-300; }
+        .prose-invert li { @apply text-slate-300; }
+        .prose-invert code { @apply bg-indigo-900/50 text-cyan-300 px-1.5 py-0.5 rounded font-mono text-[13px] font-bold border border-indigo-700; }
+        .prose-invert pre { @apply bg-[#1e1e2e] text-slate-100 p-0 rounded-xl overflow-hidden mb-5 font-mono text-[13px] shadow-xl border border-slate-600; }
+        .prose-invert pre code { @apply bg-transparent text-slate-100 px-5 py-5 block border-0; }
+        .prose-invert blockquote { @apply border-l-4 border-cyan-400 pl-4 italic text-slate-300 mb-5 bg-slate-800/50 py-3 pr-4 rounded-r-xl text-sm; }
+        .prose-invert hr { @apply border-slate-600 my-6; }
         .prose-invert strong { @apply font-bold text-white; }
         .prose-invert em { @apply italic text-cyan-300; }
         .prose-invert a { @apply text-cyan-400 hover:text-cyan-300 underline font-semibold; }
+
+        /* Dark mode section cards - vivid colors for dark background */
+        .prose-invert .ai-section { @apply border-slate-600/50 rounded-xl; }
+        .prose-invert .ai-section.summary { @apply bg-gradient-to-br from-blue-950/60 to-slate-900/80 border-blue-500/30; }
+        .prose-invert .ai-section.summary .ai-section-header { @apply text-blue-300 bg-blue-900/40; }
+        .prose-invert .ai-section.analysis { @apply bg-gradient-to-br from-amber-950/60 to-slate-900/80 border-amber-500/30; }
+        .prose-invert .ai-section.analysis .ai-section-header { @apply text-amber-300 bg-amber-900/40; }
+        .prose-invert .ai-section.corrected { @apply bg-gradient-to-br from-emerald-950/60 to-slate-900/80 border-emerald-500/30; }
+        .prose-invert .ai-section.corrected .ai-section-header { @apply text-emerald-300 bg-emerald-900/40; }
+        .prose-invert .ai-section.explanation { @apply bg-gradient-to-br from-purple-950/60 to-slate-900/80 border-purple-500/30; }
+        .prose-invert .ai-section.explanation .ai-section-header { @apply text-purple-300 bg-purple-900/40; }
+        .prose-invert .ai-section.tip { @apply bg-gradient-to-br from-cyan-950/60 to-slate-900/80 border-cyan-500/30; }
+        .prose-invert .ai-section.tip .ai-section-header { @apply text-cyan-300 bg-cyan-900/40; }
+
+        .prose-invert .ai-section-body p { @apply text-slate-300; }
+        .prose-invert .ai-section-body li { @apply text-slate-300; }
+        .prose-invert .line-item { @apply hover:bg-white/5; }
+        .prose-invert .line-badge { @apply bg-purple-800/60 text-purple-300 border border-purple-600/30; }
+        .prose-invert .line-content { @apply text-slate-300; }
+        .prose-invert .line-content code { @apply bg-slate-700/50 text-cyan-300 border-slate-600; }
+        .prose-invert .conclusion-card { @apply bg-gradient-to-r from-indigo-900/40 via-purple-900/40 to-pink-900/40 border-indigo-500/30; }
+        .prose-invert .conclusion-card p { @apply text-slate-200; }
+        .prose-invert .ai-section li span.bg-indigo-400 { @apply bg-cyan-400; }
+
+        /* Code Highlight - Per Document: code inside backticks appears in RED */
+        .code-highlight {
+            @apply bg-red-50 text-red-600 px-2 py-0.5 rounded-md font-mono text-sm font-medium border border-red-200;
+        }
+        .prose-invert .code-highlight {
+            @apply bg-red-900/30 text-red-400 border-red-700;
+        }
+
+        /* Dark Theme */
+        body.dark-theme {
+            @apply bg-slate-900 text-slate-100;
+        }
+        body.dark-theme nav {
+            @apply bg-slate-900/90 border-slate-700;
+        }
+        body.dark-theme .bg-white {
+            @apply !bg-slate-800;
+        }
+        body.dark-theme .bg-slate-50 {
+            @apply !bg-slate-900;
+        }
+        body.dark-theme .text-slate-900 {
+            @apply !text-slate-100;
+        }
+        body.dark-theme .text-slate-600 {
+            @apply !text-slate-300;
+        }
+        body.dark-theme .text-slate-700 {
+            @apply !text-slate-200;
+        }
+        body.dark-theme .border-slate-200 {
+            @apply !border-slate-700;
+        }
+        body.dark-theme .border-slate-100 {
+            @apply !border-slate-700;
+        }
 
         /* Animations */
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -93,53 +261,60 @@
         .modal-backdrop { background: rgba(15, 23, 42, 0.7); backdrop-filter: blur(4px); }
     </style>
 </head>
+
 <body class="bg-slate-50 text-slate-900">
     <!-- Navbar -->
     <nav class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="h-16 flex items-center justify-between">
                 <div class="flex items-center gap-8">
-                    <div class="flex items-center gap-2.5 font-bold text-xl cursor-pointer" onclick="navigateTo('home')">
-                        <div class="w-9 h-9 bg-gradient-to-br from-indigo-600 to-purple-600 text-white rounded-xl flex items-center justify-center shadow-lg shadow-indigo-200">
-                            <i data-lucide="code-2" class="w-5 h-5"></i>
-                        </div>
+                    <div class="flex items-center gap-2 font-bold text-xl cursor-pointer" onclick="navigateTo('home')">
+                        <img src="/favicon.svg" alt="KONKMENG logo" class="w-10 h-10">
                         <span class="tracking-tight hidden sm:inline">KONKMENG</span>
                     </div>
                     <div class="hidden md:flex items-center gap-1" id="nav-links"></div>
                 </div>
-                
+
                 <div class="flex items-center gap-3">
-                    <div class="flex items-center gap-1.5 bg-slate-100 px-2.5 py-1.5 rounded-lg border border-slate-200">
+
+                    <div
+                        class="flex items-center gap-1.5 bg-slate-100 px-2.5 py-1.5 rounded-lg border border-slate-200">
                         <i data-lucide="globe" class="w-4 h-4 text-indigo-600"></i>
-                        <select id="lang-select" onchange="changeLanguage(this.value)" class="bg-transparent text-xs font-medium outline-none cursor-pointer pr-1">
+                        <select id="lang-select" onchange="changeLanguage(this.value)"
+                            class="bg-transparent text-xs font-medium outline-none cursor-pointer pr-1">
                             <option value="en">EN</option>
                             <option value="km">ខ្មែរ</option>
                         </select>
                     </div>
-                    
+
                     <div id="auth-nav" class="hidden md:flex items-center gap-2">
-                <button onclick="openSignInModal()" class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors">
-                    Sign In
-                </button>
-                <button onclick="openSignUpModal()" class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-xl hover:bg-indigo-700 transition-colors">
-                    Get Started
-                </button>
-            </div>
-                    
-                    <button class="md:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors" onclick="toggleMobileMenu()">
+                        <button onclick="openSignInModal()"
+                            class="px-4 py-2 text-sm font-medium text-slate-600 hover:text-indigo-600 transition-colors">
+                            Sign In
+                        </button>
+                        <button onclick="openSignUpModal()"
+                            class="px-4 py-2 bg-indigo-600 text-white text-sm font-medium rounded-xl hover:bg-indigo-700 transition-colors">
+                            Get Started
+                        </button>
+                    </div>
+
+                    <button class="md:hidden p-2 text-slate-600 hover:bg-slate-100 rounded-lg transition-colors"
+                        onclick="toggleMobileMenu()">
                         <i data-lucide="menu" id="mobile-menu-icon" class="w-5 h-5"></i>
                     </button>
                 </div>
             </div>
         </div>
-        
+
         <div id="mobile-menu" class="hidden md:hidden bg-white border-t border-slate-100">
             <div class="max-w-7xl mx-auto px-4 py-4 space-y-2" id="mobile-nav-links"></div>
             <div class="max-w-7xl mx-auto px-4 pb-4 space-y-2" id="mobile-auth-nav">
-                <button onclick="openSignInModal(); toggleMobileMenu()" class="w-full px-4 py-3 text-left text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded-xl transition-colors">
+                <button onclick="openSignInModal(); toggleMobileMenu()"
+                    class="w-full px-4 py-3 text-left text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded-xl transition-colors">
                     Sign In
                 </button>
-                <button onclick="openSignUpModal(); toggleMobileMenu()" class="w-full px-4 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors">
+                <button onclick="openSignUpModal(); toggleMobileMenu()"
+                    class="w-full px-4 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors">
                     Get Started
                 </button>
             </div>
@@ -151,49 +326,63 @@
         <section id="home" class="page-section active">
             <div class="relative py-20 md:py-32 overflow-hidden bg-white">
                 <div class="absolute inset-0 overflow-hidden pointer-events-none">
-                    <div class="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-indigo-100/50 rounded-full blur-[100px]"></div>
-                    <div class="absolute -bottom-[10%] -right-[10%] w-[60%] h-[60%] bg-purple-100/40 rounded-full blur-[120px]"></div>
+                    <div
+                        class="absolute -top-[10%] -left-[10%] w-[50%] h-[50%] bg-indigo-100/50 rounded-full blur-[100px]">
+                    </div>
+                    <div
+                        class="absolute -bottom-[10%] -right-[10%] w-[60%] h-[60%] bg-purple-100/40 rounded-full blur-[120px]">
+                    </div>
                     <div class="absolute inset-0 bg-grid opacity-[0.12]"></div>
                     <div class="absolute inset-0 bg-gradient-to-b from-white via-transparent to-white"></div>
                 </div>
-                
+
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
                     <div class="max-w-4xl mx-auto text-center">
-                        <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-white/60 backdrop-blur-sm border border-indigo-100 rounded-full text-indigo-600 text-sm font-semibold mb-8 shadow-sm animate-fade-in">
+                        <div class="inline-flex items-center gap-2 px-4 py-1.5 bg-white/60 backdrop-blur-sm border border-indigo-100 rounded-full text-indigo-600 text-sm font-semibold mb-8 shadow-sm"
+                            data-aos="fade-down">
                             <i data-lucide="zap" class="w-4 h-4"></i>
                             <span data-t="hero.badge"></span>
                         </div>
-                        
-                        <h1 class="text-4xl sm:text-5xl md:text-7xl font-extrabold text-slate-900 leading-[1.1] mb-6 tracking-tight animate-fade-in stagger-1">
+
+                        <h1 class="text-4xl sm:text-5xl md:text-7xl font-extrabold text-slate-900 leading-[1.1] mb-6 tracking-tight"
+                            data-aos="fade-up" data-aos-delay="100">
                             <span data-t="hero.title"></span> <br />
-                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500">KONKMENG</span>
+                            <span
+                                class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-500">KONKMENG</span>
                         </h1>
-                        
-                        <p class="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed animate-fade-in stagger-2" data-t="hero.subtitle"></p>
-                        
-                        <div class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 animate-fade-in stagger-3">
-                            <button onclick="scrollToTool()" class="w-full sm:w-auto px-8 py-4 bg-indigo-600 text-white font-semibold rounded-xl shadow-xl shadow-indigo-200 hover:bg-indigo-700 hover:shadow-2xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2">
+
+                        <p class="text-lg md:text-xl text-slate-600 max-w-2xl mx-auto mb-10 leading-relaxed"
+                            data-aos="fade-up" data-aos-delay="200" data-t="hero.subtitle"></p>
+
+                        <div
+                            class="flex flex-col sm:flex-row items-center justify-center gap-4 mb-16 animate-fade-in stagger-3">
+                            <button onclick="scrollToTool()"
+                                class="w-full sm:w-auto px-8 py-4 bg-indigo-600 text-white font-semibold rounded-xl shadow-xl shadow-indigo-200 hover:bg-indigo-700 hover:shadow-2xl hover:-translate-y-0.5 transition-all flex items-center justify-center gap-2">
                                 <i data-lucide="play" class="w-5 h-5"></i>
                                 <span data-t="hero.cta_start"></span>
                             </button>
-                            <button class="w-full sm:w-auto px-8 py-4 bg-white border border-slate-200 text-slate-700 font-semibold rounded-xl shadow-lg hover:border-slate-300 hover:text-indigo-600 transition-all flex items-center justify-center gap-2">
+                            <button
+                                class="w-full sm:w-auto px-8 py-4 bg-white border border-slate-200 text-slate-700 font-semibold rounded-xl shadow-lg hover:border-slate-300 hover:text-indigo-600 transition-all flex items-center justify-center gap-2">
                                 <i data-lucide="github" class="w-5 h-5"></i>
                                 <span>View on GitHub</span>
                             </button>
                         </div>
-                        
+
                         <div class="grid grid-cols-3 gap-8 max-w-2xl mx-auto animate-fade-in stagger-3">
                             <div class="text-center">
                                 <div class="text-2xl sm:text-4xl font-bold text-slate-900 mb-1">2M+</div>
-                                <div class="text-xs sm:text-sm text-slate-500 font-medium" data-t="hero.stats_users"></div>
+                                <div class="text-xs sm:text-sm text-slate-500 font-medium" data-t="hero.stats_users">
+                                </div>
                             </div>
                             <div class="text-center">
                                 <div class="text-2xl sm:text-4xl font-bold text-slate-900 mb-1">15+</div>
-                                <div class="text-xs sm:text-sm text-slate-500 font-medium" data-t="hero.stats_languages"></div>
+                                <div class="text-xs sm:text-sm text-slate-500 font-medium"
+                                    data-t="hero.stats_languages"></div>
                             </div>
                             <div class="text-center">
                                 <div class="text-2xl sm:text-4xl font-bold text-slate-900 mb-1">100M+</div>
-                                <div class="text-xs sm:text-sm text-slate-500 font-medium" data-t="hero.stats_analyzed"></div>
+                                <div class="text-xs sm:text-sm text-slate-500 font-medium" data-t="hero.stats_analyzed">
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -204,21 +393,24 @@
             <section class="py-16 md:py-24 bg-slate-50">
                 <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="p-6 md:p-8 bg-white rounded-2xl border border-slate-100 hover:border-indigo-200 hover:shadow-xl hover:-translate-y-1 transition-all">
+                        <div class="p-6 md:p-8 bg-white rounded-2xl border border-slate-100 hover:border-indigo-200 hover:shadow-xl hover:-translate-y-1 transition-all"
+                            data-aos="fade-up" data-aos-delay="0">
                             <div class="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center mb-5">
                                 <i data-lucide="zap" class="w-6 h-6 text-indigo-600"></i>
                             </div>
                             <h3 class="text-lg font-bold text-slate-900 mb-2" data-t="features.f1_title"></h3>
                             <p class="text-slate-600 text-sm leading-relaxed" data-t="features.f1_desc"></p>
                         </div>
-                        <div class="p-6 md:p-8 bg-white rounded-2xl border border-slate-100 hover:border-indigo-200 hover:shadow-xl hover:-translate-y-1 transition-all">
+                        <div class="p-6 md:p-8 bg-white rounded-2xl border border-slate-100 hover:border-indigo-200 hover:shadow-xl hover:-translate-y-1 transition-all"
+                            data-aos="fade-up" data-aos-delay="100">
                             <div class="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center mb-5">
                                 <i data-lucide="shield-check" class="w-6 h-6 text-indigo-600"></i>
                             </div>
                             <h3 class="text-lg font-bold text-slate-900 mb-2" data-t="features.f2_title"></h3>
                             <p class="text-slate-600 text-sm leading-relaxed" data-t="features.f2_desc"></p>
                         </div>
-                        <div class="p-6 md:p-8 bg-white rounded-2xl border border-slate-100 hover:border-indigo-200 hover:shadow-xl hover:-translate-y-1 transition-all">
+                        <div class="p-6 md:p-8 bg-white rounded-2xl border border-slate-100 hover:border-indigo-200 hover:shadow-xl hover:-translate-y-1 transition-all"
+                            data-aos="fade-up" data-aos-delay="200">
                             <div class="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center mb-5">
                                 <i data-lucide="languages" class="w-6 h-6 text-indigo-600"></i>
                             </div>
@@ -236,17 +428,20 @@
                         <h2 class="text-2xl md:text-4xl font-bold text-slate-900 mb-4" data-t="tool.title"></h2>
                         <p class="text-slate-600 max-w-xl mx-auto" data-t="tool.subtitle"></p>
                     </div>
-                    
+
                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                         <!-- Editor Panel -->
-                        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
-                            <div class="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
+                        <div
+                            class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm h-fit self-start sticky top-4">
+                            <div
+                                class="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
                                 <div class="flex items-center gap-2">
                                     <i data-lucide="file-code" class="w-4 h-4 text-indigo-600"></i>
                                     <span class="text-sm font-medium text-slate-700" data-t="tool.editor_title"></span>
                                 </div>
                                 <div class="flex items-center gap-2">
-                                    <select id="language" class="text-xs bg-white border border-slate-200 rounded-lg px-2 py-1.5 outline-none focus:border-indigo-300">
+                                    <select id="language"
+                                        class="text-xs bg-white border border-slate-200 rounded-lg px-2 py-1.5 outline-none focus:border-indigo-300">
                                         <option value="JavaScript">JavaScript</option>
                                         <option value="Python">Python</option>
                                         <option value="TypeScript">TypeScript</option>
@@ -262,36 +457,46 @@
                                         <option value="SQL">SQL</option>
                                         <option value="HTML/CSS">HTML/CSS</option>
                                     </select>
-                                    <button onclick="loadExample()" class="text-xs px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors flex items-center gap-1">
+                                    <button onclick="loadExample()"
+                                        class="text-xs px-3 py-1.5 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors flex items-center gap-1">
                                         <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
                                         <span data-t="tool.example"></span>
                                     </button>
                                 </div>
                             </div>
-                            <textarea id="code" class="w-full h-72 md:h-96 p-4 font-mono text-sm bg-slate-900 text-slate-100 resize-none outline-none" placeholder="// Paste your code here..."></textarea>
+                            <textarea id="code"
+                                class="w-full h-72 md:h-96 p-4 font-mono text-sm bg-slate-900 text-slate-100 resize-none outline-none"
+                                placeholder="// Paste your code here..."></textarea>
                             <div class="flex items-center gap-2 px-4 py-3 bg-slate-50 border-t border-slate-200">
-                                <button id="analyzeBtn" onclick="analyzeCode()" class="flex-1 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl transition-colors flex items-center justify-center gap-2">
+                                <button id="analyzeBtn" onclick="analyzeCode()"
+                                    class="flex-1 px-4 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-medium rounded-xl transition-colors flex items-center justify-center gap-2">
                                     <i data-lucide="sparkles" class="w-4 h-4" id="analyze-icon"></i>
                                     <span data-t="tool.analyze"></span>
                                 </button>
-                                <button onclick="clearCode()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl transition-colors">
+                                <button onclick="clearCode()"
+                                    class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl transition-colors">
                                     <i data-lucide="trash-2" class="w-4 h-4"></i>
                                 </button>
-                                <button onclick="toggleFullscreen()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl transition-colors">
+                                <button onclick="toggleFullscreen()"
+                                    class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-xl transition-colors">
                                     <i data-lucide="maximize" class="w-4 h-4"></i>
                                 </button>
                             </div>
                         </div>
 
                         <!-- Output Panel -->
-                        <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm flex flex-col">
-                            <div class="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
+                        <div
+                            class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm flex flex-col">
+                            <div
+                                class="flex items-center justify-between px-4 py-3 bg-slate-50 border-b border-slate-200">
                                 <div class="flex items-center gap-2">
                                     <i data-lucide="bot" class="w-4 h-4 text-indigo-600"></i>
-                                    <span class="text-sm font-medium text-slate-700" data-t="tool.response_title"></span>
+                                    <span class="text-sm font-medium text-slate-700"
+                                        data-t="tool.response_title"></span>
                                 </div>
                                 <div class="flex items-center gap-2">
-                                    <button onclick="copyAnalysis()" id="copy-btn" class="hidden px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-medium hover:bg-slate-50 flex items-center gap-1.5 transition-all">
+                                    <button onclick="copyAnalysis()" id="copy-btn"
+                                        class="hidden px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-medium hover:bg-slate-50 flex items-center gap-1.5 transition-all">
                                         <i data-lucide="copy" class="w-3.5 h-3.5"></i>
                                         <span>Copy</span>
                                     </button>
@@ -302,13 +507,15 @@
                                 </div>
                             </div>
                             <div id="output" class="prose flex-1 h-72 md:h-96 overflow-y-auto p-4">
-                                <div id="placeholder" class="h-full flex flex-col items-center justify-center text-slate-400">
+                                <div id="placeholder"
+                                    class="h-full flex flex-col items-center justify-center text-slate-400">
                                     <i data-lucide="message-square" class="w-12 h-12 mb-4 opacity-50"></i>
                                     <p class="text-sm" data-t="tool.placeholder"></p>
                                     <p class="text-xs mt-1 opacity-70" data-t="tool.placeholder_hint"></p>
                                 </div>
                             </div>
-                            <div class="px-4 py-2 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
+                            <div
+                                class="px-4 py-2 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
                                 <span class="flex items-center gap-1">
                                     <i data-lucide="cpu" class="w-3.5 h-3.5"></i>
                                     Powered by KONKMENG
@@ -328,14 +535,16 @@
                     <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4" data-t="product.title"></h1>
                     <p class="text-slate-600 max-w-2xl mx-auto" data-t="product.subtitle"></p>
                 </div>
-                
+
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="bg-white p-8 rounded-2xl border border-slate-100 hover:border-indigo-200 hover:shadow-xl transition-all animate-fade-in">
+                    <div
+                        class="bg-white p-8 rounded-2xl border border-slate-100 hover:border-indigo-200 hover:shadow-xl transition-all animate-fade-in">
                         <div class="w-12 h-12 bg-indigo-50 rounded-xl flex items-center justify-center mb-6">
                             <i data-lucide="code-2" class="w-6 h-6 text-indigo-600"></i>
                         </div>
                         <h3 class="text-xl font-bold text-slate-900 mb-3">Code Analysis</h3>
-                        <p class="text-slate-600 mb-4">Advanced AI-powered code analysis with line-by-line explanations, performance insights, and security recommendations.</p>
+                        <p class="text-slate-600 mb-4">Advanced AI-powered code analysis with line-by-line explanations,
+                            performance insights, and security recommendations.</p>
                         <ul class="space-y-2 text-sm text-slate-600">
                             <li class="flex items-center gap-2">
                                 <i data-lucide="check" class="w-4 h-4 text-green-500"></i>
@@ -351,13 +560,15 @@
                             </li>
                         </ul>
                     </div>
-                    
-                    <div class="bg-white p-8 rounded-2xl border border-slate-100 hover:border-indigo-200 hover:shadow-xl transition-all animate-fade-in stagger-1">
+
+                    <div
+                        class="bg-white p-8 rounded-2xl border border-slate-100 hover:border-indigo-200 hover:shadow-xl transition-all animate-fade-in stagger-1">
                         <div class="w-12 h-12 bg-purple-50 rounded-xl flex items-center justify-center mb-6">
                             <i data-lucide="shield-check" class="w-6 h-6 text-purple-600"></i>
                         </div>
                         <h3 class="text-xl font-bold text-slate-900 mb-3">Security Scanner</h3>
-                        <p class="text-slate-600 mb-4">Comprehensive security vulnerability detection with detailed remediation suggestions and best practices.</p>
+                        <p class="text-slate-600 mb-4">Comprehensive security vulnerability detection with detailed
+                            remediation suggestions and best practices.</p>
                         <ul class="space-y-2 text-sm text-slate-600">
                             <li class="flex items-center gap-2">
                                 <i data-lucide="check" class="w-4 h-4 text-green-500"></i>
@@ -382,18 +593,19 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <!-- Khmer Title -->
                 <div class="text-center mb-12">
-                    <h2 class="text-2xl md:text-3xl font-bold text-slate-900 mb-3" style="font-family: 'Kantumruy Pro', sans-serif;">
-                        គ្មានថ្លៃលាក់កំបាំង។ បង់ប្រាក់តាមការប្រើប្រាស់។
+                    <h2 class="text-2xl md:text-3xl font-bold text-slate-900 mb-3" data-t="pricing.title">
+                        Simple Pricing
                     </h2>
                     <p class="text-lg text-slate-600 max-w-2xl mx-auto" data-t="pricing.subtitle">
                         Choose the perfect plan for your needs
                     </p>
                 </div>
-                
+
                 <!-- Pricing Cards -->
                 <div class="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-8">
                     <!-- Free Plan -->
-                    <div class="bg-white rounded-2xl border border-slate-200 p-8 hover:shadow-lg transition-all duration-300 cursor-pointer group" onclick="handlePricingClick('free')">
+                    <div class="bg-white rounded-2xl border border-slate-200 p-8 hover:shadow-lg transition-all duration-300 cursor-pointer group"
+                        onclick="handlePricingClick('free')">
                         <h3 class="text-2xl font-bold text-slate-900 mb-2">Free</h3>
                         <div class="mb-6">
                             <span class="text-4xl font-bold text-slate-900">$0</span>
@@ -413,16 +625,19 @@
                                 <span class="text-slate-600">Community support</span>
                             </li>
                         </ul>
-                        <button class="w-full px-6 py-3 bg-slate-100 text-slate-700 font-semibold rounded-xl hover:bg-slate-200 transition-colors group-hover:bg-slate-200">
+                        <button
+                            class="w-full px-6 py-3 bg-slate-100 text-slate-700 font-semibold rounded-xl hover:bg-slate-200 transition-colors group-hover:bg-slate-200">
                             Get Started
                         </button>
                     </div>
-                    
+
                     <!-- Pro Plan (Featured) -->
-                    <div class="bg-white rounded-2xl border-2 border-indigo-600 p-8 hover:shadow-2xl transition-all duration-300 cursor-pointer group relative transform md:scale-105" onclick="handlePricingClick('pro')">
+                    <div class="bg-white rounded-2xl border-2 border-indigo-600 p-8 hover:shadow-2xl transition-all duration-300 cursor-pointer group relative transform md:scale-105"
+                        onclick="handlePricingClick('pro')">
                         <!-- Popular Badge -->
                         <div class="absolute -top-4 left-1/2 transform -translate-x-1/2">
-                            <span class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-1.5 rounded-full text-sm font-bold shadow-lg">
+                            <span
+                                class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-4 py-1.5 rounded-full text-sm font-bold shadow-lg">
                                 POPULAR
                             </span>
                         </div>
@@ -449,13 +664,15 @@
                                 <span class="text-slate-600">API access</span>
                             </li>
                         </ul>
-                        <button class="w-full px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg group-hover:shadow-xl">
+                        <button
+                            class="w-full px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-semibold rounded-xl hover:from-indigo-700 hover:to-purple-700 transition-all shadow-lg group-hover:shadow-xl">
                             Start Free Trial
                         </button>
                     </div>
-                    
+
                     <!-- Enterprise Plan -->
-                    <div class="bg-white rounded-2xl border border-slate-200 p-8 hover:shadow-lg transition-all duration-300 cursor-pointer group" onclick="handlePricingClick('enterprise')">
+                    <div class="bg-white rounded-2xl border border-slate-200 p-8 hover:shadow-lg transition-all duration-300 cursor-pointer group"
+                        onclick="handlePricingClick('enterprise')">
                         <h3 class="text-2xl font-bold text-slate-900 mb-2">Enterprise</h3>
                         <div class="mb-6">
                             <span class="text-4xl font-bold text-slate-900">Custom</span>
@@ -478,7 +695,8 @@
                                 <span class="text-slate-600">On-premise option</span>
                             </li>
                         </ul>
-                        <button class="w-full px-6 py-3 bg-slate-900 text-white font-semibold rounded-xl hover:bg-slate-800 transition-colors group-hover:bg-slate-800">
+                        <button
+                            class="w-full px-6 py-3 bg-slate-900 text-white font-semibold rounded-xl hover:bg-slate-800 transition-colors group-hover:bg-slate-800">
                             Contact Sales
                         </button>
                     </div>
@@ -486,43 +704,119 @@
             </div>
         </section>
 
+        <!-- Payment QR Modal -->
+        <div id="paymentQRModal" class="fixed inset-0 z-[9999] hidden items-center justify-center p-4"
+            style="background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);">
+            <div
+                class="bg-white rounded-3xl shadow-2xl max-w-md w-full overflow-hidden animate-[sectionFadeIn_0.3s_ease-out]">
+                <!-- Modal Header -->
+                <div class="bg-gradient-to-r from-indigo-600 to-purple-600 px-6 py-4 flex items-center justify-between">
+                    <div>
+                        <h3 class="text-white font-bold text-lg" id="qrModalPlan">Pro Plan</h3>
+                        <p class="text-indigo-200 text-sm" id="qrModalPrice">$29/month</p>
+                    </div>
+                    <button onclick="closePaymentQRModal()" class="text-white/80 hover:text-white transition-colors">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12"></path>
+                        </svg>
+                    </button>
+                </div>
+                <!-- QR Code -->
+                <div class="px-6 py-5">
+                    <p class="text-center text-slate-600 text-sm mb-4">Scan QR code to pay via ABA Bank</p>
+                    <div class="flex justify-center mb-4">
+                        <img src="/images/aba-qr.jpg" alt="ABA Bank QR Payment - SOPHY PHE"
+                            class="w-72 h-auto rounded-xl shadow-md border border-slate-200">
+                    </div>
+                    <!-- Account Info -->
+                    <div class="bg-slate-50 rounded-xl p-4 space-y-2">
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-slate-500">Account Name:</span>
+                            <span class="text-sm font-bold text-slate-800">SOPHY PHE</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-slate-500">គណនី KHR:</span>
+                            <span class="text-sm font-bold text-slate-800">010 542 005</span>
+                        </div>
+                        <div class="flex items-center justify-between">
+                            <span class="text-sm text-slate-500">គណនី USD:</span>
+                            <span class="text-sm font-bold text-slate-800">010 541 988</span>
+                        </div>
+                    </div>
+                    <!-- Instructions -->
+                    <div class="mt-4 bg-indigo-50 rounded-xl p-3 border border-indigo-100">
+                        <p class="text-xs text-indigo-700 leading-relaxed">
+                            💡 After payment, send screenshot to <strong>sophyphe262@gmail.com</strong> with your
+                            account email to activate your plan.
+                        </p>
+                        <p class="text-xs text-indigo-600 leading-relaxed mt-1"
+                            style="font-family: 'Kantumruy Pro', sans-serif;">
+                            💡 បន្ទាប់ពីបង់ប្រាក់ សូមផ្ញើ screenshot ទៅ <strong>sophyphe262@gmail.com</strong>
+                            ជាមួយអ៊ីមែលគណនីរបស់អ្នក។
+                        </p>
+                    </div>
+                </div>
+                <!-- Footer -->
+                <div class="px-6 pb-5">
+                    <button onclick="closePaymentQRModal()"
+                        class="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-medium rounded-xl transition-colors text-sm">
+                        Close
+                    </button>
+                </div>
+            </div>
+        </div>
+
         <!-- Docs Page -->
         <section id="docs" class="page-section py-20">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-16">
                     <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4" data-t="docs.title"></h1>
-                    <p class="text-slate-600 max-w-2xl mx-auto">Comprehensive documentation to help you get started with KONKMENG</p>
+                    <p class="text-slate-600 max-w-2xl mx-auto">Comprehensive documentation to help you get started with
+                        KONKMENG</p>
                 </div>
-                
+
                 <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
                     <div class="lg:col-span-1">
                         <div class="bg-white p-6 rounded-xl border border-slate-200 sticky top-24">
                             <h3 class="font-semibold text-slate-900 mb-4">Quick Links</h3>
                             <nav class="space-y-2">
-                                <a href="#getting-started" class="block px-3 py-2 text-sm text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">Getting Started</a>
-                                <a href="#api-reference" class="block px-3 py-2 text-sm text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">API Reference</a>
-                                <a href="#examples" class="block px-3 py-2 text-sm text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">Examples</a>
-                                <a href="#troubleshooting" class="block px-3 py-2 text-sm text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">Troubleshooting</a>
+                                <a href="#getting-started"
+                                    class="block px-3 py-2 text-sm text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">Getting
+                                    Started</a>
+                                <a href="#api-reference"
+                                    class="block px-3 py-2 text-sm text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">API
+                                    Reference</a>
+                                <a href="#examples"
+                                    class="block px-3 py-2 text-sm text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">Examples</a>
+                                <a href="#troubleshooting"
+                                    class="block px-3 py-2 text-sm text-slate-600 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition-colors">Troubleshooting</a>
                             </nav>
                         </div>
                     </div>
-                    
+
                     <div class="lg:col-span-3 space-y-8">
-                        <div id="getting-started" class="bg-white p-8 rounded-xl border border-slate-200 animate-fade-in">
+                        <div id="getting-started"
+                            class="bg-white p-8 rounded-xl border border-slate-200 animate-fade-in">
                             <h2 class="text-2xl font-bold text-slate-900 mb-4">Getting Started</h2>
-                            <p class="text-slate-600 mb-6">Welcome to KONKMENG! Follow these steps to start analyzing your code with AI.</p>
-                            
+                            <p class="text-slate-600 mb-6">Welcome to KONKMENG! Follow these steps to start analyzing
+                                your code with AI.</p>
+
                             <h3 class="text-lg font-semibold text-slate-900 mb-3">1. Sign Up</h3>
-                            <p class="text-slate-600 mb-4">Create your free account to get instant access to code analysis tools.</p>
-                            
+                            <p class="text-slate-600 mb-4">Create your free account to get instant access to code
+                                analysis tools.</p>
+
                             <h3 class="text-lg font-semibold text-slate-900 mb-3">2. Upload Your Code</h3>
-                            <p class="text-slate-600 mb-4">Paste your code directly into the editor or upload files from your computer.</p>
-                            
+                            <p class="text-slate-600 mb-4">Paste your code directly into the editor or upload files from
+                                your computer.</p>
+
                             <h3 class="text-lg font-semibold text-slate-900 mb-3">3. Analyze</h3>
-                            <p class="text-slate-600 mb-4">Click the analyze button and get instant AI-powered insights about your code.</p>
+                            <p class="text-slate-600 mb-4">Click the analyze button and get instant AI-powered insights
+                                about your code.</p>
                         </div>
-                        
-                        <div id="api-reference" class="bg-white p-8 rounded-xl border border-slate-200 animate-fade-in stagger-1">
+
+                        <div id="api-reference"
+                            class="bg-white p-8 rounded-xl border border-slate-200 animate-fade-in stagger-1">
                             <h2 class="text-2xl font-bold text-slate-900 mb-4">API Reference</h2>
                             <div class="bg-slate-900 text-slate-100 p-4 rounded-lg font-mono text-sm mb-4">
                                 POST /api/analyze<br>
@@ -541,14 +835,18 @@
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="text-center mb-16">
                     <h1 class="text-3xl md:text-4xl font-bold text-slate-900 mb-4" data-t="blog.title"></h1>
-                    <p class="text-slate-600 max-w-2xl mx-auto">Latest updates, tutorials, and insights from the KONKMENG team</p>
+                    <p class="text-slate-600 max-w-2xl mx-auto">Latest updates, tutorials, and insights from the
+                        KONKMENG team</p>
                 </div>
-                
+
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                     <!-- Blog Post 1: Introducing KONKMENG 2.0 -->
-                    <article class="bg-white rounded-xl border border-slate-200 overflow-hidden hover:border-indigo-200 hover:shadow-xl transition-all animate-fade-in">
+                    <article
+                        class="bg-white rounded-xl border border-slate-200 overflow-hidden hover:border-indigo-200 hover:shadow-xl transition-all animate-fade-in">
                         <div class="h-48 bg-slate-900 overflow-hidden">
-                            <img src="images/blog/artificial-intelligence-new-technology-science-futuristic-abstract-human-brain-ai-technology-cpu-central-processor-unit-chipset-big-data-machine-learning-cyber-mind-domination-generative-ai-scaled-1.jpg" alt="AI Technology Brain" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+                            <img src="images/blog/artificial-intelligence-new-technology-science-futuristic-abstract-human-brain-ai-technology-cpu-central-processor-unit-chipset-big-data-machine-learning-cyber-mind-domination-generative-ai-scaled-1.jpg"
+                                alt="AI Technology Brain"
+                                class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
                         </div>
                         <div class="p-6">
                             <div class="flex items-center gap-4 text-sm text-slate-500 mb-3">
@@ -562,15 +860,18 @@
                                 </span>
                             </div>
                             <h3 class="text-xl font-bold text-slate-900 mb-2">Introducing KONKMENG 2.0</h3>
-                            <p class="text-slate-600 mb-4">We're excited to announce the launch of KONKMENG 2.0 with faster analysis and more languages...</p>
+                            <p class="text-slate-600 mb-4">We're excited to announce the launch of KONKMENG 2.0 with
+                                faster analysis and more languages...</p>
                             <a href="#" class="text-indigo-600 font-medium hover:text-indigo-700">Read More →</a>
                         </div>
                     </article>
-                    
+
                     <!-- Blog Post 2: Best Practices -->
-                    <article class="bg-white rounded-xl border border-slate-200 overflow-hidden hover:border-indigo-200 hover:shadow-xl transition-all animate-fade-in stagger-1">
+                    <article
+                        class="bg-white rounded-xl border border-slate-200 overflow-hidden hover:border-indigo-200 hover:shadow-xl transition-all animate-fade-in stagger-1">
                         <div class="h-48 bg-slate-900 overflow-hidden">
-                            <img src="images/blog/VFLt5vHV7aCoLrLGjP9Qwm.jpg" alt="AI Code Analysis" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+                            <img src="images/blog/VFLt5vHV7aCoLrLGjP9Qwm.jpg" alt="AI Code Analysis"
+                                class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
                         </div>
                         <div class="p-6">
                             <div class="flex items-center gap-4 text-sm text-slate-500 mb-3">
@@ -584,15 +885,19 @@
                                 </span>
                             </div>
                             <h3 class="text-xl font-bold text-slate-900 mb-2">Best Practices for Code Analysis</h3>
-                            <p class="text-slate-600 mb-4">Learn how to get the most out of KONKMENG with these tips and tricks from our engineering team...</p>
+                            <p class="text-slate-600 mb-4">Learn how to get the most out of KONKMENG with these tips and
+                                tricks from our engineering team...</p>
                             <a href="#" class="text-indigo-600 font-medium hover:text-indigo-700">Read More →</a>
                         </div>
                     </article>
-                    
+
                     <!-- Blog Post 3: CI/CD Integration -->
-                    <article class="bg-white rounded-xl border border-slate-200 overflow-hidden hover:border-indigo-200 hover:shadow-xl transition-all animate-fade-in stagger-2">
+                    <article
+                        class="bg-white rounded-xl border border-slate-200 overflow-hidden hover:border-indigo-200 hover:shadow-xl transition-all animate-fade-in stagger-2">
                         <div class="h-48 bg-slate-900 overflow-hidden">
-                            <img src="images/blog/a20b27404d38-acemoglu-header-ai-illustration-by-justin-metz.jpg" alt="AI Integration" class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
+                            <img src="images/blog/a20b27404d38-acemoglu-header-ai-illustration-by-justin-metz.jpg"
+                                alt="AI Integration"
+                                class="w-full h-full object-cover hover:scale-105 transition-transform duration-300">
                         </div>
                         <div class="p-6">
                             <div class="flex items-center gap-4 text-sm text-slate-500 mb-3">
@@ -606,7 +911,8 @@
                                 </span>
                             </div>
                             <h3 class="text-xl font-bold text-slate-900 mb-2">Integrating with CI/CD</h3>
-                            <p class="text-slate-600 mb-4">A comprehensive guide to adding automated code analysis to your GitHub Actions pipeline...</p>
+                            <p class="text-slate-600 mb-4">A comprehensive guide to adding automated code analysis to
+                                your GitHub Actions pipeline...</p>
                             <a href="#" class="text-indigo-600 font-medium hover:text-indigo-700">Read More →</a>
                         </div>
                     </article>
@@ -617,21 +923,24 @@
         <!-- Profile Page -->
         <section id="profile" class="page-section py-20">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="bg-gradient-to-br from-indigo-50 to-purple-50 p-8 rounded-2xl border border-slate-200 animate-fade-in">
+                <div
+                    class="bg-gradient-to-br from-indigo-50 to-purple-50 p-8 rounded-2xl border border-slate-200 animate-fade-in">
                     <div class="flex flex-col md:flex-row items-center gap-8 mb-8">
                         <div class="relative">
-                            <div class="w-32 h-32 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white text-4xl font-bold shadow-xl">
+                            <div
+                                class="w-32 h-32 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-full flex items-center justify-center text-white text-4xl font-bold shadow-xl">
                                 <span id="profileInitial">U</span>
                             </div>
-                            <button class="absolute bottom-0 right-0 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center border border-slate-200 hover:border-indigo-300 transition-colors">
+                            <button
+                                class="absolute bottom-0 right-0 w-10 h-10 bg-white rounded-full shadow-lg flex items-center justify-center border border-slate-200 hover:border-indigo-300 transition-colors">
                                 <i data-lucide="camera" class="w-5 h-5 text-indigo-600"></i>
                             </button>
                         </div>
-                        
+
                         <div class="flex-1 text-center md:text-left">
                             <h1 class="text-3xl font-bold text-slate-900 mb-2" id="profileName">Loading...</h1>
                             <p class="text-slate-600 mb-4" id="profileEmail">Loading...</p>
-                            
+
                             <div class="flex flex-wrap gap-8 justify-center md:justify-start">
                                 <div class="text-center">
                                     <div class="text-2xl font-bold text-indigo-600" id="profileSavedCodes">0</div>
@@ -647,13 +956,14 @@
                                 </div>
                             </div>
                         </div>
-                        
-                        <button class="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors flex items-center gap-2">
+
+                        <button
+                            class="px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors flex items-center gap-2">
                             <i data-lucide="edit" class="w-4 h-4"></i>
                             Edit Profile
                         </button>
                     </div>
-                    
+
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div class="bg-white p-6 rounded-xl border border-slate-200">
                             <h3 class="text-lg font-semibold text-slate-900 mb-4">Recent Activity</h3>
@@ -674,15 +984,17 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="bg-white p-6 rounded-xl border border-slate-200">
                             <h3 class="text-lg font-semibold text-slate-900 mb-4">Settings</h3>
                             <div class="space-y-3">
-                                <label class="flex items-center justify-between p-3 bg-slate-50 rounded-lg cursor-pointer hover:bg-slate-100 transition-colors">
+                                <label
+                                    class="flex items-center justify-between p-3 bg-slate-50 rounded-lg cursor-pointer hover:bg-slate-100 transition-colors">
                                     <span class="text-sm font-medium text-slate-900">Email Notifications</span>
                                     <input type="checkbox" class="w-4 h-4 text-indigo-600 rounded" checked>
                                 </label>
-                                <label class="flex items-center justify-between p-3 bg-slate-50 rounded-lg cursor-pointer hover:bg-slate-100 transition-colors">
+                                <label
+                                    class="flex items-center justify-between p-3 bg-slate-50 rounded-lg cursor-pointer hover:bg-slate-100 transition-colors">
                                     <span class="text-sm font-medium text-slate-900">Dark Mode</span>
                                     <input type="checkbox" class="w-4 h-4 text-indigo-600 rounded">
                                 </label>
@@ -697,11 +1009,14 @@
     <footer class="bg-gradient-to-br from-slate-900 to-slate-800 text-white py-16 relative overflow-hidden">
         <!-- Animated Background -->
         <div class="absolute inset-0 overflow-hidden pointer-events-none">
-            <div class="absolute -top-[50%] -left-[30%] w-[80%] h-[80%] bg-indigo-500/10 rounded-full blur-[150px] animate-pulse"></div>
-            <div class="absolute -bottom-[50%] -right-[30%] w-[80%] h-[80%] bg-purple-500/10 rounded-full blur-[150px] animate-pulse" style="animation-delay: 2s;"></div>
+            <div
+                class="absolute -top-[50%] -left-[30%] w-[80%] h-[80%] bg-indigo-500/10 rounded-full blur-[150px] animate-pulse">
+            </div>
+            <div class="absolute -bottom-[50%] -right-[30%] w-[80%] h-[80%] bg-purple-500/10 rounded-full blur-[150px] animate-pulse"
+                style="animation-delay: 2s;"></div>
             <div class="absolute inset-0 bg-grid opacity-[0.05]"></div>
         </div>
-        
+
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
                 <div class="animate-fade-in">
@@ -710,13 +1025,16 @@
                         Product
                     </h4>
                     <ul class="space-y-3 text-sm text-slate-300">
-                        <li><a onclick="navigateTo('product')" class="hover:text-indigo-400 transition-colors cursor-pointer">Features</a></li>
-                        <li><a onclick="navigateTo('pricing')" class="hover:text-indigo-400 transition-colors cursor-pointer">Pricing</a></li>
-                        <li><a onclick="navigateTo('docs')" class="hover:text-indigo-400 transition-colors cursor-pointer">Documentation</a></li>
+                        <li><a onclick="navigateTo('product')"
+                                class="hover:text-indigo-400 transition-colors cursor-pointer">Features</a></li>
+                        <li><a onclick="navigateTo('pricing')"
+                                class="hover:text-indigo-400 transition-colors cursor-pointer">Pricing</a></li>
+                        <li><a onclick="navigateTo('docs')"
+                                class="hover:text-indigo-400 transition-colors cursor-pointer">Documentation</a></li>
                         <li><a href="#" class="hover:text-indigo-400 transition-colors">API</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="animate-fade-in stagger-1">
                     <h4 class="font-semibold text-white mb-4 flex items-center gap-2">
                         <i data-lucide="users" class="w-5 h-5 text-purple-400"></i>
@@ -724,12 +1042,13 @@
                     </h4>
                     <ul class="space-y-3 text-sm text-slate-300">
                         <li><a href="#" class="hover:text-indigo-400 transition-colors">About</a></li>
-                        <li><a onclick="navigateTo('blog')" class="hover:text-indigo-400 transition-colors cursor-pointer">Blog</a></li>
+                        <li><a onclick="navigateTo('blog')"
+                                class="hover:text-indigo-400 transition-colors cursor-pointer">Blog</a></li>
                         <li><a href="#" class="hover:text-indigo-400 transition-colors">Careers</a></li>
                         <li><a href="#" class="hover:text-indigo-400 transition-colors">Contact</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="animate-fade-in stagger-2">
                     <h4 class="font-semibold text-white mb-4 flex items-center gap-2">
                         <i data-lucide="shield-check" class="w-5 h-5 text-green-400"></i>
@@ -742,27 +1061,30 @@
                         <li><a href="#" class="hover:text-indigo-400 transition-colors">Security</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="animate-fade-in stagger-3">
                     <h4 class="font-semibold text-white mb-4 flex items-center gap-2">
                         <i data-lucide="link" class="w-5 h-5 text-yellow-400"></i>
                         Connect
                     </h4>
                     <div class="flex gap-3 mb-4">
-                        <a href="#" class="w-10 h-10 bg-slate-700 hover:bg-indigo-600 rounded-lg flex items-center justify-center transition-colors">
+                        <a href="#"
+                            class="w-10 h-10 bg-slate-700 hover:bg-indigo-600 rounded-lg flex items-center justify-center transition-colors">
                             <i data-lucide="github" class="w-5 h-5"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-slate-700 hover:bg-indigo-600 rounded-lg flex items-center justify-center transition-colors">
+                        <a href="#"
+                            class="w-10 h-10 bg-slate-700 hover:bg-indigo-600 rounded-lg flex items-center justify-center transition-colors">
                             <i data-lucide="twitter" class="w-5 h-5"></i>
                         </a>
-                        <a href="#" class="w-10 h-10 bg-slate-700 hover:bg-indigo-600 rounded-lg flex items-center justify-center transition-colors">
+                        <a href="#"
+                            class="w-10 h-10 bg-slate-700 hover:bg-indigo-600 rounded-lg flex items-center justify-center transition-colors">
                             <i data-lucide="linkedin" class="w-5 h-5"></i>
                         </a>
                     </div>
                     <p class="text-sm text-slate-400">Stay updated with our latest features and releases.</p>
                 </div>
             </div>
-            
+
             <div class="border-t border-slate-700 pt-8">
                 <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                     <p class="text-sm text-slate-400">
@@ -794,11 +1116,12 @@
             <div class="bg-slate-800 border-b border-slate-700 px-4 py-3 flex items-center justify-between">
                 <div class="flex items-center gap-4">
                     <div class="flex items-center gap-2">
-                        <i data-lucide="code-2" class="w-5 h-5 text-indigo-400"></i>
+                        <img src="/favicon.svg" alt="KONKMENG" class="w-6 h-6">
                         <span class="text-white font-semibold">KONKMENG IDE</span>
                     </div>
                     <div class="flex items-center gap-2">
-                        <select id="fullscreenLanguage" class="bg-slate-700 text-white text-sm px-3 py-1.5 rounded-lg border border-slate-600 outline-none focus:border-indigo-500">
+                        <select id="fullscreenLanguage"
+                            class="bg-slate-700 text-white text-sm px-3 py-1.5 rounded-lg border border-slate-600 outline-none focus:border-indigo-500">
                             <option value="JavaScript">JavaScript</option>
                             <option value="Python">Python</option>
                             <option value="TypeScript">TypeScript</option>
@@ -814,23 +1137,26 @@
                             <option value="SQL">SQL</option>
                             <option value="HTML/CSS">HTML/CSS</option>
                         </select>
-                        <button onclick="loadExampleFullscreen()" class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-sm rounded-lg transition-colors flex items-center gap-1">
+                        <button onclick="loadExampleFullscreen()"
+                            class="px-3 py-1.5 bg-slate-700 hover:bg-slate-600 text-white text-sm rounded-lg transition-colors flex items-center gap-1">
                             <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
                             Example
                         </button>
                     </div>
                 </div>
                 <div class="flex items-center gap-2">
-                    <button id="fullscreenAnalyzeBtn" onclick="analyzeCodeFullscreen()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2">
+                    <button id="fullscreenAnalyzeBtn" onclick="analyzeCodeFullscreen()"
+                        class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors flex items-center gap-2">
                         <i data-lucide="sparkles" class="w-4 h-4" id="fullscreen-analyze-icon"></i>
                         Analyze
                     </button>
-                    <button onclick="toggleFullscreen()" class="px-3 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors">
+                    <button onclick="toggleFullscreen()"
+                        class="px-3 py-2 bg-slate-700 hover:bg-slate-600 text-white rounded-lg transition-colors">
                         <i data-lucide="minimize" class="w-4 h-4"></i>
                     </button>
                 </div>
             </div>
-            
+
             <!-- Main Content -->
             <div class="flex-1 flex overflow-hidden">
                 <!-- Code Editor Panel -->
@@ -838,14 +1164,17 @@
                     <div class="bg-slate-800 px-4 py-2 border-b border-slate-700">
                         <div class="flex items-center justify-between">
                             <span class="text-slate-300 text-sm font-medium">Code Editor</span>
-                            <button onclick="clearCodeFullscreen()" class="text-slate-400 hover:text-slate-200 transition-colors">
+                            <button onclick="clearCodeFullscreen()"
+                                class="text-slate-400 hover:text-slate-200 transition-colors">
                                 <i data-lucide="trash-2" class="w-4 h-4"></i>
                             </button>
                         </div>
                     </div>
-                    <textarea id="fullscreenCode" class="flex-1 w-full p-4 font-mono text-sm bg-slate-900 text-slate-100 resize-none outline-none" placeholder="// Paste your code here..."></textarea>
+                    <textarea id="fullscreenCode"
+                        class="flex-1 w-full p-4 font-mono text-sm bg-slate-900 text-slate-100 resize-none outline-none"
+                        placeholder="// Paste your code here..."></textarea>
                 </div>
-                
+
                 <!-- AI Response Panel -->
                 <div class="w-1/2 flex flex-col">
                     <div class="bg-slate-800 px-4 py-2 border-b border-slate-700">
@@ -855,7 +1184,8 @@
                                 <span class="text-slate-300 text-sm font-medium">AI Response</span>
                             </div>
                             <div class="flex items-center gap-2">
-                                <button onclick="copyAnalysisFullscreen()" id="fullscreen-copy-btn" class="hidden px-3 py-1 bg-slate-700 hover:bg-slate-600 text-white text-xs rounded-lg transition-colors flex items-center gap-1">
+                                <button onclick="copyAnalysisFullscreen()" id="fullscreen-copy-btn"
+                                    class="hidden px-3 py-1 bg-slate-700 hover:bg-slate-600 text-white text-xs rounded-lg transition-colors flex items-center gap-1">
                                     <i data-lucide="copy" class="w-3 h-3"></i>
                                     Copy
                                 </button>
@@ -867,7 +1197,8 @@
                         </div>
                     </div>
                     <div id="fullscreenOutput" class="prose prose-invert flex-1 overflow-y-auto p-4">
-                        <div id="fullscreenPlaceholder" class="h-full flex flex-col items-center justify-center text-slate-500">
+                        <div id="fullscreenPlaceholder"
+                            class="h-full flex flex-col items-center justify-center text-slate-500">
                             <i data-lucide="message-square" class="w-16 h-16 mb-4 opacity-50"></i>
                             <p class="text-lg mb-2">Your AI analysis will appear here</p>
                             <p class="text-sm opacity-70">Paste code and click Analyze to get started</p>
@@ -886,35 +1217,65 @@
                 <button onclick="closeSignInModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
-                
+
                 <div class="text-center mb-8">
-                    <div class="w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4">
+                    <div
+                        class="w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4">
                         <i data-lucide="code-2" class="w-8 h-8 text-white"></i>
                     </div>
                     <h2 class="text-2xl font-bold text-slate-900 mb-2">Welcome Back</h2>
                     <p class="text-slate-600">Sign in to your KONKMENG account</p>
                 </div>
-                
+
                 <form onsubmit="handleSignIn(event)">
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-slate-700 mb-2">Email</label>
-                        <input type="email" required class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500" placeholder="you@example.com">
+                        <input type="email" required
+                            class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500"
+                            placeholder="you@example.com">
                     </div>
-                    
+
                     <div class="mb-6">
                         <label class="block text-sm font-medium text-slate-700 mb-2">Password</label>
-                        <input type="password" required class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500" placeholder="••••••••">
+                        <input type="password" required
+                            class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500"
+                            placeholder="••••••••">
                     </div>
-                    
-                    <button type="submit" class="w-full px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors font-medium">
+
+                    <button type="submit"
+                        class="w-full px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors font-medium">
                         Sign In
                     </button>
                 </form>
-                
+
+                <!-- Divider -->
+                <div class="flex items-center gap-3 my-6">
+                    <div class="flex-1 h-px bg-slate-200"></div>
+                    <span class="text-sm text-slate-400">or</span>
+                    <div class="flex-1 h-px bg-slate-200"></div>
+                </div>
+
+                <!-- Google Login -->
+                <button onclick="handleGoogleLogin()"
+                    class="w-full px-6 py-3 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors font-medium flex items-center justify-center gap-3">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24">
+                        <path fill="#4285F4"
+                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
+                        <path fill="#34A853"
+                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                        <path fill="#FBBC05"
+                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                        <path fill="#EA4335"
+                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                    </svg>
+                    <span class="text-slate-700">Continue with Google</span>
+                </button>
+
                 <div class="mt-6 text-center">
                     <p class="text-sm text-slate-600">
-                        Don't have an account? 
-                        <a href="#" onclick="switchToSignUp()" class="text-indigo-600 hover:text-indigo-700 font-medium">Sign up</a>
+                        Don't have an account?
+                        <a href="#" onclick="switchToSignUp()"
+                            class="text-indigo-600 hover:text-indigo-700 font-medium">Sign up</a>
                     </p>
                 </div>
             </div>
@@ -929,40 +1290,72 @@
                 <button onclick="closeSignUpModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
-                
+
                 <div class="text-center mb-8">
-                    <div class="w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4">
+                    <div
+                        class="w-16 h-16 bg-gradient-to-br from-indigo-600 to-purple-600 rounded-xl flex items-center justify-center mx-auto mb-4">
                         <i data-lucide="code-2" class="w-8 h-8 text-white"></i>
                     </div>
                     <h2 class="text-2xl font-bold text-slate-900 mb-2">Create Account</h2>
                     <p class="text-slate-600">Join KONKMENG and start analyzing your code</p>
                 </div>
-                
+
                 <form onsubmit="handleSignUp(event)">
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-slate-700 mb-2">Full Name</label>
-                        <input type="text" required class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500" placeholder="John Doe">
+                        <input type="text" required
+                            class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500"
+                            placeholder="John Doe">
                     </div>
-                    
+
                     <div class="mb-4">
                         <label class="block text-sm font-medium text-slate-700 mb-2">Email</label>
-                        <input type="email" required class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500" placeholder="you@example.com">
+                        <input type="email" required
+                            class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500"
+                            placeholder="you@example.com">
                     </div>
-                    
+
                     <div class="mb-6">
                         <label class="block text-sm font-medium text-slate-700 mb-2">Password</label>
-                        <input type="password" required class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500" placeholder="••••••••">
+                        <input type="password" required
+                            class="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:border-indigo-500"
+                            placeholder="••••••••">
                     </div>
-                    
-                    <button type="submit" class="w-full px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors font-medium">
+
+                    <button type="submit"
+                        class="w-full px-6 py-3 bg-indigo-600 text-white rounded-xl hover:bg-indigo-700 transition-colors font-medium">
                         Create Account
                     </button>
                 </form>
-                
+
+                <!-- Divider -->
+                <div class="flex items-center gap-3 my-6">
+                    <div class="flex-1 h-px bg-slate-200"></div>
+                    <span class="text-sm text-slate-400">or</span>
+                    <div class="flex-1 h-px bg-slate-200"></div>
+                </div>
+
+                <!-- Google Login -->
+                <button onclick="handleGoogleLogin()"
+                    class="w-full px-6 py-3 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors font-medium flex items-center justify-center gap-3">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24">
+                        <path fill="#4285F4"
+                            d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" />
+                        <path fill="#34A853"
+                            d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                        <path fill="#FBBC05"
+                            d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                        <path fill="#EA4335"
+                            d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                    </svg>
+                    <span class="text-slate-700">Continue with Google</span>
+                </button>
+
                 <div class="mt-6 text-center">
                     <p class="text-sm text-slate-600">
-                        Already have an account? 
-                        <a href="#" onclick="switchToSignIn()" class="text-indigo-600 hover:text-indigo-700 font-medium">Sign in</a>
+                        Already have an account?
+                        <a href="#" onclick="switchToSignIn()"
+                            class="text-indigo-600 hover:text-indigo-700 font-medium">Sign in</a>
                     </p>
                 </div>
             </div>
@@ -974,27 +1367,29 @@
         <div class="modal-backdrop absolute inset-0" onclick="closePaymentQRModal()"></div>
         <div class="flex items-center justify-center min-h-screen p-4">
             <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full p-8 relative animate-fade-in">
-                <button onclick="closePaymentQRModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
+                <button onclick="closePaymentQRModal()"
+                    class="absolute top-4 right-4 text-slate-400 hover:text-slate-600">
                     <i data-lucide="x" class="w-6 h-6"></i>
                 </button>
-                
+
                 <div class="text-center">
                     <!-- Plan Info -->
                     <div class="mb-6">
                         <h2 class="text-2xl font-bold text-slate-900 mb-2" id="qr-plan-name">Pro Plan</h2>
                         <p class="text-3xl font-bold text-indigo-600" id="qr-plan-price">$29/month</p>
                     </div>
-                    
+
                     <!-- QR Code -->
                     <div class="bg-white p-6 rounded-xl border-2 border-indigo-200 mb-6">
                         <div id="qr-code-container" class="flex items-center justify-center">
                             <!-- QR Code will be generated here -->
-                            <div class="w-64 h-64 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg flex items-center justify-center">
+                            <div
+                                class="w-64 h-64 bg-gradient-to-br from-indigo-50 to-purple-50 rounded-lg flex items-center justify-center">
                                 <canvas id="qr-canvas" class="max-w-full"></canvas>
                             </div>
                         </div>
                     </div>
-                    
+
                     <!-- Payment Instructions -->
                     <div class="text-left bg-slate-50 p-4 rounded-lg mb-4">
                         <h3 class="font-semibold text-slate-900 mb-2 flex items-center gap-2">
@@ -1020,15 +1415,17 @@
                             </li>
                         </ol>
                     </div>
-                    
+
                     <!-- Payment Details -->
                     <div class="text-sm text-slate-500 mb-4">
-                        <p class="mb-1">Payment ID: <span class="font-mono text-slate-700" id="payment-id">KM-2026-XXXX</span></p>
+                        <p class="mb-1">Payment ID: <span class="font-mono text-slate-700"
+                                id="payment-id">KM-2026-XXXX</span></p>
                         <p>Secure payment powered by KONKMENG</p>
                     </div>
-                    
+
                     <!-- Alternative Payment Button -->
-                    <button onclick="handleAlternativePayment()" class="w-full px-6 py-3 bg-slate-100 text-slate-700 font-medium rounded-xl hover:bg-slate-200 transition-colors">
+                    <button onclick="handleAlternativePayment()"
+                        class="w-full px-6 py-3 bg-slate-100 text-slate-700 font-medium rounded-xl hover:bg-slate-200 transition-colors">
                         Use Alternative Payment Method
                     </button>
                 </div>
@@ -1042,9 +1439,9 @@
         // ===== TRANSLATIONS =====
         const translations = {
             en: {
-                'hero.badge': 'Powered by KONKMENG • Lightning Fast',
-                'hero.title': 'Master Coding with',
-                'hero.subtitle': 'AI-powered code analysis that explains your code line by line. Support for 15+ languages with blazing fast responses.',
+                'hero.badge': 'Powered by KONKMENG AI CODE • Lightning Fast',
+                'hero.title': 'Debug & Refactor with',
+                'hero.subtitle': 'Bilingual AI-powered code analysis that explains your code line by line. Get instant debugging help in Khmer or English.',
                 'hero.cta_start': 'Try it Free',
                 'hero.stats_users': 'Developers',
                 'hero.stats_languages': 'Languages',
@@ -1082,7 +1479,7 @@
             },
             km: {
                 'hero.badge': 'ដំណើរការដោយ KONKMENG • លឿនបំផុត',
-                'hero.title': 'រៀនសរសេរកូដជាមួយ',
+                'hero.title': 'កែតម្រូវ និងរៀបចំកូដជាមួយ',
                 'hero.subtitle': 'ការវិភាគកូដដោយ KONKMENG ដែលពន្យល់កូដរបស់អ្នកម្តងមួយបន្ទាត់។ គាំទ្រភាសាចំនួន ១៥+ ជាមួយការឆ្លើយតបលឿនបំផុត។',
                 'hero.cta_start': 'ចាប់ផ្តើមសាកល្បងដោយឥតគិតថ្លៃ',
                 'hero.stats_users': 'អ្នកប្រើប្រាស់',
@@ -1130,14 +1527,22 @@
             document.getElementById('currentYear').textContent = new Date().getFullYear();
             updateUI();
             checkAuthStatus(); // Check authentication status
+            initTheme(); // Initialize dark/light theme
             lucide.createIcons();
+            // Initialize AOS - Animate On Scroll
+            AOS.init({
+                duration: 800,
+                once: true,
+                offset: 100,
+                easing: 'ease-out-cubic'
+            });
         }
 
         // Get API base URL based on environment
         function getApiBaseUrl() {
             // Check if we're in development (localhost) or production
-            return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' 
-                ? 'http://localhost:3000' 
+            return window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+                ? 'http://localhost:3000'
                 : 'https://konkmeng.onrender.com';
         }
 
@@ -1156,7 +1561,7 @@
                     ${t['nav.' + id]}
                 </button>
             `).join('');
-            
+
             // Update Mobile Nav
             const mobileNav = document.getElementById('mobile-nav-links');
             mobileNav.innerHTML = items.map(id => `
@@ -1172,6 +1577,35 @@
             currentLang = lang;
             localStorage.setItem('lang', lang);
             updateUI();
+        };
+
+        // ===== DARK/LIGHT THEME TOGGLE =====
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-theme');
+                document.getElementById('theme-icon-sun').classList.remove('hidden');
+                document.getElementById('theme-icon-moon').classList.add('hidden');
+            }
+        }
+
+        window.toggleTheme = () => {
+            const isDark = document.body.classList.toggle('dark-theme');
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+
+            // Toggle icons
+            document.getElementById('theme-icon-sun').classList.toggle('hidden', !isDark);
+            document.getElementById('theme-icon-moon').classList.toggle('hidden', isDark);
+            lucide.createIcons();
+        };
+
+        // ===== GOOGLE LOGIN HANDLER =====
+        window.handleGoogleLogin = async () => {
+            // Google OAuth popup-based login
+            // This calls the backend /api/auth/google endpoint
+            alert(currentLang === 'km'
+                ? 'Google Login កំពុងអភិវឌ្ឍន៍។ សូមប្រើ Email និង Password ជំនួស។'
+                : 'Google Login is coming soon. Please use Email and Password for now.');
         };
 
         window.navigateTo = (pageId) => {
@@ -1200,7 +1634,7 @@
             const fullscreenIDE = document.getElementById('fullscreenIDE');
             const code = document.getElementById('code').value;
             const output = document.getElementById('output').innerHTML;
-            
+
             if (fullscreenIDE.classList.contains('hidden')) {
                 // Enter fullscreen
                 fullscreenIDE.classList.remove('hidden');
@@ -1208,7 +1642,7 @@
                 document.getElementById('fullscreenOutput').innerHTML = output;
                 document.getElementById('fullscreenLanguage').value = document.getElementById('language').value;
                 document.body.style.overflow = 'hidden';
-                
+
                 // Sync copy button visibility
                 const copyBtnVisible = !document.getElementById('copy-btn').classList.contains('hidden');
                 if (copyBtnVisible) {
@@ -1221,14 +1655,14 @@
                 document.getElementById('output').innerHTML = document.getElementById('fullscreenOutput').innerHTML;
                 document.getElementById('language').value = document.getElementById('fullscreenLanguage').value;
                 document.body.style.overflow = 'auto';
-                
+
                 // Sync copy button visibility
                 const copyBtnVisible = !document.getElementById('fullscreen-copy-btn').classList.contains('hidden');
                 if (copyBtnVisible) {
                     document.getElementById('copy-btn').classList.remove('hidden');
                 }
             }
-            
+
             lucide.createIcons();
         };
 
@@ -1268,13 +1702,13 @@
             const status = document.getElementById('fullscreenStatus');
             const btn = document.getElementById('fullscreenAnalyzeBtn');
             const icon = document.getElementById('fullscreen-analyze-icon');
-            
+
             if (!code) return alert('Please paste your code');
-            
+
             btn.disabled = true;
             icon.classList.add('animate-spin');
             status.innerHTML = `<div class="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></div><span class="text-xs text-amber-400">Analyzing...</span>`;
-            
+
             // Show thinking animation
             output.innerHTML = `
                 <div class="h-full flex flex-col items-center justify-center">
@@ -1286,16 +1720,16 @@
                     <p class="text-slate-400 text-sm">${currentLang === 'km' ? 'កំពុងវិភាគកូដ...' : 'Analyzing your code...'}</p>
                 </div>
             `;
-            
+
             try {
                 const headers = { 'Content-Type': 'application/json' };
                 const token = localStorage.getItem('token');
-                
+
                 // Add token if user is logged in - enables auto-save to history
                 if (token) {
                     headers['Authorization'] = `Bearer ${token}`;
                 }
-                
+
                 const response = await fetch(`${getApiBaseUrl()}/api/analyze-code`, {
                     method: 'POST',
                     headers: headers,
@@ -1305,39 +1739,39 @@
                         responseLang: currentLang
                     })
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (!response.ok) {
                     throw new Error(data.error || data.details || 'Analysis failed');
                 }
-                
+
                 // Parse markdown and animate the response
                 const parsedHTML = parseMarkdown(data.analysis || 'No analysis returned');
                 await animateResponse(parsedHTML, output);
-                
+
                 document.getElementById('fullscreen-copy-btn').classList.remove('hidden');
                 status.innerHTML = `<div class="w-2 h-2 bg-emerald-500 rounded-full"></div><span class="text-xs text-emerald-400">Complete</span>`;
-                
+
                 // Show token usage if available
                 if (data.usage) {
                     console.log(`Tokens used: ${data.usage.total_tokens}`);
                 }
-                
+
             } catch (error) {
                 console.error('Analysis error:', error);
-                
+
                 // Check if it's a rate limit error
-                const isRateLimit = error.message.includes('rate limit') || 
-                                  error.message.includes('429') || 
-                                  error.message.includes('quota') ||
-                                  error.message.includes('tokens per day');
-                
+                const isRateLimit = error.message.includes('rate limit') ||
+                    error.message.includes('429') ||
+                    error.message.includes('quota') ||
+                    error.message.includes('tokens per day');
+
                 if (isRateLimit) {
                     // Extract wait time if available
                     const waitTimeMatch = error.message.match(/try again in (\d+m\d+\.?\d*s)/);
                     const waitTime = waitTimeMatch ? waitTimeMatch[1] : '15-30 នាទី';
-                    
+
                     output.innerHTML = `
                         <div class="bg-amber-50 border border-amber-200 rounded-xl p-6 text-center">
                             <i data-lucide="clock" class="w-12 h-12 text-amber-500 mx-auto mb-4"></i>
@@ -1345,15 +1779,15 @@
                                 ${currentLang === 'km' ? 'API កំពុងបញ្ចប់ការប្រើប្រាស់ប្រចាំថ្ងៃ' : 'Daily API Quota Reached'}
                             </h3>
                             <p class="text-amber-700 mb-4 leading-relaxed">
-                                ${currentLang === 'km' 
-                                    ? `ប្រព័ន្ធ AI បានប្រើប្រាស់ token អស់ហើយសម្រាប់ថ្ងៃនេះ។ សូមព្យាយាមម្តងទៀតក្នុងរយៈពេល ${waitTime}` 
-                                    : `Our AI service has reached its daily token limit. Please try again in ${waitTime}`}
+                                ${currentLang === 'km'
+                            ? `ប្រព័ន្ធ AI បានប្រើប្រាស់ token អស់ហើយសម្រាប់ថ្ងៃនេះ។ សូមព្យាយាមម្តងទៀតក្នុងរយៈពេល ${waitTime}`
+                            : `Our AI service has reached its daily token limit. Please try again in ${waitTime}`}
                             </p>
                             <div class="bg-amber-100 rounded-lg p-3 mb-4">
                                 <p class="text-sm text-amber-600">
-                                    ${currentLang === 'km' 
-                                        ? '💡 នេះបង្ហាញថាសេវាកម្មរបស់យើងពេញនិយម! ប្រព័ន្ធនឹងដំណើរការធម្មតាវិញនៅពេលដែល API quota reset' 
-                                        : '💡 This shows our service is popular! The system will work normally once the API quota resets'}
+                                    ${currentLang === 'km'
+                            ? '💡 នេះបង្ហាញថាសេវាកម្មរបស់យើងពេញនិយម! ប្រព័ន្ធនឹងដំណើរការធម្មតាវិញនៅពេលដែល API quota reset'
+                            : '💡 This shows our service is popular! The system will work normally once the API quota resets'}
                                 </p>
                             </div>
                             <div class="flex gap-2 justify-center">
@@ -1381,7 +1815,8 @@
                 lucide.createIcons();
             } finally {
                 btn.disabled = false;
-                icon.classList.remove('animate-spin');
+                const freshIconFs = document.getElementById('fullscreen-analyze-icon') || btn.querySelector('svg');
+                if (freshIconFs) freshIconFs.classList.remove('animate-spin');
                 lucide.createIcons();
             }
         };
@@ -1421,12 +1856,12 @@
             event.preventDefault();
             const email = event.target.querySelector('input[type="email"]').value;
             const password = event.target.querySelector('input[type="password"]').value;
-            
+
             if (!email || !password) {
                 alert(currentLang === 'km' ? 'សូមបំពេញព័ត៌មានទាំងអស់' : 'Please fill in all fields');
                 return;
             }
-            
+
             try {
                 const response = await fetch(`${getApiBaseUrl()}/api/auth/login`, {
                     method: 'POST',
@@ -1435,22 +1870,22 @@
                     },
                     body: JSON.stringify({ email, password, responseLang: currentLang })
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (!response.ok || !data.success) {
                     throw new Error(data.error || 'Login failed');
                 }
-                
+
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
-                
+
                 // Update UI to show logged in state
                 updateAuthUI(true);
-                
+
                 alert(data.message || 'Login successful!');
                 closeSignInModal();
-                
+
             } catch (error) {
                 console.error('Login error:', error);
                 alert(error.message || (currentLang === 'km' ? 'ការចូលប្រើបរាណ៍បរាជ័យ' : 'Login failed'));
@@ -1462,12 +1897,12 @@
             const name = event.target.querySelector('input[type="text"]').value;
             const email = event.target.querySelector('input[type="email"]').value;
             const password = event.target.querySelector('input[type="password"]').value;
-            
+
             if (!name || !email || !password) {
                 alert(currentLang === 'km' ? 'សូមបំពេញព័ត៌មានទាំងអស់' : 'Please fill in all fields');
                 return;
             }
-            
+
             try {
                 const response = await fetch(`${getApiBaseUrl()}/api/auth/signup`, {
                     method: 'POST',
@@ -1476,22 +1911,22 @@
                     },
                     body: JSON.stringify({ name, email, password, responseLang: currentLang })
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (!response.ok || !data.success) {
                     throw new Error(data.error || 'Registration failed');
                 }
-                
+
                 localStorage.setItem('token', data.token);
                 localStorage.setItem('user', JSON.stringify(data.user));
-                
+
                 // Update UI to show logged in state
                 updateAuthUI(true);
-                
+
                 alert(data.message || 'Registration successful!');
                 closeSignUpModal();
-                
+
             } catch (error) {
                 console.error('Registration error:', error);
                 alert(error.message || (currentLang === 'km' ? 'ការចុះឈ្មោះបរាជ័យ' : 'Registration failed'));
@@ -1502,10 +1937,10 @@
         function updateAuthUI(isLoggedIn) {
             const authNav = document.getElementById('auth-nav');
             const mobileAuthNav = document.getElementById('mobile-auth-nav');
-            
+
             if (isLoggedIn) {
                 const user = JSON.parse(localStorage.getItem('user') || '{}');
-                
+
                 // Desktop auth nav
                 authNav.innerHTML = `
                     <div class="flex items-center gap-3">
@@ -1520,7 +1955,7 @@
                         </button>
                     </div>
                 `;
-                
+
                 // Mobile auth nav
                 mobileAuthNav.innerHTML = `
                     <div class="flex items-center gap-3 p-3 bg-slate-50 rounded-xl">
@@ -1546,7 +1981,7 @@
                         Get Started
                     </button>
                 `;
-                
+
                 mobileAuthNav.innerHTML = `
                     <button onclick="openSignInModal(); toggleMobileMenu()" class="w-full px-4 py-3 text-left text-slate-600 hover:text-indigo-600 hover:bg-slate-50 rounded-xl transition-colors">
                         Sign In
@@ -1556,7 +1991,7 @@
                     </button>
                 `;
             }
-            
+
             lucide.createIcons();
         }
 
@@ -1572,14 +2007,14 @@
             const modal = document.getElementById('paymentQRModal');
             document.getElementById('qr-plan-name').textContent = plan;
             document.getElementById('qr-plan-price').textContent = price;
-            
+
             // Generate unique payment ID
             const paymentId = 'KM-' + new Date().getFullYear() + '-' + Math.random().toString(36).substr(2, 6).toUpperCase();
             document.getElementById('payment-id').textContent = paymentId;
-            
+
             // Generate QR Code
             generateQRCode(plan, price, paymentId);
-            
+
             modal.classList.remove('hidden');
             lucide.createIcons();
         };
@@ -1596,11 +2031,11 @@
         function generateQRCode(plan, price, paymentId) {
             const canvas = document.getElementById('qr-canvas');
             const ctx = canvas.getContext('2d');
-            
+
             // Set canvas size
             canvas.width = 256;
             canvas.height = 256;
-            
+
             // Create payment data
             const paymentData = {
                 merchant: 'KONKMENG',
@@ -1609,15 +2044,15 @@
                 paymentId: paymentId,
                 url: 'https://konkmeng.onrender.com/payment/' + paymentId
             };
-            
+
             // For demo: Draw a simple QR-like pattern
             // In production, use a real QR code library like qrcode.js
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(0, 0, 256, 256);
-            
+
             ctx.fillStyle = '#000000';
             const blockSize = 8;
-            
+
             // Create a simple pattern (in production, use real QR code library)
             for (let i = 0; i < 32; i++) {
                 for (let j = 0; j < 32; j++) {
@@ -1626,7 +2061,7 @@
                     }
                 }
             }
-            
+
             // Add KONKMENG logo in center
             ctx.fillStyle = '#ffffff';
             ctx.fillRect(96, 96, 64, 64);
@@ -1634,21 +2069,21 @@
             ctx.font = 'bold 16px Arial';
             ctx.textAlign = 'center';
             ctx.fillText('KM', 128, 128);
-            
+
             console.log('QR Code generated for:', paymentData);
         }
 
         // Handle pricing card clicks
         window.handlePricingClick = (plan) => {
             console.log('Pricing plan clicked:', plan);
-            
+
             // Add active state animation
             const cards = document.querySelectorAll('#pricing .group');
             cards.forEach(card => {
                 card.classList.add('scale-95');
                 setTimeout(() => card.classList.remove('scale-95'), 200);
             });
-            
+
             // Handle different plans
             if (plan === 'free') {
                 // Free plan: Navigate directly to code analysis tool
@@ -1659,6 +2094,21 @@
             } else if (plan === 'enterprise') {
                 openPaymentQRModal('Enterprise Plan', 'Custom Pricing');
             }
+        };
+
+        // Payment QR Modal functions
+        window.openPaymentQRModal = (plan, price) => {
+            document.getElementById('qrModalPlan').textContent = plan;
+            document.getElementById('qrModalPrice').textContent = price;
+            const modal = document.getElementById('paymentQRModal');
+            modal.classList.remove('hidden');
+            modal.classList.add('flex');
+        };
+
+        window.closePaymentQRModal = () => {
+            const modal = document.getElementById('paymentQRModal');
+            modal.classList.add('hidden');
+            modal.classList.remove('flex');
         };
 
         // Check login status on page load
@@ -1681,7 +2131,7 @@ function fibonacci(n) {
 }
 
 console.log(fibonacci(10));`,
-            
+
             'Python': `# Fibonacci sequence
 def fibonacci(n):
     if n <= 1:
@@ -1689,7 +2139,7 @@ def fibonacci(n):
     return fibonacci(n - 1) + fibonacci(n - 2)
 
 print(fibonacci(10))`,
-            
+
             'TypeScript': `// Fibonacci sequence with types
 function fibonacci(n: number): number {
     if (n <= 1) return n;
@@ -1697,7 +2147,7 @@ function fibonacci(n: number): number {
 }
 
 console.log(fibonacci(10));`,
-            
+
             'Java': `// Fibonacci sequence
 public class Fibonacci {
     public static int fibonacci(int n) {
@@ -1709,7 +2159,7 @@ public class Fibonacci {
         System.out.println(fibonacci(10));
     }
 }`,
-            
+
             'C++': `// Fibonacci sequence
 #include <iostream>
 using namespace std;
@@ -1723,7 +2173,7 @@ int main() {
     cout << fibonacci(10) << endl;
     return 0;
 }`,
-            
+
             'C#': `// Fibonacci sequence
 using System;
 
@@ -1737,7 +2187,7 @@ class Program {
         Console.WriteLine(Fibonacci(10));
     }
 }`,
-            
+
             'PHP': `<?php
 // Fibonacci sequence
 function fibonacci($n) {
@@ -1747,7 +2197,7 @@ function fibonacci($n) {
 
 echo fibonacci(10);
 ?>`,
-            
+
             'Ruby': `# Fibonacci sequence
 def fibonacci(n)
     return n if n <= 1
@@ -1755,7 +2205,7 @@ def fibonacci(n)
 end
 
 puts fibonacci(10)`,
-            
+
             'Go': `// Fibonacci sequence
 package main
 
@@ -1771,7 +2221,7 @@ func fibonacci(n int) int {
 func main() {
     fmt.Println(fibonacci(10))
 }`,
-            
+
             'Rust': `// Fibonacci sequence
 fn fibonacci(n: u32) -> u32 {
     match n {
@@ -1784,7 +2234,7 @@ fn fibonacci(n: u32) -> u32 {
 fn main() {
     println!("{}", fibonacci(10));
 }`,
-            
+
             'Swift': `// Fibonacci sequence
 func fibonacci(_ n: Int) -> Int {
     if n <= 1 { return n }
@@ -1792,7 +2242,7 @@ func fibonacci(_ n: Int) -> Int {
 }
 
 print(fibonacci(10))`,
-            
+
             'Kotlin': `// Fibonacci sequence
 fun fibonacci(n: Int): Int {
     if (n <= 1) return n
@@ -1802,7 +2252,7 @@ fun fibonacci(n: Int): Int {
 fun main() {
     println(fibonacci(10))
 }`,
-            
+
             'SQL': `-- Find top 10 customers by total orders
 SELECT 
     c.customer_id,
@@ -1814,7 +2264,7 @@ LEFT JOIN orders o ON c.customer_id = o.customer_id
 GROUP BY c.customer_id, c.customer_name
 ORDER BY total_spent DESC
 LIMIT 10;`,
-            
+
             'HTML/CSS': `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -1843,7 +2293,7 @@ LIMIT 10;`,
 </body>
 </html>`
         };
-        
+
         window.loadExample = () => {
             const language = document.getElementById('language').value;
             const example = codeExamples[language] || codeExamples['JavaScript'];
@@ -1881,13 +2331,13 @@ LIMIT 10;`,
             const btn = document.getElementById('analyzeBtn');
             const icon = document.getElementById('analyze-icon');
             const t = translations[currentLang];
-            
+
             if (!code) return alert(currentLang === 'km' ? 'សូមបញ្ចូលកូដ' : 'Please paste your code');
-            
+
             btn.disabled = true;
             icon.classList.add('animate-spin');
             status.innerHTML = `<div class="w-2 h-2 bg-amber-500 rounded-full animate-pulse"></div><span class="text-xs text-amber-600">${t['tool.status_analyzing']}</span>`;
-            
+
             // Show thinking animation
             output.innerHTML = `
                 <div class="h-full flex flex-col items-center justify-center">
@@ -1899,16 +2349,16 @@ LIMIT 10;`,
                     <p class="text-slate-500 text-sm">${currentLang === 'km' ? 'កំពុងវិភាគកូដ...' : 'Analyzing your code...'}</p>
                 </div>
             `;
-            
+
             try {
                 const headers = { 'Content-Type': 'application/json' };
                 const token = localStorage.getItem('token');
-                
+
                 // Add token if user is logged in - enables auto-save to history
                 if (token) {
                     headers['Authorization'] = `Bearer ${token}`;
                 }
-                
+
                 const response = await fetch(`${getApiBaseUrl()}/api/analyze-code`, {
                     method: 'POST',
                     headers: headers,
@@ -1918,39 +2368,39 @@ LIMIT 10;`,
                         responseLang: currentLang
                     })
                 });
-                
+
                 const data = await response.json();
-                
+
                 if (!response.ok) {
                     throw new Error(data.error || data.details || 'Analysis failed');
                 }
-                
+
                 // Parse markdown and animate the response
                 const parsedHTML = parseMarkdown(data.analysis || 'No analysis returned');
                 await animateResponse(parsedHTML, output);
-                
+
                 document.getElementById('copy-btn').classList.remove('hidden');
                 status.innerHTML = `<div class="w-2 h-2 bg-emerald-500 rounded-full"></div><span class="text-xs text-emerald-600">${t['tool.status_complete']}</span>`;
-                
+
                 // Show token usage if available
                 if (data.usage) {
                     console.log(`Tokens used: ${data.usage.total_tokens}`);
                 }
-                
+
             } catch (error) {
                 console.error('Analysis error:', error);
-                
+
                 // Check if it's a rate limit error
-                const isRateLimit = error.message.includes('rate limit') || 
-                                  error.message.includes('429') || 
-                                  error.message.includes('quota') ||
-                                  error.message.includes('tokens per day');
-                
+                const isRateLimit = error.message.includes('rate limit') ||
+                    error.message.includes('429') ||
+                    error.message.includes('quota') ||
+                    error.message.includes('tokens per day');
+
                 if (isRateLimit) {
                     // Extract wait time if available
                     const waitTimeMatch = error.message.match(/try again in (\d+m\d+\.?\d*s)/);
                     const waitTime = waitTimeMatch ? waitTimeMatch[1] : '15-30 នាទី';
-                    
+
                     output.innerHTML = `
                         <div class="bg-amber-50 border border-amber-200 rounded-xl p-6 text-center">
                             <i data-lucide="clock" class="w-12 h-12 text-amber-500 mx-auto mb-4"></i>
@@ -1958,15 +2408,15 @@ LIMIT 10;`,
                                 ${currentLang === 'km' ? 'API កំពុងបញ្ចប់ការប្រើប្រាស់ប្រចាំថ្ងៃ' : 'Daily API Quota Reached'}
                             </h3>
                             <p class="text-amber-700 mb-4 leading-relaxed">
-                                ${currentLang === 'km' 
-                                    ? `ប្រព័ន្ធ AI បានប្រើប្រាស់ token អស់ហើយសម្រាប់ថ្ងៃនេះ។ សូមព្យាយាមម្តងទៀតក្នុងរយៈពេល ${waitTime}` 
-                                    : `Our AI service has reached its daily token limit. Please try again in ${waitTime}`}
+                                ${currentLang === 'km'
+                            ? `ប្រព័ន្ធ AI បានប្រើប្រាស់ token អស់ហើយសម្រាប់ថ្ងៃនេះ។ សូមព្យាយាមម្តងទៀតក្នុងរយៈពេល ${waitTime}`
+                            : `Our AI service has reached its daily token limit. Please try again in ${waitTime}`}
                             </p>
                             <div class="bg-amber-100 rounded-lg p-3 mb-4">
                                 <p class="text-sm text-amber-600">
-                                    ${currentLang === 'km' 
-                                        ? '💡 នេះបង្ហាញថាសេវាកម្មរបស់យើងពេញនិយម! ប្រព័ន្ធនឹងដំណើរការធម្មតាវិញនៅពេលដែល API quota reset' 
-                                        : '💡 This shows our service is popular! The system will work normally once the API quota resets'}
+                                    ${currentLang === 'km'
+                            ? '💡 នេះបង្ហាញថាសេវាកម្មរបស់យើងពេញនិយម! ប្រព័ន្ធនឹងដំណើរការធម្មតាវិញនៅពេលដែល API quota reset'
+                            : '💡 This shows our service is popular! The system will work normally once the API quota resets'}
                                 </p>
                             </div>
                             <div class="flex gap-2 justify-center">
@@ -1994,58 +2444,165 @@ LIMIT 10;`,
                 lucide.createIcons();
             } finally {
                 btn.disabled = false;
-                icon.classList.remove('animate-spin');
                 lucide.createIcons();
+                const freshIcon = document.getElementById('analyze-icon') || btn.querySelector('svg');
+                if (freshIcon) freshIcon.classList.remove('animate-spin');
             }
         };
 
-        // Simple Markdown Parser
+        // ===== MODERN MARKDOWN PARSER =====
         function parseMarkdown(text) {
             let html = text;
-            
-            // Code blocks with language
+
+            // Step 1: Extract and protect code blocks
+            const codeBlocks = [];
             html = html.replace(/```(\w+)?\n([\s\S]*?)```/g, (match, lang, code) => {
-                return `<pre><code>${escapeHtml(code.trim())}</code></pre>`;
+                const idx = codeBlocks.length;
+                const langLabel = lang || 'code';
+                codeBlocks.push({ lang: langLabel, code: code.trim() });
+                return `%%CODEBLOCK_${idx}%%`;
             });
-            
-            // Inline code
+
+            // Step 2: Detect KONKMENG section boxes (┌───┐ │ Title │ └───┘)
+            html = html.replace(/┌[─]+┐\s*\n│\s*(.+?)\s*│\s*\n└[─]+┘/g, (match, title) => {
+                const t = title.trim();
+                let sectionType = 'summary';
+                let icon = '📋';
+                if (t.includes('🎯') || t.toLowerCase().includes('summary') || t.includes('សង្ខេប')) { sectionType = 'summary'; icon = '🎯'; }
+                else if (t.includes('🔍') || t.toLowerCase().includes('analysis') || t.includes('វិភាគ')) { sectionType = 'analysis'; icon = '🔍'; }
+                else if (t.includes('✅') || t.toLowerCase().includes('corrected') || t.includes('កែប្រែ')) { sectionType = 'corrected'; icon = '✅'; }
+                else if (t.includes('📖') || t.toLowerCase().includes('line-by-line') || t.includes('explanation') || t.includes('ពន្យល់')) { sectionType = 'explanation'; icon = '📖'; }
+                else if (t.includes('💡') || t.toLowerCase().includes('tip') || t.toLowerCase().includes('pro tip') || t.includes('ជំនាញ')) { sectionType = 'tip'; icon = '💡'; }
+                const cleanTitle = t.replace(/[🎯🔍✅📖💡💬]/g, '').trim();
+                return `%%SECTION_START_${sectionType}%%${icon} ${cleanTitle}%%SECTION_HEADER_END%%`;
+            });
+
+            // Step 3: Inline code
             html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
-            
-            // Headers
+
+            // Step 4: Headers (fallback for non-box headers)
             html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
             html = html.replace(/^## (.*$)/gim, '<h2>$1</h2>');
             html = html.replace(/^# (.*$)/gim, '<h1>$1</h1>');
-            
-            // Bold
+
+            // Step 5: Bold and italic
             html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-            
-            // Italic
             html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
-            
-            // Lists
-            html = html.replace(/^\* (.+)$/gim, '<li>$1</li>');
-            html = html.replace(/^- (.+)$/gim, '<li>$1</li>');
-            html = html.replace(/(<li>.*<\/li>)/s, '<ul>$1</ul>');
-            
-            // Links
+
+            // Step 6: Detect line-by-line items: • **Line 1:** `code` - explanation
+            // Also handles: • **បន្ទាត់ 1:** `code` - explanation (Khmer)
+            html = html.replace(/^[•\-\*]\s*<strong>(Line|បន្ទាត់)\s*(\d+):?<\/strong>\s*(.+)$/gim, (match, prefix, num, rest) => {
+                return `<div class="line-item"><span class="line-badge">${prefix === 'បន្ទាត់' ? 'L' : 'L'}${num}</span><div class="line-content">${rest.trim()}</div></div>`;
+            });
+
+            // Step 7: Bullet list items (remaining)
+            html = html.replace(/^[•]\s+(.+)$/gim, '<li><span class="inline-block w-1.5 h-1.5 bg-indigo-400 rounded-full mr-2 mt-2 shrink-0"></span>$1</li>');
+            html = html.replace(/^- (.+)$/gim, '<li><span class="inline-block w-1.5 h-1.5 bg-indigo-400 rounded-full mr-2 mt-2 shrink-0"></span>$1</li>');
+
+            // Step 7b: Wrap consecutive <li> in <ul>
+            html = html.replace(/(<li>.*?<\/li>\s*)+/gs, (match) => {
+                return `<ul>${match}</ul>`;
+            });
+
+            // Step 7c: Clean up stray box-drawing characters (┌─┐│└┘) that weren't matched as sections
+            html = html.replace(/[┌┐└┘│─]+/g, '');
+
+            // Step 8: Conclusion line
+            html = html.replace(/^💬\s*(.+)$/gim, '<div class="conclusion-card"><p>💬 $1</p></div>');
+
+            // Step 9: Links
             html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
-            
-            // Paragraphs
+
+            // Step 10: Paragraphs (split by double newlines)
             html = html.split('\n\n').map(para => {
                 if (!para.trim()) return '';
-                if (para.startsWith('<')) return para;
-                return `<p>${para}</p>`;
+                if (para.trim().startsWith('<') || para.trim().startsWith('%%')) return para;
+                // Wrap single newline paragraphs
+                const lines = para.split('\n').filter(l => l.trim());
+                return lines.map(l => {
+                    if (l.trim().startsWith('<') || l.trim().startsWith('%%')) return l;
+                    return `<p>${l}</p>`;
+                }).join('\n');
             }).join('\n');
-            
-            return html;
+
+            // Step 11: Build section cards
+            // Find all section starts and wrap content until next section
+            const sectionRegex = /%%SECTION_START_(\w+)%%(.+?)%%SECTION_HEADER_END%%/g;
+            let lastIndex = 0;
+            let result = '';
+            let sectionMatch;
+            const allParts = [];
+            let tempHtml = html;
+
+            // Collect section positions
+            const sections = [];
+            while ((sectionMatch = sectionRegex.exec(tempHtml)) !== null) {
+                sections.push({
+                    type: sectionMatch[1],
+                    title: sectionMatch[2],
+                    startIndex: sectionMatch.index,
+                    endOfHeader: sectionMatch.index + sectionMatch[0].length
+                });
+            }
+
+            if (sections.length > 0) {
+                // Content before first section
+                result += tempHtml.substring(0, sections[0].startIndex);
+
+                for (let i = 0; i < sections.length; i++) {
+                    const sec = sections[i];
+                    const nextStart = (i + 1 < sections.length) ? sections[i + 1].startIndex : tempHtml.length;
+                    let bodyContent = tempHtml.substring(sec.endOfHeader, nextStart).trim();
+
+                    // Clean up empty paragraphs and whitespace-only elements
+                    bodyContent = bodyContent.replace(/<p>\s*<\/p>/g, '');
+                    bodyContent = bodyContent.replace(/<p>\s*\n\s*<\/p>/g, '');
+                    bodyContent = bodyContent.replace(/^\s*\n\s*/g, '');
+                    bodyContent = bodyContent.replace(/\s*\n\s*$/g, '');
+
+                    result += `<div class="ai-section ${sec.type}">`;
+                    result += `<div class="ai-section-header">${sec.title}</div>`;
+                    result += `<div class="ai-section-body">${bodyContent}</div>`;
+                    result += `</div>`;
+                }
+            } else {
+                result = tempHtml;
+            }
+
+            // Step 12: Restore code blocks with modern styling
+            codeBlocks.forEach((block, idx) => {
+                const escapedCode = escapeHtml(block.code);
+                const codeHtml = `<div class="rounded-xl overflow-hidden mb-5 shadow-lg border border-slate-700/30">`
+                    + `<div class="code-block-header">`
+                    + `<span class="code-block-lang">${block.lang}</span>`
+                    + `<button class="code-copy-btn" onclick="copyCodeBlock(this)"><svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z"></path></svg>Copy</button>`
+                    + `</div>`
+                    + `<pre><code>${escapedCode}</code></pre>`
+                    + `</div>`;
+                result = result.replace(`%%CODEBLOCK_${idx}%%`, codeHtml);
+            });
+
+            return result;
         }
-        
+
         function escapeHtml(text) {
             const div = document.createElement('div');
             div.textContent = text;
             return div.innerHTML;
         }
-        
+
+        // Copy code from code blocks
+        window.copyCodeBlock = function (btn) {
+            const pre = btn.closest('.rounded-xl').querySelector('pre code');
+            if (!pre) return;
+            navigator.clipboard.writeText(pre.textContent).then(() => {
+                const original = btn.innerHTML;
+                btn.innerHTML = '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>Copied!';
+                btn.classList.add('text-green-400');
+                setTimeout(() => { btn.innerHTML = original; btn.classList.remove('text-green-400'); }, 2000);
+            });
+        };
+
         // Add corrected code box at the end
         function addCorrectedCodeBox(container, code, language) {
             const codeBox = document.createElement('div');
@@ -2061,8 +2618,8 @@ LIMIT 10;`,
             `;
             container.appendChild(codeBox);
         }
-        
-        window.copyCorrectedCode = function(btn) {
+
+        window.copyCorrectedCode = function (btn) {
             const code = btn.nextElementSibling.textContent;
             navigator.clipboard.writeText(code).then(() => {
                 const original = btn.textContent;
@@ -2071,40 +2628,206 @@ LIMIT 10;`,
             });
         };
 
-        // Animate response line by line
+        // Animate response with smooth section-by-section reveal
         async function animateResponse(html, container) {
             container.innerHTML = '';
-            
-            // Split by lines (preserve HTML structure)
-            const lines = html.split('\n');
-            
-            for (let i = 0; i < lines.length; i++) {
-                const line = lines[i];
-                
-                // Create a temporary div to hold the line
-                const lineDiv = document.createElement('div');
-                lineDiv.innerHTML = line;
-                lineDiv.style.opacity = '0';
-                lineDiv.style.transform = 'translateY(10px)';
-                lineDiv.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
-                
-                container.appendChild(lineDiv);
-                
-                // Trigger animation
-                await new Promise(resolve => setTimeout(resolve, 10));
-                lineDiv.style.opacity = '1';
-                lineDiv.style.transform = 'translateY(0)';
-                
-                // Wait before showing next line (faster for empty lines)
-                const delay = line.trim() === '' ? 10 : 30;
-                await new Promise(resolve => setTimeout(resolve, delay));
+            container.style.scrollBehavior = 'smooth';
+
+            // Create a wrapper to parse the full HTML
+            const wrapper = document.createElement('div');
+            wrapper.innerHTML = html;
+
+            // Blinking cursor element
+            const cursor = document.createElement('div');
+            cursor.innerHTML = '<span class="inline-block w-2 h-5 bg-indigo-500 rounded-sm animate-pulse ml-1"></span>';
+            cursor.className = 'py-2';
+
+            const children = Array.from(wrapper.children);
+
+            for (let i = 0; i < children.length; i++) {
+                const child = children[i];
+                const isSection = child.classList?.contains('ai-section');
+                const isCodeBlock = child.querySelector?.('pre') || child.tagName === 'PRE';
+                const isConclusionCard = child.classList?.contains('conclusion-card');
+
+                if (isSection) {
+                    // For section cards: slide in the header first, then stream body content
+                    child.style.opacity = '0';
+                    child.style.transform = 'translateY(16px)';
+                    child.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    container.appendChild(child);
+
+                    // Add cursor
+                    container.appendChild(cursor);
+                    scrollToBottom(container);
+
+                    await sleep(60);
+                    child.style.opacity = '1';
+                    child.style.transform = 'translateY(0)';
+                    await sleep(150);
+
+                    // Now stream the body content word by word
+                    const body = child.querySelector('.ai-section-body');
+                    if (body) {
+                        const bodyChildren = Array.from(body.children);
+                        body.innerHTML = '';
+
+                        for (let j = 0; j < bodyChildren.length; j++) {
+                            const bodyChild = bodyChildren[j];
+                            const isLineItem = bodyChild.classList?.contains('line-item');
+                            const isCodeWrapper = bodyChild.querySelector?.('pre') || bodyChild.tagName === 'PRE' || bodyChild.classList?.contains('rounded-xl');
+                            const isUl = bodyChild.tagName === 'UL';
+
+                            if (isLineItem) {
+                                // Line items: slide in
+                                bodyChild.style.opacity = '0';
+                                bodyChild.style.transform = 'translateX(-10px)';
+                                bodyChild.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                                body.appendChild(bodyChild);
+                                scrollToBottom(container);
+                                await sleep(30);
+                                bodyChild.style.opacity = '1';
+                                bodyChild.style.transform = 'translateX(0)';
+                                await sleep(80);
+                            } else if (isCodeWrapper) {
+                                // Code blocks: appear with a quick fade
+                                bodyChild.style.opacity = '0';
+                                bodyChild.style.transition = 'opacity 0.4s ease';
+                                body.appendChild(bodyChild);
+                                scrollToBottom(container);
+                                await sleep(50);
+                                bodyChild.style.opacity = '1';
+                                await sleep(200);
+                            } else if (isUl) {
+                                // List: add items one by one
+                                const listItems = Array.from(bodyChild.children);
+                                const ul = document.createElement('ul');
+                                body.appendChild(ul);
+                                for (const li of listItems) {
+                                    li.style.opacity = '0';
+                                    li.style.transform = 'translateX(-8px)';
+                                    li.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                                    ul.appendChild(li);
+                                    scrollToBottom(container);
+                                    await sleep(20);
+                                    li.style.opacity = '1';
+                                    li.style.transform = 'translateX(0)';
+                                    await sleep(60);
+                                }
+                            } else if (bodyChild.tagName === 'P') {
+                                // Paragraphs: stream word by word
+                                const fullHTML = bodyChild.innerHTML;
+                                bodyChild.innerHTML = '';
+                                body.appendChild(bodyChild);
+
+                                // Split into words preserving HTML tags
+                                const words = splitIntoTokens(fullHTML);
+                                for (let w = 0; w < words.length; w++) {
+                                    bodyChild.innerHTML += words[w];
+                                    if (w % 3 === 0) {
+                                        scrollToBottom(container);
+                                        await sleep(15);
+                                    }
+                                }
+                                await sleep(30);
+                            } else {
+                                // Other elements: quick fade
+                                bodyChild.style.opacity = '0';
+                                bodyChild.style.transition = 'opacity 0.3s ease';
+                                body.appendChild(bodyChild);
+                                scrollToBottom(container);
+                                await sleep(30);
+                                bodyChild.style.opacity = '1';
+                                await sleep(50);
+                            }
+                        }
+                    }
+                } else if (isConclusionCard) {
+                    // Conclusion card: special entrance
+                    child.style.opacity = '0';
+                    child.style.transform = 'translateY(12px) scale(0.97)';
+                    child.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    container.appendChild(child);
+                    scrollToBottom(container);
+                    await sleep(100);
+                    child.style.opacity = '1';
+                    child.style.transform = 'translateY(0) scale(1)';
+                    await sleep(200);
+                } else {
+                    // Regular elements: word-by-word if paragraph, otherwise fade
+                    if (child.tagName === 'P') {
+                        const fullHTML = child.innerHTML;
+                        child.innerHTML = '';
+                        container.appendChild(child);
+                        const words = splitIntoTokens(fullHTML);
+                        for (let w = 0; w < words.length; w++) {
+                            child.innerHTML += words[w];
+                            if (w % 3 === 0) {
+                                scrollToBottom(container);
+                                await sleep(15);
+                            }
+                        }
+                        await sleep(40);
+                    } else {
+                        child.style.opacity = '0';
+                        child.style.transform = 'translateY(8px)';
+                        child.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                        container.appendChild(child);
+                        scrollToBottom(container);
+                        await sleep(30);
+                        child.style.opacity = '1';
+                        child.style.transform = 'translateY(0)';
+                        await sleep(60);
+                    }
+                }
             }
-            
+
+            // Remove cursor
+            if (cursor.parentNode) cursor.remove();
+
             // Re-render icons after animation
             lucide.createIcons();
+        }
+
+        function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+        function scrollToBottom(el) {
+            el.scrollTop = el.scrollHeight;
+        }
+
+        // Split HTML string into word tokens while preserving HTML tags intact
+        function splitIntoTokens(html) {
+            const tokens = [];
+            let i = 0;
+            while (i < html.length) {
+                if (html[i] === '<') {
+                    // Find the end of the tag
+                    const end = html.indexOf('>', i);
+                    if (end !== -1) {
+                        tokens.push(html.substring(i, end + 1));
+                        i = end + 1;
+                    } else {
+                        tokens.push(html[i]);
+                        i++;
+                    }
+                } else if (html[i] === ' ') {
+                    tokens.push(' ');
+                    i++;
+                } else {
+                    // Collect word characters
+                    let word = '';
+                    while (i < html.length && html[i] !== '<' && html[i] !== ' ') {
+                        word += html[i];
+                        i++;
+                    }
+                    tokens.push(word);
+                }
+            }
+            return tokens;
         }
 
         init();
     </script>
 </body>
+
 </html>
