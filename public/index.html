@@ -2496,8 +2496,8 @@ LIMIT 10;`,
             });
 
             // Step 7: Bullet list items (remaining)
-            html = html.replace(/^[•]\s+(.+)$/gim, '<li><span class="inline-block w-1.5 h-1.5 bg-indigo-400 rounded-full mr-2 mt-2 shrink-0"></span>$1</li>');
-            html = html.replace(/^- (.+)$/gim, '<li><span class="inline-block w-1.5 h-1.5 bg-indigo-400 rounded-full mr-2 mt-2 shrink-0"></span>$1</li>');
+            html = html.replace(/^[•]\s+(.+)$/gim, '<li><span class="inline-block w-1.5 h-1.5 bg-indigo-400 rounded-full mr-2 mt-2 shrink-0"></span><span>$1</span></li>');
+            html = html.replace(/^- (.+)$/gim, '<li><span class="inline-block w-1.5 h-1.5 bg-indigo-400 rounded-full mr-2 mt-2 shrink-0"></span><span>$1</span></li>');
 
             // Step 7b: Wrap consecutive <li> in <ul>
             html = html.replace(/(<li>.*?<\/li>\s*)+/gs, (match) => {
