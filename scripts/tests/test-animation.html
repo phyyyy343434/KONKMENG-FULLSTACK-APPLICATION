@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animation Test - KONKMENG AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-bounce {
+            animation: bounce 0.6s infinite;
+        }
+    </style>
+</head>
+<body class="bg-slate-900 text-white p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-3xl font-bold mb-8">🎬 Animation Test - KONKMENG AI</h1>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <!-- Thinking Animation Demo -->
+            <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                <h2 class="text-xl font-bold mb-4">1️⃣ Thinking Animation</h2>
+                <div class="bg-slate-900 rounded-lg p-8 flex flex-col items-center justify-center min-h-[200px]">
+                    <div class="flex items-center gap-2 mb-4">
+                        <div class="w-3 h-3 bg-indigo-600 rounded-full animate-bounce" style="animation-delay: 0ms"></div>
+                        <div class="w-3 h-3 bg-indigo-600 rounded-full animate-bounce" style="animation-delay: 150ms"></div>
+                        <div class="w-3 h-3 bg-indigo-600 rounded-full animate-bounce" style="animation-delay: 300ms"></div>
+                    </div>
+                    <p class="text-slate-400 text-sm">Analyzing your code...</p>
+                </div>
+                <p class="text-slate-400 text-sm mt-4">This shows while waiting for API response</p>
+            </div>
+
+            <!-- Line Animation Demo -->
+            <div class="bg-slate-800 rounded-xl p-6 border border-slate-700">
+                <h2 class="text-xl font-bold mb-4">2️⃣ Line-by-Line Animation</h2>
+                <div class="bg-slate-900 rounded-lg p-4 min-h-[200px]">
+                    <div id="demo-output" class="text-sm space-y-2"></div>
+                </div>
+                <button onclick="startDemo()" class="mt-4 w-full px-4 py-2 bg-indigo-600 hover:bg-indigo-700 rounded-lg transition-colors">
+                    ▶️ Start Demo
+                </button>
+            </div>
+        </div>
+
+        <div class="mt-8 bg-slate-800 rounded-xl p-6 border border-slate-700">
+            <h2 class="text-xl font-bold mb-4">📊 Animation Details</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                <div>
+                    <div class="text-slate-400 mb-1">Transition Duration</div>
+                    <div class="text-indigo-400 font-mono">0.3s ease</div>
+                </div>
+                <div>
+                    <div class="text-slate-400 mb-1">Delay Between Lines</div>
+                    <div class="text-indigo-400 font-mono">30ms</div>
+                </div>
+                <div>
+                    <div class="text-slate-400 mb-1">Slide Distance</div>
+                    <div class="text-indigo-400 font-mono">10px</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-8 bg-indigo-900/30 border border-indigo-700 rounded-xl p-6">
+            <h3 class="text-lg font-bold mb-2">✨ Features</h3>
+            <ul class="space-y-2 text-sm text-slate-300">
+                <li>✅ Smooth fade-in effect</li>
+                <li>✅ Slide-up animation</li>
+                <li>✅ Staggered timing (30ms per line)</li>
+                <li>✅ GPU-accelerated transitions</li>
+                <li>✅ Works with HTML content</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        const sampleResponse = `┌─────────────────────────────────────┐
+│  🎯 **Code Summary**                 │
+└─────────────────────────────────────┘
+
+This is a simple function that logs "Hello World" to the console.
+
+
+┌─────────────────────────────────────┐
+│  🔍 **Detailed Analysis**            │
+└─────────────────────────────────────┘
+
+The code is syntactically correct and will execute without errors.
+
+
+**Performance Issues:**
+
+• No performance issues detected
+
+• Function is lightweight and efficient
+
+
+**Logic Flaws:**
+
+• No logic flaws detected
+
+• Code follows best practices
+
+
+┌─────────────────────────────────────┐
+│  ✅ **Corrected Code (OPTIMIZED)**   │
+└─────────────────────────────────────┘
+
+\`\`\`javascript
+function hello() {
+  console.log("Hello World");
+}
+\`\`\`
+
+
+💬 **Conclusion:** Code is clean and ready to use!`;
+
+        async function animateResponse(html, container) {
+            container.innerHTML = '';
+            const lines = html.split('\n');
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i];
+                const lineDiv = document.createElement('div');
+                lineDiv.innerHTML = line || '&nbsp;';
+                lineDiv.style.opacity = '0';
+                lineDiv.style.transform = 'translateY(10px)';
+                lineDiv.style.transition = 'opacity 0.3s ease, transform 0.3s ease';
+                
+                container.appendChild(lineDiv);
+                
+                await new Promise(resolve => setTimeout(resolve, 10));
+                lineDiv.style.opacity = '1';
+                lineDiv.style.transform = 'translateY(0)';
+                
+                const delay = line.trim() === '' ? 10 : 30;
+                await new Promise(resolve => setTimeout(resolve, delay));
+            }
+        }
+
+        async function startDemo() {
+            const output = document.getElementById('demo-output');
+            await animateResponse(sampleResponse, output);
+        }
+
+        // Auto-start demo on load
+        setTimeout(startDemo, 1000);
+    </script>
+</body>
+</html>
