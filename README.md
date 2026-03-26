@@ -587,7 +587,7 @@ MIT License - see LICENSE file for details
 
 **KONKMENG Team**
 
-- GitHub: [@phyyyy343434](https://github.com/phyyyy343434)
+- GitHub: [@phesophy2](https://github.com/phesophy2)
 - Repository: [KONKMENG-FULLSTACK-APPLICATION](https://github.com/phyyyy343434/KONKMENG-FULLSTACK-APPLICATION)
 
 ---
